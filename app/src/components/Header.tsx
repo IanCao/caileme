@@ -22,7 +22,7 @@ export function Header() {
       <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="裁了么" width={28} height={28} className="rounded" />
+          <img src="/logo.png" alt="裁了么" width={36} height={36} className="rounded" />
           <span className="text-xl font-bold tracking-tight">裁了么<span className="text-sm font-normal text-gray-400 ml-1">牛马保护站</span></span>
         </Link>
 

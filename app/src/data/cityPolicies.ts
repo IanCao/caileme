@@ -1,6 +1,6 @@
 // 2025-2026年中国主要城市政策数据
 // 数据来源：各地人社局公开文件（最低工资标准、失业保险金标准、社平工资）
-// 最后更新：2025年
+// 最后更新：2026年3月
 
 export interface CityPolicy {
   name: string;
@@ -16,6 +16,7 @@ export interface CityPolicy {
   housePurchaseMonths: number;
   housePurchaseNote: string;
   medicalGraceDays: number; // 医保断缴宽限天数
+  policyUrl: string;        // 当地人社局官网
 }
 
 export const cityPolicies: CityPolicy[] = [
@@ -32,6 +33,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 60,
     housePurchaseNote: "连续缴纳60个月社保或个税",
     medicalGraceDays: 90,
+    policyUrl: "http://rsj.beijing.gov.cn",
   },
   {
     name: "上海",
@@ -44,9 +46,10 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentHigh: 2590,
     unemploymentNotes: "按缴费年限分4档：1年内¥2055/月，1-2年¥2295/月，2-3年¥2420/月，3年以上¥2590/月",
     unemploymentUrl: "https://rsj.sh.gov.cn",
-    housePurchaseMonths: 60,
-    housePurchaseNote: "连续缴纳60个月社保",
+    housePurchaseMonths: 36,
+    housePurchaseNote: "外环外（临港等）放宽至36个月，中心城区仍需60个月",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.sh.gov.cn",
   },
   {
     name: "广州",
@@ -58,9 +61,10 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 2070,
     unemploymentNotes: "按最低工资标准的90%发放，即¥2300×90%=¥2070/月",
     unemploymentUrl: "https://rsj.gz.gov.cn",
-    housePurchaseMonths: 60,
-    housePurchaseNote: "连续缴纳60个月社保",
+    housePurchaseMonths: 6,
+    housePurchaseNote: "限购区需6个月社保；花都/从化/增城已取消限购",
     medicalGraceDays: 90,
+    policyUrl: "http://rsj.gz.gov.cn",
   },
   {
     name: "深圳",
@@ -73,8 +77,9 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentNotes: "按最低工资标准的90%发放，即¥2360×90%=¥2124/月",
     unemploymentUrl: "https://hrss.sz.gov.cn",
     housePurchaseMonths: 36,
-    housePurchaseNote: "连续缴纳36个月社保",
+    housePurchaseNote: "非深户连续缴纳36个月社保（此前为60个月，已放宽）",
     medicalGraceDays: 60,
+    policyUrl: "https://hrss.sz.gov.cn",
   },
   {
     name: "杭州",
@@ -86,9 +91,10 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 2052,
     unemploymentNotes: "按最低工资标准的90%发放，即¥2280×90%=¥2052/月",
     unemploymentUrl: "https://hrss.hangzhou.gov.cn",
-    housePurchaseMonths: 48,
-    housePurchaseNote: "连续缴纳48个月社保",
+    housePurchaseMonths: 12,
+    housePurchaseNote: "限购区放宽至12个月社保；余杭/临平/钱塘等已取消限购",
     medicalGraceDays: 90,
+    policyUrl: "https://hrss.hangzhou.gov.cn",
   },
   {
     name: "南京",
@@ -100,9 +106,10 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 2052,
     unemploymentNotes: "按最低工资标准的90%发放，即¥2280×90%=¥2052/月",
     unemploymentUrl: "https://rsj.nanjing.gov.cn",
-    housePurchaseMonths: 24,
-    housePurchaseNote: "连续缴纳24个月社保",
+    housePurchaseMonths: 0,
+    housePurchaseNote: "大部分区域已取消限购，不再要求社保缴纳年限",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.nanjing.gov.cn",
   },
   {
     name: "苏州",
@@ -114,9 +121,10 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 2052,
     unemploymentNotes: "按最低工资标准的90%发放（江苏省一类地区）",
     unemploymentUrl: "https://hrss.suzhou.gov.cn",
-    housePurchaseMonths: 24,
-    housePurchaseNote: "连续缴纳24个月社保",
+    housePurchaseMonths: 6,
+    housePurchaseNote: "已大幅放宽，部分区域取消限购，限购区仅需6个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://hrss.suzhou.gov.cn",
   },
   {
     name: "成都",
@@ -131,6 +139,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "非本地户籍需12个月社保，本地户籍不限",
     medicalGraceDays: 90,
+    policyUrl: "http://cdhrss.chengdu.gov.cn",
   },
   {
     name: "武汉",
@@ -145,6 +154,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 24,
     housePurchaseNote: "连续缴纳24个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.wuhan.gov.cn",
   },
   {
     name: "西安",
@@ -159,6 +169,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "非本地户籍需12个月社保或个税，本地户籍不限",
     medicalGraceDays: 90,
+    policyUrl: "https://xahrss.xa.gov.cn",
   },
   {
     name: "重庆",
@@ -173,6 +184,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 0,
     housePurchaseNote: "本地户籍不限购，外地户籍需1年社保或个税",
     medicalGraceDays: 90,
+    policyUrl: "https://rlsbj.cq.gov.cn",
   },
   {
     name: "天津",
@@ -187,6 +199,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 24,
     housePurchaseNote: "连续缴纳24个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://hrss.tj.gov.cn",
   },
   {
     name: "长沙",
@@ -201,6 +214,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "非本地户籍需12个月社保或个税",
     medicalGraceDays: 60,
+    policyUrl: "https://rsj.changsha.gov.cn",
   },
   {
     name: "郑州",
@@ -215,6 +229,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 24,
     housePurchaseNote: "连续缴纳24个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.zhengzhou.gov.cn",
   },
   {
     name: "厦门",
@@ -229,6 +244,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 36,
     housePurchaseNote: "连续缴纳36个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://hrss.xm.gov.cn",
   },
   {
     name: "青岛",
@@ -243,6 +259,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://hrss.qingdao.gov.cn",
   },
   {
     name: "东莞",
@@ -257,6 +274,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 60,
+    policyUrl: "https://dghrss.dg.gov.cn",
   },
   {
     name: "合肥",
@@ -271,6 +289,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.hefei.gov.cn",
   },
   {
     name: "佛山",
@@ -285,6 +304,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 60,
+    policyUrl: "https://hrss.foshan.gov.cn",
   },
   {
     name: "无锡",
@@ -299,6 +319,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 24,
     housePurchaseNote: "连续缴纳24个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://hrss.wuxi.gov.cn",
   },
   {
     name: "宁波",
@@ -313,6 +334,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 24,
     housePurchaseNote: "连续缴纳24个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.ningbo.gov.cn",
   },
   {
     name: "福州",
@@ -327,6 +349,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.fuzhou.gov.cn",
   },
   {
     name: "济南",
@@ -341,6 +364,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://jnhrss.jinan.gov.cn",
   },
   {
     name: "大连",
@@ -355,6 +379,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 60,
+    policyUrl: "https://rsj.dl.gov.cn",
   },
   {
     name: "沈阳",
@@ -369,6 +394,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 60,
+    policyUrl: "https://rsj.shenyang.gov.cn",
   },
   {
     name: "昆明",
@@ -383,6 +409,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.km.gov.cn",
   },
   {
     name: "贵阳",
@@ -397,6 +424,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.guiyang.gov.cn",
   },
   {
     name: "南昌",
@@ -411,6 +439,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.nc.gov.cn",
   },
   {
     name: "哈尔滨",
@@ -425,6 +454,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 6,
     housePurchaseNote: "连续缴纳6个月社保",
     medicalGraceDays: 60,
+    policyUrl: "http://rsj.harbin.gov.cn",
   },
   {
     name: "石家庄",
@@ -439,6 +469,7 @@ export const cityPolicies: CityPolicy[] = [
     housePurchaseMonths: 12,
     housePurchaseNote: "连续缴纳12个月社保",
     medicalGraceDays: 90,
+    policyUrl: "https://rsj.sjz.gov.cn",
   },
 ];
 

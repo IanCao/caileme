@@ -8,10 +8,23 @@ const MAX_FILES = 5;
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 
-function formatFileSize(bytes: number) {
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+async function uploadToImgos(file: File): Promise<string> {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch("https://imgos.cn/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
+    const data = await res.json();
+    const url = data.url || data.data?.url || data.src || data.data?.src;
+    if (!url) throw new Error("No URL in response");
+    return url;
+  } catch (err) {
+    console.warn("图片上传失败，使用本地预览:", err);
+    return URL.createObjectURL(file);
+  }
 }
 
 const categoryList = [
@@ -29,27 +42,33 @@ export default function SubmitPage() {
   const [category, setCategory] = useState("经验分享");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [images, setImages] = useState<File[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
-  const addFiles = useCallback((files: FileList | null) => {
+  const addFiles = useCallback(async (files: FileList | null) => {
     if (!files) return;
     const newFiles = Array.from(files).filter((file) => {
       if (!ACCEPTED_TYPES.includes(file.type)) return false;
       if (file.size > MAX_FILE_SIZE) return false;
       return true;
     });
-    setImages((prev) => {
-      const combined = [...prev, ...newFiles];
-      return combined.slice(0, MAX_FILES);
-    });
+    if (newFiles.length === 0) return;
+
+    setUploading(true);
+    try {
+      const urls = await Promise.all(newFiles.map(uploadToImgos));
+      setImageUrls((prev) => [...prev, ...urls].slice(0, MAX_FILES));
+    } finally {
+      setUploading(false);
+    }
   }, []);
 
   const removeImage = useCallback((index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+    setImageUrls((prev) => prev.filter((_, i) => i !== index));
   }, []);
 
   const handleDrop = useCallback(
@@ -74,7 +93,7 @@ export default function SubmitPage() {
         category,
         title,
         content,
-        images: images.map((img) => img.name),
+        images: imageUrls.length > 0 ? imageUrls : undefined,
       });
       if (!result.success) {
         console.warn("API unavailable, submission recorded locally");
@@ -94,7 +113,7 @@ export default function SubmitPage() {
     setCategory("经验分享");
     setTitle("");
     setContent("");
-    setImages([]);
+    setImageUrls([]);
   };
 
   return (
@@ -273,36 +292,32 @@ export default function SubmitPage() {
                     />
                     <div className="text-3xl mb-2">📷</div>
                     <p className="text-sm text-gray-500">
-                      点击或拖拽上传图片
+                      {uploading ? (
+                        <span className="text-[#0071e3]">⏳ 上传中...</span>
+                      ) : (
+                        "点击或拖拽上传图片"
+                      )}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
                       支持 JPG、PNG、GIF、WebP，最多 {MAX_FILES} 张，每张不超过 5MB
                     </p>
                   </div>
 
-                  {images.length > 0 && (
+                  {imageUrls.length > 0 && (
                     <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-3">
-                      {images.map((file, index) => (
+                      {imageUrls.map((url, index) => (
                         <div
-                          key={`${file.name}-${index}`}
+                          key={`${url}-${index}`}
                           className="relative group rounded-xl overflow-hidden border border-gray-100 bg-white"
                         >
                           <img
-                            src={URL.createObjectURL(file)}
-                            alt={file.name}
+                            src={url}
+                            alt={`已上传图片 ${index + 1}`}
                             className="w-full h-24 object-cover"
-                            onLoad={(e) =>
-                              URL.revokeObjectURL(
-                                (e.target as HTMLImageElement).src
-                              )
-                            }
                           />
                           <div className="px-2 py-1.5">
-                            <p className="text-xs text-gray-600 truncate">
-                              {file.name}
-                            </p>
-                            <p className="text-xs text-gray-400">
-                              {formatFileSize(file.size)}
+                            <p className="text-xs text-green-600 truncate">
+                              ✓ 已上传
                             </p>
                           </div>
                           <button
@@ -323,7 +338,7 @@ export default function SubmitPage() {
 
                 <button
                   type="submit"
-                  disabled={submitting || !email || !title || !content}
+                  disabled={submitting || uploading || !email || !title || !content}
                   className="w-full bg-black text-white py-3.5 rounded-full text-base font-medium hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {submitting ? "提交中..." : "提交投稿"}

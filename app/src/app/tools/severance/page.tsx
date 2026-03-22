@@ -658,66 +658,79 @@ export default function SeveranceCalculator() {
                       className="bg-white rounded-2xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto"
                     >
                       {/* 可截图的卡片区域 */}
-                      <div ref={shareCardRef} className="bg-white rounded-2xl overflow-hidden" style={{ padding: 0 }}>
-                        {/* 顶部渐变条 */}
-                        <div className="h-2" style={{ background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899)" }} />
-
-                        <div className="px-6 pt-5 pb-6">
-                          {/* 品牌标题 */}
-                          <div className="flex items-center gap-2 mb-5">
-                            <span className="text-xl">🛡️</span>
+                      <div ref={shareCardRef} style={{
+                        width: 400,
+                        background: "#ffffff",
+                        borderRadius: 20,
+                        overflow: "hidden",
+                        fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+                        boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+                        padding: 0,
+                      }}>
+                        <div style={{ padding: "28px 28px 24px" }}>
+                          {/* Logo + Brand */}
+                          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                            <img src="/logo.png" width="32" height="32" style={{ borderRadius: 8 }} />
                             <div>
-                              <div className="text-base font-bold text-gray-900">裁了么 · 计算结果</div>
-                              <div className="text-[11px] text-gray-400">牛马保护站</div>
+                              <div style={{ fontSize: 16, fontWeight: 700, color: "#1d1d1f", letterSpacing: -0.3 }}>裁了么</div>
+                              <div style={{ fontSize: 11, color: "#86868b" }}>赔偿计算结果</div>
                             </div>
                           </div>
 
-                          {/* 数据内容 */}
-                          <div className="space-y-3">
-                            {shareOptions.amount && (
-                              <>
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                  <span className="text-sm text-gray-500">赔偿方案</span>
-                                  <span className="text-sm font-semibold text-gray-900">{result.recommended}</span>
-                                </div>
-                                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                  <span className="text-sm text-gray-500">预计到手</span>
-                                  <span className="text-lg font-bold text-indigo-600">{fmt(result.totalWithExtras)}</span>
-                                </div>
-                              </>
-                            )}
+                          {/* Hero Amount */}
+                          {shareOptions.amount && (
+                            <div style={{ textAlign: "center" as const, marginBottom: 24 }}>
+                              <div style={{ fontSize: 13, color: "#86868b", marginBottom: 4 }}>预计赔偿</div>
+                              <div style={{ fontSize: 44, fontWeight: 700, color: "#1d1d1f", letterSpacing: -2, lineHeight: 1 }}>{fmt(result.totalWithExtras)}</div>
+                              <div style={{ fontSize: 14, fontWeight: 500, color: "#86868b", marginTop: 8 }}>{result.recommended}</div>
+                            </div>
+                          )}
+
+                          {/* Info Section */}
+                          <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 20 }}>
                             {shareOptions.years && (
-                              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span className="text-sm text-gray-500">工龄</span>
-                                <span className="text-sm font-semibold text-gray-900">
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: shareOptions.city || shareOptions.salary ? 10 : 0 }}>
+                                <span style={{ fontSize: 13, color: "#86868b" }}>工龄</span>
+                                <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>
                                   {parseInt(years) || 0}年{(parseInt(months) || 0) > 0 ? `${parseInt(months)}个月` : ""}
                                 </span>
                               </div>
                             )}
                             {shareOptions.city && (
-                              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span className="text-sm text-gray-500">城市</span>
-                                <span className="text-sm font-semibold text-gray-900">{cityInfo?.name || city}</span>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: shareOptions.salary ? 10 : 0 }}>
+                                <span style={{ fontSize: 13, color: "#86868b" }}>城市</span>
+                                <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{cityInfo?.name || city}</span>
                               </div>
                             )}
                             {shareOptions.salary && (
-                              <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                                <span className="text-sm text-gray-500">月均工资</span>
-                                <span className="text-sm font-semibold text-gray-900">{fmt(result.avgSalary)}</span>
+                              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                                <span style={{ fontSize: 13, color: "#86868b" }}>月均工资</span>
+                                <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{fmt(result.avgSalary)}</span>
                               </div>
                             )}
                           </div>
 
-                          {/* 底部品牌信息 */}
-                          <div className="mt-6 pt-4 border-t border-gray-100 text-center">
-                            <p className="text-xs text-gray-500">帮助你的牛马朋友们 👉</p>
-                            <p className="text-sm font-semibold text-indigo-600 mt-0.5">caileme.team</p>
+                          {/* Calculation Formula */}
+                          {shareOptions.amount && (
+                            <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 24 }}>
+                              <div style={{ fontSize: 13, color: "#86868b", marginBottom: 6 }}>计算公式</div>
+                              <div style={{ fontSize: 13, fontWeight: 500, color: "#1d1d1f" }}>
+                                {fmt(result.effectiveSalary)} × {result.compensationMonths}个月 = {fmt(result.recommendedAmount)}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Footer */}
+                          <div style={{ borderTop: "1px solid #e5e5e7", paddingTop: 16, textAlign: "center" as const }}>
+                            <div style={{ fontSize: 12, color: "#86868b" }}>
+                              裁了么 · caileme.team
+                            </div>
                           </div>
                         </div>
                       </div>
 
                       {/* 操作按钮（不在截图区域内） */}
-                      <div className="px-6 pb-5 flex gap-3">
+                      <div style={{ padding: "0 24px 20px", display: "flex", gap: 12 }}>
                         <button
                           onClick={async () => {
                             if (!shareCardRef.current) return;
@@ -726,6 +739,7 @@ export default function SeveranceCalculator() {
                               const canvas = await html2canvas(shareCardRef.current, {
                                 scale: 2,
                                 backgroundColor: "#ffffff",
+                                useCORS: true,
                               });
                               const link = document.createElement("a");
                               link.download = "裁了么-赔偿计算结果.png";
@@ -735,9 +749,9 @@ export default function SeveranceCalculator() {
                               console.error("Failed to generate image:", e);
                             }
                           }}
-                          className="flex-1 bg-black text-white py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+                          style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "#0071e3", color: "#ffffff", fontSize: 14, fontWeight: 500, border: "none", cursor: "pointer" }}
                         >
-                          保存为图片
+                          💾 保存为图片
                         </button>
                         <button
                           onClick={() => {
@@ -757,16 +771,16 @@ export default function SeveranceCalculator() {
                             if (shareOptions.salary) {
                               lines.push(`月均工资：${fmt(result.avgSalary)}`);
                             }
-                            lines.push("——帮助你的牛马朋友们 caileme.team");
+                            lines.push("——裁了么 · caileme.team");
                             const text = lines.join("\n");
                             navigator.clipboard.writeText(text).then(() => {
                               setShareCopied(true);
                               setTimeout(() => setShareCopied(false), 2000);
                             });
                           }}
-                          className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
+                          style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "transparent", color: "#424245", fontSize: 14, fontWeight: 500, border: "1px solid #d2d2d7", cursor: "pointer" }}
                         >
-                          {shareCopied ? "✅ 已复制" : "复制文本"}
+                          {shareCopied ? "✅ 已复制" : "📋 复制文本"}
                         </button>
                       </div>
                     </motion.div>

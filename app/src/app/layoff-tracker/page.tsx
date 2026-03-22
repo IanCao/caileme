@@ -27,7 +27,7 @@ export default function LayoffTrackerPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold">📋 维权进度追踪器</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold">📋 裁员维权进度追踪器</h1>
               <p className="mt-1 text-gray-500 text-sm">
                 从收到通知到再就业，全程指引
               </p>
@@ -283,68 +283,62 @@ export default function LayoffTrackerPage() {
               style={{
                 width: 400,
                 background: "#ffffff",
-                borderRadius: 16,
+                borderRadius: 20,
                 overflow: "hidden",
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
               }}
             >
-              {/* Gradient top bar */}
-              <div
-                style={{
-                  height: 8,
-                  background: "linear-gradient(to right, #4ade80, #22c55e)",
-                }}
-              />
-
-              <div style={{ padding: "24px 28px 20px" }}>
-                {/* Title */}
-                <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: "#111" }}>
-                  📋 维权进度 · 追踪卡
+              <div style={{ padding: "28px 28px 24px" }}>
+                {/* Logo + Brand */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                  <img src="/logo.png" width="32" height="32" style={{ borderRadius: 8 }} />
+                  <div>
+                    <div style={{ fontSize: 16, fontWeight: 700, color: "#1d1d1f", letterSpacing: -0.3 }}>裁了么</div>
+                    <div style={{ fontSize: 11, color: "#86868b" }}>维权进度 · 追踪卡</div>
+                  </div>
                 </div>
 
-                {/* Progress info */}
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                    <span style={{ fontSize: 14, color: "#6b7280" }}>完成进度</span>
-                    <span style={{ fontSize: 22, fontWeight: 700, color: "#16a34a" }}>{progressPercentage}%</span>
-                  </div>
-                  {/* Progress bar */}
-                  <div style={{ height: 8, background: "#f3f4f6", borderRadius: 4, overflow: "hidden", marginBottom: 6 }}>
+                {/* Hero Percentage */}
+                <div style={{ textAlign: "center" as const, marginBottom: 24 }}>
+                  <div style={{ fontSize: 56, fontWeight: 700, color: "#1d1d1f", letterSpacing: -2, lineHeight: 1 }}>{progressPercentage}<span style={{ fontSize: 24, fontWeight: 600, color: "#86868b" }}>%</span></div>
+                  <div style={{ fontSize: 15, fontWeight: 500, color: "#86868b", marginTop: 6 }}>已完成 {progress?.completedSteps.length || 0}/{layoffSteps.length} 步骤</div>
+                </div>
+
+                {/* Progress Bar */}
+                <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 20 }}>
+                  <div style={{ fontSize: 13, color: "#86868b", marginBottom: 8 }}>完成进度</div>
+                  <div style={{ height: 8, background: "#e5e5e7", borderRadius: 4, overflow: "hidden" }}>
                     <div
                       style={{
                         height: "100%",
                         width: `${progressPercentage}%`,
-                        background: "linear-gradient(to right, #4ade80, #22c55e)",
+                        background: "#1d1d1f",
                         borderRadius: 4,
+                        transition: "width 0.3s",
                       }}
                     />
                   </div>
-                  <div style={{ fontSize: 13, color: "#9ca3af", textAlign: "right" as const }}>
-                    {progress?.completedSteps.length || 0}/{layoffSteps.length} 步骤
-                  </div>
                 </div>
-
-                {/* Divider */}
-                <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
 
                 {/* Completed steps */}
                 {progress && progress.completedSteps.length > 0 && (
-                  <div style={{ marginBottom: 20 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: "#111", marginBottom: 10 }}>
-                      ✅ 已完成
+                  <div style={{ marginBottom: 24 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f", marginBottom: 10 }}>
+                      已完成步骤
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                       {layoffSteps
                         .filter((s) => progress.completedSteps.includes(s.id))
                         .slice(0, 8)
                         .map((step) => (
-                          <div key={step.id} style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
-                            <span style={{ color: "#22c55e", flexShrink: 0 }}>{step.icon}</span>
+                          <div key={step.id} style={{ fontSize: 13, color: "#424245", display: "flex", alignItems: "flex-start", gap: 8 }}>
+                            <span style={{ flexShrink: 0 }}>{step.icon}</span>
                             <span>{step.title}</span>
                           </div>
                         ))}
                       {progress.completedSteps.length > 8 && (
-                        <div style={{ fontSize: 12, color: "#9ca3af" }}>
+                        <div style={{ fontSize: 12, color: "#86868b" }}>
                           ...还有 {progress.completedSteps.length - 8} 个步骤
                         </div>
                       )}
@@ -353,12 +347,8 @@ export default function LayoffTrackerPage() {
                 )}
 
                 {/* Footer */}
-                <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
-                <div style={{ textAlign: "center" as const }}>
-                  <div style={{ fontSize: 13, color: "#9ca3af", marginBottom: 2 }}>
-                    帮助你的牛马朋友们 →
-                  </div>
-                  <div style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>
+                <div style={{ borderTop: "1px solid #e5e5e7", paddingTop: 16, textAlign: "center" as const }}>
+                  <div style={{ fontSize: 12, color: "#86868b" }}>
                     裁了么 · caileme.team
                   </div>
                 </div>
@@ -386,7 +376,7 @@ export default function LayoffTrackerPage() {
                     alert("保存失败，请尝试截图保存");
                   }
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "#0071e3", color: "#ffffff", fontSize: 14, fontWeight: 500, border: "none", cursor: "pointer" }}
               >
                 💾 保存为图片
               </button>
@@ -403,7 +393,7 @@ export default function LayoffTrackerPage() {
                     `✅ 已完成:`,
                     ...completedNames.map((n) => `· ${n}`),
                     ``,
-                    `帮助你的牛马朋友们 → caileme.team`,
+                    `裁了么 · caileme.team`,
                   ].join("\n");
                   navigator.clipboard.writeText(text).then(() => {
                     alert("已复制到剪贴板！");
@@ -411,7 +401,7 @@ export default function LayoffTrackerPage() {
                     alert("复制失败，请手动复制");
                   });
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
+                style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "transparent", color: "#424245", fontSize: 14, fontWeight: 500, border: "1px solid #d2d2d7", cursor: "pointer" }}
               >
                 📋 复制文本
               </button>

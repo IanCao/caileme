@@ -27,7 +27,7 @@ export default function SocialInsuranceGuide() {
           <p className="mt-4 text-gray-500 text-lg">
             医保、公积金、失业金、社保转移——离职后的钱别忘了拿
           </p>
-          <div className="mt-2 text-sm text-gray-400">阅读时间：约10分钟</div>
+          <div className="mt-2 text-sm text-gray-400">阅读时间：约10分钟 · 数据更新：2026年3月</div>
 
           <div className="mt-10 prose prose-gray max-w-none">
             {/* Section 1 */}
@@ -65,6 +65,12 @@ export default function SocialInsuranceGuide() {
                 <div className="p-3 bg-accent/5 rounded-xl mt-2">
                   <p className="text-accent font-medium">
                     重要：离职当月社保由原公司缴纳。尽量在离职后1个月内办理灵活就业参保，避免断缴影响。
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    参考：
+                    <a href="https://www.nhsa.gov.cn" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">国家医疗保障局</a>
+                    {" "}|{" "}
+                    <a href="http://12333.gov.cn" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">全国12333</a>
                   </p>
                 </div>
               </div>
@@ -154,7 +160,7 @@ export default function SocialInsuranceGuide() {
                   </div>
                 </div>
                 <p>
-                  金额一般为当地最低工资的70%-90%，各城市不同。例如北京约2000元/月，上海约2000元/月，深圳约2200元/月。
+                  金额一般为当地最低工资的70%-90%，各城市不同。例如北京约2234元/月，上海约2055-2590元/月，深圳约2124元/月（2026年标准）。
                 </p>
                 <p>
                   <strong>申领流程：</strong>
@@ -166,6 +172,12 @@ export default function SocialInsuranceGuide() {
                 <div className="p-3 bg-accent/5 rounded-xl mt-2">
                   <p className="text-accent font-medium">
                     注意：必须在离职之日起60天内申请失业登记，逾期可能影响领取。领取失业金期间，医保由失业保险基金代缴，不用自己出钱。
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    参考：
+                    <a href="https://www.mohrss.gov.cn" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">人力资源和社会保障部</a>
+                    {" "}|{" "}
+                    <a href="http://12333.gov.cn" target="_blank" rel="noopener noreferrer" className="text-accent hover:underline">全国12333</a>
                   </p>
                 </div>
               </div>
@@ -311,6 +323,44 @@ export default function SocialInsuranceGuide() {
                 <div className="text-xs text-gray-400">查询你所在城市的失业金标准</div>
               </div>
             </Link>
+          </div>
+        </div>
+
+        {/* 数据来源 */}
+        <div className="mt-10 p-6 bg-white rounded-2xl border border-gray-100">
+          <h3 className="font-semibold mb-3">📚 数据来源</h3>
+          <p className="text-xs text-gray-500 mb-3">
+            本指南数据更新至2026年3月，来源于以下官方渠道，具体政策以当地最新规定为准：
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <a href="https://www.mohrss.gov.cn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-lg">🏛️</span>
+              <div>
+                <div className="text-sm font-medium">人力资源和社会保障部</div>
+                <div className="text-xs text-gray-400">www.mohrss.gov.cn</div>
+              </div>
+            </a>
+            <a href="https://www.nhsa.gov.cn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-lg">🏥</span>
+              <div>
+                <div className="text-sm font-medium">国家医疗保障局</div>
+                <div className="text-xs text-gray-400">www.nhsa.gov.cn</div>
+              </div>
+            </a>
+            <a href="https://www.mohurd.gov.cn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-lg">🏠</span>
+              <div>
+                <div className="text-sm font-medium">住房和城乡建设部</div>
+                <div className="text-xs text-gray-400">www.mohurd.gov.cn</div>
+              </div>
+            </a>
+            <a href="http://12333.gov.cn" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-lg">📞</span>
+              <div>
+                <div className="text-sm font-medium">全国12333</div>
+                <div className="text-xs text-gray-400">12333.gov.cn</div>
+              </div>
+            </a>
           </div>
         </div>
       </div>

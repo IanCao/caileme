@@ -100,6 +100,7 @@ export function InteractiveSimulation() {
   const [totalScore, setTotalScore] = useState(0);
   const [maxScore, setMaxScore] = useState(0);
   const [roundCount, setRoundCount] = useState(0);
+  const [maxRounds, setMaxRounds] = useState(8);
   const [showOptions, setShowOptions] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [showShareCard, setShowShareCard] = useState(false);
@@ -154,6 +155,8 @@ export function InteractiveSimulation() {
       ? Math.max(...(getCurrentStep()!.options!.map((o) => o.score)))
       : option.score;
 
+    const newRoundCount = roundCount + 1;
+
     // Add user message
     setMessages((prev) => [...prev, { role: "user", content: option.text }]);
 
@@ -170,7 +173,7 @@ export function InteractiveSimulation() {
       ]);
       setTotalScore((prev) => prev + option.score);
       setMaxScore((prev) => prev + bestScore);
-      setRoundCount((prev) => prev + 1);
+      setRoundCount(newRoundCount);
     }, 400);
 
     // Try API first (will fallback to client-side)
@@ -185,6 +188,22 @@ export function InteractiveSimulation() {
         })),
       });
       // Fire-and-forget for now; use client-side logic regardless
+    }
+
+    // Check if max rounds reached
+    if (newRoundCount >= maxRounds) {
+      setTimeout(() => {
+        setIsTyping(true);
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            { role: "system", content: `谈判模拟已结束，共进行了 ${maxRounds} 轮对话。感谢你的参与！` },
+          ]);
+          setIsTyping(false);
+          setTimeout(() => setPhase("summary"), 1500);
+        }, 600);
+      }, 800);
+      return;
     }
 
     // Navigate to next step
@@ -249,6 +268,28 @@ export function InteractiveSimulation() {
           <p className="mt-2 text-gray-500">
             选择一个场景，AI扮演HR与你实时互动
           </p>
+        </div>
+
+        {/* Round selector */}
+        <div className="flex items-center justify-center gap-3">
+          <span className="text-sm text-gray-500 font-medium">谈判轮次</span>
+          {[
+            { value: 5, label: "5次" },
+            { value: 8, label: "8次(推荐)" },
+            { value: 10, label: "10次" },
+          ].map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setMaxRounds(opt.value)}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 ${
+                maxRounds === opt.value
+                  ? "bg-black text-white"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -393,76 +434,58 @@ export function InteractiveSimulation() {
                 style={{
                   width: 400,
                   background: "#ffffff",
-                  borderRadius: 16,
+                  borderRadius: 20,
                   overflow: "hidden",
-                  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
                 }}
               >
-                {/* Gradient top bar */}
-                <div
-                  style={{
-                    height: 8,
-                    background: pct >= 80
-                      ? "linear-gradient(to right, #22c55e, #059669)"
-                      : pct >= 60
-                        ? "linear-gradient(to right, #eab308, #f97316)"
-                        : "linear-gradient(to right, #ef4444, #ec4899)",
-                  }}
-                />
-
-                <div style={{ padding: "24px 28px 20px" }}>
-                  {/* Title */}
-                  <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: "#111" }}>
-                    🤖 AI裁员模拟 · 成绩单
-                  </div>
-
-                  {/* Info rows */}
-                  <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 14, color: "#6b7280" }}>场景</span>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>{selectedScenario.title}</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 14, color: "#6b7280" }}>得分</span>
-                      <span style={{ fontSize: 22, fontWeight: 700, color: pct >= 80 ? "#16a34a" : pct >= 60 ? "#ca8a04" : "#dc2626" }}>{pct}%</span>
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ fontSize: 14, color: "#6b7280" }}>评价</span>
-                      <span style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>{summary.emoji} {summary.title}</span>
+                <div style={{ padding: "28px 28px 24px" }}>
+                  {/* Logo + Brand */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                    <img src="/logo.png" width="32" height="32" style={{ borderRadius: 8 }} />
+                    <div>
+                      <div style={{ fontSize: 16, fontWeight: 700, color: "#1d1d1f", letterSpacing: -0.3 }}>裁了么</div>
+                      <div style={{ fontSize: 11, color: "#86868b" }}>AI 裁员模拟 · 成绩单</div>
                     </div>
                   </div>
 
-                  {/* Divider */}
-                  <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
+                  {/* Hero Score */}
+                  <div style={{ textAlign: "center" as const, marginBottom: 24 }}>
+                    <div style={{ fontSize: 56, fontWeight: 700, color: "#1d1d1f", letterSpacing: -2, lineHeight: 1 }}>{pct}<span style={{ fontSize: 24, fontWeight: 600, color: "#86868b" }}>%</span></div>
+                    <div style={{ fontSize: 15, fontWeight: 500, color: "#86868b", marginTop: 6 }}>{summary.emoji} {summary.title}</div>
+                  </div>
 
-                  {/* Key tips */}
-                  <div style={{ marginBottom: 20 }}>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: "#111", marginBottom: 10 }}>
-                      💡 关键提示
+                  {/* Info Section */}
+                  <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 20 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                      <span style={{ fontSize: 13, color: "#86868b" }}>模拟场景</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{selectedScenario.title}</span>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                      <div style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
-                        <span style={{ color: "#22c55e", flexShrink: 0 }}>·</span>
-                        <span>保持冷静，不被HR话术影响判断</span>
-                      </div>
-                      <div style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
-                        <span style={{ color: "#22c55e", flexShrink: 0 }}>·</span>
-                        <span>了解法定赔偿标准(N+1)，不轻易让步</span>
-                      </div>
-                      <div style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
-                        <span style={{ color: "#22c55e", flexShrink: 0 }}>·</span>
-                        <span>不要当场签字，保留协商空间</span>
-                      </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 13, color: "#86868b" }}>综合评价</span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{summary.description?.slice(0, 15) || summary.title}</span>
+                    </div>
+                  </div>
+
+                  {/* Key Tips */}
+                  <div style={{ marginBottom: 24 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f", marginBottom: 10 }}>
+                      关键提示
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                      {["保持冷静，不被HR话术影响判断", "了解法定赔偿标准(N+1)，不轻易让步", "不要当场签字，保留协商空间"].map((tip, i) => (
+                        <div key={i} style={{ fontSize: 13, color: "#424245", display: "flex", alignItems: "flex-start", gap: 8 }}>
+                          <span style={{ color: "#86868b", flexShrink: 0, fontSize: 11, marginTop: 2 }}>●</span>
+                          <span>{tip}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
                   {/* Footer */}
-                  <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
-                  <div style={{ textAlign: "center" as const }}>
-                    <div style={{ fontSize: 13, color: "#9ca3af", marginBottom: 2 }}>
-                      帮助你的牛马朋友们 →
-                    </div>
-                    <div style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>
+                  <div style={{ borderTop: "1px solid #e5e5e7", paddingTop: 16, textAlign: "center" as const }}>
+                    <div style={{ fontSize: 12, color: "#86868b" }}>
                       裁了么 · caileme.team
                     </div>
                   </div>
@@ -490,7 +513,7 @@ export function InteractiveSimulation() {
                       alert("保存失败，请尝试截图保存");
                     }
                   }}
-                  className="flex-1 py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                  style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "#0071e3", color: "#ffffff", fontSize: 14, fontWeight: 500, border: "none", cursor: "pointer" }}
                 >
                   💾 保存为图片
                 </button>
@@ -508,7 +531,7 @@ export function InteractiveSimulation() {
                       `· 了解法定赔偿标准(N+1)，不轻易让步`,
                       `· 不要当场签字，保留协商空间`,
                       ``,
-                      `帮助你的牛马朋友们 → caileme.team`,
+                      `裁了么 · caileme.team`,
                     ].join("\n");
                     navigator.clipboard.writeText(text).then(() => {
                       alert("已复制到剪贴板！");
@@ -516,7 +539,7 @@ export function InteractiveSimulation() {
                       alert("复制失败，请手动复制");
                     });
                   }}
-                  className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
+                  style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "transparent", color: "#424245", fontSize: 14, fontWeight: 500, border: "1px solid #d2d2d7", cursor: "pointer" }}
                 >
                   📋 复制文本
                 </button>
@@ -543,6 +566,10 @@ export function InteractiveSimulation() {
         </button>
         {selectedScenario && (
           <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-400">
+              第 {Math.min(roundCount + 1, maxRounds)}/{maxRounds} 轮
+            </span>
+            <span className="text-sm text-gray-300">·</span>
             <span className="text-sm text-gray-400">
               得分: {totalScore}
             </span>

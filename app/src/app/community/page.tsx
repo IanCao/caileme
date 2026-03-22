@@ -308,12 +308,12 @@ export default function CommunityPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl"
+              className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <h3 className="text-lg font-bold mb-2">加入打工人互助社群</h3>
+              <h3 className="text-xl font-bold mb-2">加入打工人互助社群</h3>
               <p className="text-sm text-gray-500 mb-4">扫描下方二维码，加入社群</p>
-              <img src="/commu.jpg" alt="社群二维码" className="w-64 h-64 mx-auto rounded-xl object-cover" />
+              <img src="/commu.jpg" alt="社群二维码" className="w-[340px] h-[340px] mx-auto rounded-xl object-cover" />
               <button
                 onClick={() => setShowGroupModal(false)}
                 className="mt-4 text-sm text-gray-500 hover:text-gray-700"

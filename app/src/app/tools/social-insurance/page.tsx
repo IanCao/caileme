@@ -143,6 +143,9 @@ export default function SocialInsurancePage() {
         <p className="mt-4 text-gray-500 text-center text-lg">
           裁员后社保断缴，到底会影响什么？
         </p>
+        <p className="mt-2 text-xs text-gray-400 text-center">
+          数据更新时间：2026年3月 | 具体政策以当地最新规定为准
+        </p>
 
         {/* 城市选择 */}
         <div className="mt-10 bg-white rounded-2xl p-6 md:p-8 border border-gray-100">
@@ -205,6 +208,18 @@ export default function SocialInsurancePage() {
                       💡 {item.solution}
                     </p>
                   </div>
+                  {cityInfo.policyUrl && (
+                    <div className="mt-2 text-right">
+                      <a
+                        href={cityInfo.policyUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+                      >
+                        📎 查看政策原文 →
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

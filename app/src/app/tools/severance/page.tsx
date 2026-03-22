@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cityPolicies, getCityByCode } from "@/data/cityPolicies";
 import CitySelector from "@/components/CitySelector";
@@ -43,6 +43,8 @@ export default function SeveranceCalculator() {
     salary: false,
   });
   const [shareCopied, setShareCopied] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   const calculate = () => {
     if (!situation) return;
@@ -632,35 +634,145 @@ export default function SeveranceCalculator() {
                   ))}
                 </div>
                 <button
-                  onClick={() => {
-                    const lines: string[] = ["【裁了么计算结果】"];
-                    if (shareOptions.amount) {
-                      lines.push(`赔偿方案：${result.recommended}`);
-                      lines.push(`预计到手：${fmt(result.totalWithExtras)}`);
-                    }
-                    if (shareOptions.years) {
-                      const y = parseInt(years) || 0;
-                      const m = parseInt(months) || 0;
-                      lines.push(`工龄：${y}年${m > 0 ? m + "个月" : ""}`);
-                    }
-                    if (shareOptions.city) {
-                      lines.push(`城市：${cityInfo?.name || city}`);
-                    }
-                    if (shareOptions.salary) {
-                      lines.push(`月均工资：${fmt(result.avgSalary)}`);
-                    }
-                    lines.push("——来自 caileme.team");
-                    const text = lines.join("\n");
-                    navigator.clipboard.writeText(text).then(() => {
-                      setShareCopied(true);
-                      setTimeout(() => setShareCopied(false), 2000);
-                    });
-                  }}
+                  onClick={() => setShowShareCard(true)}
                   className="w-full bg-black text-white py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
                 >
-                  {shareCopied ? "✅ 已复制到剪贴板" : "复制分享文本"}
+                  生成分享卡片
                 </button>
               </div>
+
+              {/* 分享卡片弹窗 */}
+              <AnimatePresence>
+                {showShareCard && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+                    onClick={(e) => { if (e.target === e.currentTarget) setShowShareCard(false); }}
+                  >
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      className="bg-white rounded-2xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto"
+                    >
+                      {/* 可截图的卡片区域 */}
+                      <div ref={shareCardRef} className="bg-white rounded-2xl overflow-hidden" style={{ padding: 0 }}>
+                        {/* 顶部渐变条 */}
+                        <div className="h-2" style={{ background: "linear-gradient(90deg, #6366f1, #8b5cf6, #ec4899)" }} />
+
+                        <div className="px-6 pt-5 pb-6">
+                          {/* 品牌标题 */}
+                          <div className="flex items-center gap-2 mb-5">
+                            <span className="text-xl">🛡️</span>
+                            <div>
+                              <div className="text-base font-bold text-gray-900">裁了么 · 计算结果</div>
+                              <div className="text-[11px] text-gray-400">牛马保护站</div>
+                            </div>
+                          </div>
+
+                          {/* 数据内容 */}
+                          <div className="space-y-3">
+                            {shareOptions.amount && (
+                              <>
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                  <span className="text-sm text-gray-500">赔偿方案</span>
+                                  <span className="text-sm font-semibold text-gray-900">{result.recommended}</span>
+                                </div>
+                                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                  <span className="text-sm text-gray-500">预计到手</span>
+                                  <span className="text-lg font-bold text-indigo-600">{fmt(result.totalWithExtras)}</span>
+                                </div>
+                              </>
+                            )}
+                            {shareOptions.years && (
+                              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span className="text-sm text-gray-500">工龄</span>
+                                <span className="text-sm font-semibold text-gray-900">
+                                  {parseInt(years) || 0}年{(parseInt(months) || 0) > 0 ? `${parseInt(months)}个月` : ""}
+                                </span>
+                              </div>
+                            )}
+                            {shareOptions.city && (
+                              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span className="text-sm text-gray-500">城市</span>
+                                <span className="text-sm font-semibold text-gray-900">{cityInfo?.name || city}</span>
+                              </div>
+                            )}
+                            {shareOptions.salary && (
+                              <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                                <span className="text-sm text-gray-500">月均工资</span>
+                                <span className="text-sm font-semibold text-gray-900">{fmt(result.avgSalary)}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* 底部品牌信息 */}
+                          <div className="mt-6 pt-4 border-t border-gray-100 text-center">
+                            <p className="text-xs text-gray-500">帮助你的牛马朋友们 👉</p>
+                            <p className="text-sm font-semibold text-indigo-600 mt-0.5">caileme.team</p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 操作按钮（不在截图区域内） */}
+                      <div className="px-6 pb-5 flex gap-3">
+                        <button
+                          onClick={async () => {
+                            if (!shareCardRef.current) return;
+                            try {
+                              const html2canvas = (await import("html2canvas")).default;
+                              const canvas = await html2canvas(shareCardRef.current, {
+                                scale: 2,
+                                backgroundColor: "#ffffff",
+                              });
+                              const link = document.createElement("a");
+                              link.download = "裁了么-赔偿计算结果.png";
+                              link.href = canvas.toDataURL("image/png");
+                              link.click();
+                            } catch (e) {
+                              console.error("Failed to generate image:", e);
+                            }
+                          }}
+                          className="flex-1 bg-black text-white py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+                        >
+                          保存为图片
+                        </button>
+                        <button
+                          onClick={() => {
+                            const lines: string[] = ["【裁了么计算结果】"];
+                            if (shareOptions.amount) {
+                              lines.push(`赔偿方案：${result.recommended}`);
+                              lines.push(`预计到手：${fmt(result.totalWithExtras)}`);
+                            }
+                            if (shareOptions.years) {
+                              const y = parseInt(years) || 0;
+                              const m = parseInt(months) || 0;
+                              lines.push(`工龄：${y}年${m > 0 ? m + "个月" : ""}`);
+                            }
+                            if (shareOptions.city) {
+                              lines.push(`城市：${cityInfo?.name || city}`);
+                            }
+                            if (shareOptions.salary) {
+                              lines.push(`月均工资：${fmt(result.avgSalary)}`);
+                            }
+                            lines.push("——帮助你的牛马朋友们 caileme.team");
+                            const text = lines.join("\n");
+                            navigator.clipboard.writeText(text).then(() => {
+                              setShareCopied(true);
+                              setTimeout(() => setShareCopied(false), 2000);
+                            });
+                          }}
+                          className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-full text-sm font-medium hover:bg-gray-200 transition-colors"
+                        >
+                          {shareCopied ? "✅ 已复制" : "复制文本"}
+                        </button>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
         </motion.div>

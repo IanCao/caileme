@@ -34,6 +34,7 @@ exports.main_handler = async (event, context) => {
       "/feedback": "/api/feedback",
       "/submit": "/api/community/submit",
       "/comment": "/api/comment",
+      "/like": "/api/like",
     };
     const workerPath = pathMap[path] || `/api${path}`;
 

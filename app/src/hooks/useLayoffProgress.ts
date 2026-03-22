@@ -153,6 +153,19 @@ export function useLayoffProgress() {
       ? existing.filter((i) => i !== item)
       : [...existing, item];
 
+    const step = layoffSteps.find((s) => s.id === stepId);
+    const allChecked = step?.checkItems
+      ? newCheckedItems.length >= step.checkItems.length
+      : false;
+
+    const stepIndex = layoffSteps.findIndex((s) => s.id === stepId);
+    let newCompletedSteps = progress.completedSteps;
+    if (allChecked && !progress.completedSteps.includes(stepId)) {
+      newCompletedSteps = [...progress.completedSteps, stepId];
+    } else if (!allChecked && progress.completedSteps.includes(stepId)) {
+      newCompletedSteps = progress.completedSteps.filter((id) => id !== stepId);
+    }
+
     const newProgress: LayoffProgress = {
       ...progress,
       stepProgress: {
@@ -160,11 +173,17 @@ export function useLayoffProgress() {
         [stepId]: {
           ...progress.stepProgress[stepId],
           stepId,
-          completed: progress.stepProgress[stepId]?.completed || false,
+          completed: allChecked,
+          completedAt: allChecked ? new Date().toISOString() : undefined,
           notes: progress.stepProgress[stepId]?.notes || "",
           checkedItems: newCheckedItems,
         },
       },
+      completedSteps: newCompletedSteps,
+      currentStep:
+        allChecked && stepIndex !== -1
+          ? Math.max(progress.currentStep, stepIndex + 1)
+          : progress.currentStep,
       lastUpdated: new Date().toISOString(),
     };
 

@@ -93,6 +93,7 @@ export default function CommunityPage() {
   const [selectedCity, setSelectedCity] = useState('全部');
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [showGroupModal, setShowGroupModal] = useState(false);
+  const [page, setPage] = useState(1);
 
   const allItems: FeedItem[] = [
     ...allLayoffNews.map((n): FeedItem => ({ type: 'news', tag: '被裁情报', data: n })),
@@ -109,6 +110,10 @@ export default function CommunityPage() {
     return true;
   });
 
+  const PAGE_SIZE = 10;
+  const totalPages = Math.ceil(filteredItems.length / PAGE_SIZE);
+  const pagedItems = filteredItems.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-20">
@@ -124,7 +129,7 @@ export default function CommunityPage() {
           {allTags.map((tag) => (
             <button
               key={tag}
-              onClick={() => { setActiveTag(tag); setSelectedCity('全部'); }}
+              onClick={() => { setActiveTag(tag); setSelectedCity('全部'); setPage(1); }}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
                 activeTag === tag
                   ? 'bg-black text-white shadow-sm'
@@ -142,7 +147,7 @@ export default function CommunityPage() {
             {newsCities.map((city) => (
               <button
                 key={city}
-                onClick={() => setSelectedCity(city)}
+                onClick={() => { setSelectedCity(city); setPage(1); }}
                 className={`px-3 py-1 rounded-full text-xs transition-colors ${
                   selectedCity === city
                     ? 'bg-gray-700 text-white'
@@ -176,7 +181,7 @@ export default function CommunityPage() {
           {filteredItems.length === 0 ? (
             <div className="text-center py-12 text-gray-400 text-sm">暂无相关内容</div>
           ) : (
-            filteredItems.map((item) =>
+            pagedItems.map((item) =>
               item.type === 'news' ? (
                 <button
                   key={`news-${item.data.id}`}
@@ -201,6 +206,7 @@ export default function CommunityPage() {
                   </div>
                   <div className="text-xs text-gray-400">
                     涉及：{item.data.departments} · 来源：{item.data.source}
+                    <span className="ml-2">👀 {item.data.viewCount || 0} 次查看</span>
                   </div>
                 </button>
               ) : (
@@ -220,12 +226,48 @@ export default function CommunityPage() {
                   <div className="mt-3 flex items-center gap-4 text-xs text-gray-400">
                     <span>💬 {item.data.comments.length} 条评论</span>
                     <span>👍 {item.data.likes}</span>
+                    <span>👀 {item.data.viewCount || 0} 次查看</span>
                   </div>
                 </Link>
               )
             )
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between mt-6">
+            <span className="text-xs text-gray-400">
+              共 {filteredItems.length} 条，第 {page}/{totalPages} 页
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="px-3 py-1 text-xs rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+              >
+                上一页
+              </button>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`w-7 h-7 text-xs rounded-lg transition-colors ${
+                    page === p ? "bg-black text-white" : "border border-gray-200 hover:bg-gray-50"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+              <button
+                onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                disabled={page === totalPages}
+                className="px-3 py-1 text-xs rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+              >
+                下一页
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* 底部 */}
         <div className="mt-10 p-5 sm:p-6 bg-white rounded-2xl border border-gray-100 text-center">

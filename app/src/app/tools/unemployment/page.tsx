@@ -156,7 +156,7 @@ export default function UnemploymentCalculator() {
         {/* 各城市标准对比 */}
         <div className="mt-8 bg-white rounded-2xl p-6 border border-gray-100">
           <h3 className="font-semibold mb-4">📊 2026年主要城市失业金标准</h3>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto min-h-[420px]">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-gray-400 border-b border-gray-100">
@@ -168,10 +168,10 @@ export default function UnemploymentCalculator() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {pagedCities.map((c) => (
-                  <tr key={c.code}>
+                  <tr key={c.code} className="h-[42px]">
                     <td className="py-2 font-medium whitespace-nowrap">{c.name}</td>
                     <td className="py-2 text-accent font-medium whitespace-nowrap">{fmt(c.unemploymentBase)}</td>
-                    <td className="py-2 text-gray-500 text-xs">{c.unemploymentNotes}</td>
+                    <td className="py-2 text-gray-500 text-xs max-w-[200px] truncate" title={c.unemploymentNotes}>{c.unemploymentNotes}</td>
                     <td className="py-2">
                       {c.unemploymentUrl ? (
                         <a href={c.unemploymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline whitespace-nowrap">查看 →</a>

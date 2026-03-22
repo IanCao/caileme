@@ -168,6 +168,12 @@ export default function HomePage() {
               计算我的赔偿
             </Link>
             <Link
+              href="/ai-simulation"
+              className="border border-gray-300 text-gray-700 px-8 py-3.5 rounded-full text-base font-medium hover:bg-gray-50 transition-colors"
+            >
+              🤖 AI裁员模拟
+            </Link>
+            <Link
               href="/guides"
               className="border border-gray-300 text-gray-700 px-8 py-3.5 rounded-full text-base font-medium hover:bg-gray-50 transition-colors"
             >
@@ -232,6 +238,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* AI Simulation Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+          <m.div {...fadeUp}>
+            <div className="text-4xl sm:text-5xl mb-6">🤖</div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 被裁模拟</h2>
+            <p className="mt-4 text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
+              模拟被裁谈话场景，提前练习应对策略。
+              <br />
+              知己知彼，谈判不慌。
+            </p>
+            <Link
+              href="/ai-simulation"
+              className="inline-block mt-8 bg-white text-black px-8 py-3.5 rounded-full font-medium hover:bg-gray-100 transition-colors"
+            >
+              开始模拟
+            </Link>
+          </m.div>
+        </div>
+      </section>
+
       {/* Guides Section */}
       <section className="py-16 md:py-24 bg-surface">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -275,27 +302,6 @@ export default function HomePage() {
               查看全部指南 →
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* AI Simulation Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <m.div {...fadeUp}>
-            <div className="text-4xl sm:text-5xl mb-6">🤖</div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 被裁模拟</h2>
-            <p className="mt-4 text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-              模拟被裁谈话场景，提前练习应对策略。
-              <br />
-              知己知彼，谈判不慌。
-            </p>
-            <Link
-              href="/ai-simulation"
-              className="inline-block mt-8 bg-white text-black px-8 py-3.5 rounded-full font-medium hover:bg-gray-100 transition-colors"
-            >
-              开始模拟
-            </Link>
-          </m.div>
         </div>
       </section>
 

@@ -13,6 +13,7 @@ export interface NewsItem {
   source: string;
   verified: boolean;
   detail: string; // 弹窗中展示的详细内容
+  viewCount?: number;
 }
 
 export interface CommunityPost {
@@ -26,6 +27,7 @@ export interface CommunityPost {
   date: string;
   likes: number;
   comments: CommentItem[];
+  viewCount?: number;
 }
 
 export interface CommentItem {
@@ -48,6 +50,7 @@ export const layoffNews: NewsItem[] = [
     departments: "社区团购、本地生活",
     source: "多名员工确认",
     verified: true,
+    viewCount: 3842,
     detail: `**裁员规模**：约15%，主要涉及社区团购和本地生活事业部\n\n**赔偿方案**：标准N+1，部分核心员工可谈N+2\n\n**时间线**：\n- 3月初开始约谈\n- 给予3天考虑时间\n- 赔偿金当月发放\n\n**注意事项**：\n- HR会要求当天签字，建议要求带回审阅\n- 年终奖需确认是否包含在赔偿中\n- 社保缴纳到当月月底\n\n**来源**：多名被裁员工在社交平台确认，已有3人提供截图佐证`,
   },
   {
@@ -61,6 +64,7 @@ export const layoffNews: NewsItem[] = [
     departments: "海外业务、非核心部门",
     source: "内部邮件",
     verified: true,
+    viewCount: 2956,
     detail: `**裁员规模**：约20%，主要集中在海外业务部和非核心部门\n\n**赔偿方案**：N+3（业内较高水平）\n\n**特别说明**：\n- 提供3个月内推机会\n- 可选择留任调岗（降薪20%）\n- 股票期权按比例结算\n\n**员工反馈**：\n多数员工对赔偿方案表示认可，但对裁员的突然性表示不满。有员工反映前一天还在开项目会，第二天就被约谈。\n\n**来源**：内部全员邮件截图已在脉脉流传`,
   },
   {
@@ -74,6 +78,7 @@ export const layoffNews: NewsItem[] = [
     departments: "教育事业部",
     source: "媒体报道",
     verified: true,
+    viewCount: 4521,
     detail: `**裁员规模**：教育事业部整体裁撤，涉及约800人\n\n**赔偿方案**：N+1\n\n**背景**：\n由于教育政策调整，该公司决定全面退出在线教育领域。整个教育事业部被裁撤，部分技术人员可转岗至其他部门。\n\n**时间线**：\n- 2月中旬内部通知\n- 2月底前完成离职手续\n- 赔偿金次月15日发放\n\n**来源**：多家科技媒体报道确认`,
   },
   {
@@ -87,6 +92,7 @@ export const layoffNews: NewsItem[] = [
     departments: "多个项目组",
     source: "脉脉爆料",
     verified: false,
+    viewCount: 1287,
     detail: `**裁员规模**：约30%，涉及多个未上线项目组\n\n**赔偿方案**：仅N（低于法定标准）\n\n**争议点**：\n- 部分员工反映HR施压签字\n- 有"绩效不合格"的口头说法但无书面通知\n- 已有员工准备申请劳动仲裁\n\n**建议**：\n如遇到只给N的情况，不要当场签字。根据《劳动合同法》第47条，经济补偿标准不低于N+1。\n\n⚠️ 该信息尚未完全核实，请谨慎参考`,
   },
   {
@@ -100,6 +106,7 @@ export const layoffNews: NewsItem[] = [
     departments: "国际化业务",
     source: "多名员工确认",
     verified: true,
+    viewCount: 2103,
     detail: `**裁员规模**：约10%，集中在国际化业务线\n\n**赔偿方案**：标准N+1\n\n**原因**：国际化业务持续亏损，公司战略收缩聚焦国内市场\n\n**处理流程**：\n- 1月中旬一对一约谈\n- 5个工作日签署协议\n- 赔偿金15个工作日到账\n- 提供2个月社保代缴\n\n**来源**：多名被裁员工确认，流程相对规范`,
   },
   {
@@ -113,6 +120,7 @@ export const layoffNews: NewsItem[] = [
     departments: "信贷、保险",
     source: "内部消息",
     verified: false,
+    viewCount: 876,
     detail: `**裁员规模**：约25%，信贷和保险业务线为主\n\n**赔偿方案**：N+1\n\n**背景**：受监管政策影响，相关业务线收缩\n\n**注意**：\n- 竞业限制协议需仔细审阅\n- 部分员工被要求签署保密条款\n\n⚠️ 该信息来源有限，尚未完全核实`,
   },
   {
@@ -126,6 +134,7 @@ export const layoffNews: NewsItem[] = [
     departments: "K12业务",
     source: "媒体报道",
     verified: true,
+    viewCount: 3654,
     detail: `**裁员规模**：约40%，K12业务全面收缩\n\n**赔偿方案**：仅N\n\n**争议**：\n部分员工认为仅给N不合规，已组织集体协商。公司后续将部分调整为N+1。\n\n**建议**：\n面对低于法定标准的赔偿，建议：\n1. 不签字，要求书面方案\n2. 收集证据（录音、邮件）\n3. 咨询劳动法律师\n4. 必要时申请劳动仲裁\n\n**来源**：多家教育行业媒体报道`,
   },
   {
@@ -139,6 +148,7 @@ export const layoffNews: NewsItem[] = [
     departments: "自营物流",
     source: "内部消息",
     verified: false,
+    viewCount: 1543,
     detail: `**裁员规模**：约20%，自营物流部门为主\n\n**赔偿方案**：N+1\n\n**原因**：物流业务转型，部分仓储和配送岗位优化\n\n⚠️ 该信息来源有限，尚未完全核实`,
   },
   {
@@ -152,6 +162,7 @@ export const layoffNews: NewsItem[] = [
     departments: "商业化部门",
     source: "多名员工确认",
     verified: true,
+    viewCount: 2789,
     detail: `**裁员规模**：约15%，商业化部门为主\n\n**赔偿方案**：N+2（较优厚）\n\n**背景**：\nAI商业化落地不及预期，公司调整战略方向，收缩to B销售团队。\n\n**亮点**：\n- 赔偿方案高于行业平均\n- 提供免费职业咨询\n- 内推其他AI公司机会\n\n**来源**：多名被裁员工确认，整体评价较好`,
   },
   {
@@ -165,6 +176,7 @@ export const layoffNews: NewsItem[] = [
     departments: "海外业务",
     source: "脉脉爆料",
     verified: false,
+    viewCount: 432,
     detail: `**裁员规模**：约10%，海外业务团队\n\n**赔偿方案**：N+1\n\n**原因**：海外市场拓展受阻，战略收缩\n\n⚠️ 该信息仅来自社交平台爆料，尚未得到官方确认`,
   },
 ];
@@ -232,6 +244,7 @@ HR给的方案是N，也就是5个月工资。我当时很震惊，但还是保�
     category: "经验分享",
     date: "2026-03-18",
     likes: 128,
+    viewCount: 1823,
     comments: [
       { id: 1, nickname: "前端小白", content: "谢谢分享！请问谈判的时候是一个人去还是可以带人？", date: "2026-03-18", likes: 12 },
       { id: 2, nickname: "Java老司机", content: "我也是大厂5年，去年被裁只拿了N+1，早看到你的帖子就好了", date: "2026-03-19", likes: 8 },
@@ -287,6 +300,7 @@ HR说"对背调好"是常见话术，实际上：
     category: "避坑指南",
     date: "2026-03-15",
     likes: 256,
+    viewCount: 4102,
     comments: [
       { id: 1, nickname: "运营小伙", content: "太惨了...已分享给身边所有朋友", date: "2026-03-15", likes: 23 },
       { id: 2, nickname: "HR转行者", content: "作为前HR说一句，确实不要写辞职报告，这是很多公司压低赔偿的手段", date: "2026-03-16", likes: 45 },
@@ -361,6 +375,7 @@ HR说"对背调好"是常见话术，实际上：
     category: "仲裁经验",
     date: "2026-03-10",
     likes: 342,
+    viewCount: 4987,
     comments: [
       { id: 1, nickname: "打工人A", content: "太详细了！我正在准备仲裁，这个帖子帮了大忙", date: "2026-03-11", likes: 18 },
       { id: 2, nickname: "法律小白", content: "请问仲裁要去公司所在地还是自己住的地方？", date: "2026-03-11", likes: 5 },
@@ -422,6 +437,7 @@ HR说"对背调好"是常见话术，实际上：
     category: "再就业",
     date: "2026-03-05",
     likes: 89,
+    viewCount: 756,
     comments: [
       { id: 1, nickname: "求职中", content: "正在经历被裁的迷茫期，看到你的帖子感觉好多了", date: "2026-03-06", likes: 7 },
     ],
@@ -474,6 +490,7 @@ HR说"对背调好"是常见话术，实际上：
     category: "经验分享",
     date: "2026-03-01",
     likes: 67,
+    viewCount: 543,
     comments: [
       { id: 1, nickname: "北漂打工人", content: "请问补缴的话购房资格的连续月份会重新计算吗？", date: "2026-03-02", likes: 3 },
       { id: 2, nickname: "测试老陈", content: "回复@北漂打工人：是的，北京购房要求连续60个月，灵活就业补缴不算连续", date: "2026-03-02", likes: 6 },
@@ -542,6 +559,7 @@ HR说"对背调好"是常见话术，实际上：
     category: "仲裁经验",
     date: "2026-02-25",
     likes: 456,
+    viewCount: 3215,
     comments: [
       { id: 1, nickname: "被裁的小明", content: "勇气可嘉！请问录音作为证据合法吗？", date: "2026-02-26", likes: 12 },
       { id: 2, nickname: "后端小赵", content: "回复@被裁的小明：合法的，只要你是对话的参与者，在非涉密场所录音是可以的", date: "2026-02-26", likes: 20 },

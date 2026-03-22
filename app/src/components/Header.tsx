@@ -3,13 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Logo from "./Logo";
+
 
 const navItems = [
   { label: "首页", href: "/" },
   { label: "权益工具", href: "/tools" },
   { label: "维权百科", href: "/guides" },
-  { label: "AI模拟", href: "/ai-simulation" },
+  { label: "AI裁员模拟", href: "/ai-simulation" },
   { label: "牛马保护站", href: "/community" },
 
 ];
@@ -22,7 +22,7 @@ export function Header() {
       <nav className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Logo size={28} />
+          <img src="/logo.png" alt="裁了么" width={28} height={28} className="rounded" />
           <span className="text-xl font-bold tracking-tight">裁了么<span className="text-sm font-normal text-gray-400 ml-1">牛马保护站</span></span>
         </Link>
 

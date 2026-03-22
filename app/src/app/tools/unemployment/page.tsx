@@ -127,6 +127,23 @@ export default function UnemploymentCalculator() {
               <div className="mt-4 p-3 bg-accent/5 rounded-xl">
                 <p className="text-sm text-accent">{result.notes}</p>
               </div>
+
+              {(() => {
+                const ci = getCityByCode(city);
+                return ci?.unemploymentUrl ? (
+                  <div className="mt-3 p-3 bg-surface rounded-xl flex items-center justify-between">
+                    <span className="text-sm text-gray-600">🏛️ {result.cityName}失业金申领官网</span>
+                    <a
+                      href={ci.unemploymentUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-accent font-medium hover:underline"
+                    >
+                      前往申领 →
+                    </a>
+                  </div>
+                ) : null;
+              })()}
             </motion.div>
           )}
         </motion.div>
@@ -141,6 +158,7 @@ export default function UnemploymentCalculator() {
                   <th className="pb-2 font-medium">城市</th>
                   <th className="pb-2 font-medium">月标准</th>
                   <th className="pb-2 font-medium">说明</th>
+                  <th className="pb-2 font-medium">官网</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -149,6 +167,11 @@ export default function UnemploymentCalculator() {
                     <td className="py-2 font-medium">{c.name}</td>
                     <td className="py-2 text-accent">{fmt(c.unemploymentBase)}</td>
                     <td className="py-2 text-gray-500 text-xs">{c.unemploymentNotes}</td>
+                    <td className="py-2">
+                      {c.unemploymentUrl ? (
+                        <a href={c.unemploymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline">查看 →</a>
+                      ) : <span className="text-xs text-gray-300">-</span>}
+                    </td>
                   </tr>
                 ))}
               </tbody>

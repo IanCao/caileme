@@ -359,7 +359,11 @@ export default function SeveranceCalculator() {
                     key={opt.key}
                     onClick={() => {
                       setSituation(opt.key);
-                      if (opt.key === "illegal") setShowIllegalInfo(true);
+                      if (opt.key === "illegal") {
+                        setShowIllegalInfo(true);
+                      } else {
+                        setShowIllegalInfo(false);
+                      }
                     }}
                     className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
                       situation === opt.key
@@ -454,9 +458,9 @@ export default function SeveranceCalculator() {
               {/* 饼图展示 */}
               {(() => {
                 const parts: { label: string; value: number; color: string }[] = [];
-                parts.push({ label: result.recommended, value: result.recommendedAmount, color: "#1a1a1a" });
-                if (result.annualLeavePay > 0) parts.push({ label: "年假补偿", value: result.annualLeavePay, color: "#0071e3" });
-                if (result.taxAmount > 0) parts.push({ label: "个税扣除", value: result.taxAmount, color: "#ff3b30" });
+                parts.push({ label: result.recommended, value: result.recommendedAmount, color: "#a3d9a5" });
+                if (result.annualLeavePay > 0) parts.push({ label: "年假补偿", value: result.annualLeavePay, color: "#93c5fd" });
+                if (result.taxAmount > 0) parts.push({ label: "个税扣除", value: result.taxAmount, color: "#fca5a5" });
                 const total = parts.reduce((s, p) => s + p.value, 0);
                 if (total <= 0) return null;
 
@@ -484,14 +488,14 @@ export default function SeveranceCalculator() {
                     <div className="flex items-center justify-center gap-8">
                       <svg viewBox="0 0 100 100" className="w-32 h-32">
                         {slices.map((s, i) => (
-                          <path key={i} d={s.d} fill={s.color} opacity={s.label === "个税扣除" ? 0.5 : 1} />
+                          <path key={i} d={s.d} fill={s.color} />
                         ))}
                         <circle cx="50" cy="50" r="20" fill="white" />
                       </svg>
                       <div className="space-y-2">
                         {slices.map((s, i) => (
                           <div key={i} className="flex items-center gap-2">
-                            <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: s.color, opacity: s.label === "个税扣除" ? 0.5 : 1 }} />
+                            <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: s.color }} />
                             <span className="text-xs text-gray-600">{s.label}</span>
                             <span className="text-xs font-medium">{s.pct}%</span>
                             <span className="text-xs text-gray-400">{fmt(s.value)}</span>
@@ -502,6 +506,17 @@ export default function SeveranceCalculator() {
                   </div>
                 );
               })()}
+
+              {/* N与+1计算说明 */}
+              {result.isCapped && (
+                <div className="mb-6 p-4 bg-amber-50 border border-amber-100 rounded-xl">
+                  <h4 className="text-sm font-semibold text-amber-800 mb-2">⚠️ N 与 +1 的计算基数不同</h4>
+                  <div className="text-xs text-amber-700 space-y-1.5 leading-relaxed">
+                    <p><strong>N（经济补偿金）</strong>：受社平工资3倍上限限制，按 {fmt(result.effectiveSalary)}/月 计算，且年限上限12年</p>
+                    <p><strong>+1（代通知金）</strong>：<span className="font-bold">不受3倍上限限制</span>，按实际月平均工资 {fmt(result.avgSalary)}/月 计算</p>
+                  </div>
+                </div>
+              )}
 
               {/* 详细信息 */}
               <div className="space-y-3 mb-6">

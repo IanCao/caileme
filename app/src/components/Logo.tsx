@@ -1,8 +1,4 @@
-interface LogoProps {
-  size?: number;
-}
-
-export default function Logo({ size = 32 }: LogoProps) {
+export default function Logo({ size = 32 }: { size?: number }) {
   return (
     <svg
       width={size}
@@ -11,41 +7,30 @@ export default function Logo({ size = 32 }: LogoProps) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Red shield */}
+      {/* Shield */}
       <path
-        d="M32 2L6 14v22c0 16 11 26 26 30 15-4 26-14 26-30V14L32 2z"
-        fill="#CC0000"
-        stroke="#8B0000"
-        strokeWidth="2"
-        strokeLinejoin="round"
+        d="M32 4L8 15v18c0 15 10.5 24.5 24 28 13.5-3.5 24-13 24-28V15L32 4z"
+        fill="#34C759"
+        rx="4"
       />
-
-      {/* Gold hammer and sickle — classic crossed layout */}
-      <g transform="translate(32, 34)">
-        {/* Sickle blade */}
-        <path
-          d="M-2,-15 C-11,-10 -14,-1 -9,8 C-5,14 2,17 8,15 C4,16 -3,12 -6,6 C-9,0 -7,-7 -2,-12 Z"
-          fill="#FFD700"
-        />
-        {/* Sickle handle */}
-        <rect
-          x="6" y="13" width="4" height="3" rx="1"
-          fill="#FFD700"
-          transform="rotate(-20 8 14.5)"
-        />
-
-        {/* Hammer handle (diagonal) */}
-        <rect
-          x="-1.8" y="-1" width="3.6" height="22" rx="1.8"
-          fill="#FFD700"
-          transform="rotate(45 0 0)"
-        />
-        {/* Hammer head */}
-        <rect
-          x="-7.5" y="-4" width="15" height="5.5" rx="1.2"
-          fill="#FFD700"
-          transform="rotate(45 0 0) translate(0,-1.5)"
-        />
+      {/* Bull/ox silhouette */}
+      <g fill="#fff">
+        {/* Horns */}
+        <path d="M18 24c0-4 3-8 6-10l1.5 2.5C23 18.5 21.5 21 22 24h-4z" />
+        <path d="M46 24c0-4-3-8-6-10l-1.5 2.5C41 18.5 42.5 21 42 24h4z" />
+        {/* Head */}
+        <ellipse cx="32" cy="30" rx="10" ry="9" />
+        {/* Eyes */}
+        <ellipse cx="27.5" cy="28.5" rx="1.5" ry="1.5" fill="#34C759" />
+        <ellipse cx="36.5" cy="28.5" rx="1.5" ry="1.5" fill="#34C759" />
+        {/* Nostrils */}
+        <ellipse cx="29.5" cy="33" rx="1.2" ry="1" fill="#34C759" />
+        <ellipse cx="34.5" cy="33" rx="1.2" ry="1" fill="#34C759" />
+        {/* Ears */}
+        <ellipse cx="20" cy="25" rx="3" ry="2" transform="rotate(-30 20 25)" />
+        <ellipse cx="44" cy="25" rx="3" ry="2" transform="rotate(30 44 25)" />
+        {/* Body */}
+        <path d="M22 37c0 0 2 8 10 8s10-8 10-8c-2 2-6 3-10 3s-8-1-10-3z" />
       </g>
     </svg>
   );

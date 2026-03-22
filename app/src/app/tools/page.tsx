@@ -56,21 +56,21 @@ const moreTools = [
 const officialResources = [
   {
     title: "12333 劳动保障热线",
-    desc: "全国人力资源和社会保障服务热线，免费咨询劳动权益、社保、失业金等问题。",
+    desc: "全国统一服务热线，免费咨询劳动权益、社保、失业金等",
     icon: "📞",
     action: "拨打 12333",
     actionType: "phone" as const,
   },
   {
-    title: "全国法律援助热线",
-    desc: "免费法律咨询服务，经济困难的劳动者可申请免费法律援助代理。",
+    title: "12348 法律援助热线",
+    desc: "免费法律咨询，经济困难者可申请免费律师代理",
     icon: "⚖️",
     action: "拨打 12348",
     actionType: "phone" as const,
   },
   {
     title: "中国裁判文书网",
-    desc: "查阅各地劳动争议判例，了解类似案例的判决结果，为仲裁和诉讼提供参考。",
+    desc: "查阅劳动争议判例，了解类似案件判决结果",
     icon: "📋",
     action: "访问网站",
     actionType: "link" as const,
@@ -78,15 +78,15 @@ const officialResources = [
   },
   {
     title: "全国劳动仲裁委查询",
-    desc: "查找你所在城市的劳动人事争议仲裁委员会地址和联系方式。",
+    desc: "查找你所在城市的劳动仲裁委地址和联系方式",
     icon: "🏛️",
     action: "查询入口",
     actionType: "link" as const,
     href: "http://www.mohrss.gov.cn",
   },
   {
-    title: "国家信访局网上投诉",
-    desc: "当劳动仲裁和诉讼都无法解决问题时，可通过网上信访平台反映情况。",
+    title: "国家信访局投诉平台",
+    desc: "劳动仲裁和诉讼都无法解决时的最后申诉渠道",
     icon: "📝",
     action: "访问平台",
     actionType: "link" as const,
@@ -94,10 +94,34 @@ const officialResources = [
   },
   {
     title: "工会法律服务",
-    desc: "各地工会为会员提供免费法律咨询和援助，帮助维护劳动权益。",
+    desc: "各地工会为会员提供免费法律咨询和援助",
     icon: "🤝",
     action: "联系当地工会",
     actionType: "info" as const,
+  },
+  {
+    title: "劳动法全文查询",
+    desc: "《劳动合同法》《劳动法》等法律法规全文在线查阅",
+    icon: "📖",
+    action: "查看法律",
+    actionType: "link" as const,
+    href: "https://flk.npc.gov.cn",
+  },
+  {
+    title: "全国社保查询平台",
+    desc: "国家社会保险公共服务平台，查询个人社保缴费记录",
+    icon: "🔍",
+    action: "查询社保",
+    actionType: "link" as const,
+    href: "http://si.12333.gov.cn",
+  },
+  {
+    title: "法律援助中心查询",
+    desc: "查找最近的法律援助中心，获取免费法律服务",
+    icon: "🏢",
+    action: "查询地址",
+    actionType: "link" as const,
+    href: "https://www.12348.gov.cn",
   },
 ];
 
@@ -169,12 +193,12 @@ export default function ToolsPage() {
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
             <span>🏛️</span> 官方维权资源
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {officialResources.map((res, i) => (
-              <div key={i} className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100">
-                <div className="text-2xl sm:text-3xl mb-3">{res.icon}</div>
-                <h3 className="font-semibold text-base mb-1">{res.title}</h3>
-                <p className="text-gray-500 text-xs sm:text-sm leading-relaxed mb-3">{res.desc}</p>
+              <div key={i} className="bg-white rounded-xl p-4 border border-gray-100">
+                <div className="text-2xl mb-2">{res.icon}</div>
+                <h3 className="font-semibold text-sm mb-1">{res.title}</h3>
+                <p className="text-gray-500 text-xs leading-relaxed mb-2">{res.desc}</p>
                 {res.actionType === 'link' ? (
                   <a
                     href={res.href}

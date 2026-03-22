@@ -2,7 +2,7 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "服务条款",
-  description: "裁了么 共济社区 服务条款",
+  description: "裁了么 牛马保护站 服务条款",
 };
 
 export default function TermsPage() {
@@ -13,7 +13,7 @@ export default function TermsPage() {
         <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 text-sm text-gray-600 space-y-6 leading-relaxed">
           <section>
             <h2 className="text-lg font-semibold text-black mb-3">一、服务说明</h2>
-            <p>裁了么 共济社区（以下简称"本站"，域名：caileme.team）是一个提供裁员相关信息和工具的公益性平台。本站提供的所有工具和内容仅供参考，不构成法律建议。</p>
+            <p>裁了么 牛马保护站（以下简称"本站"，域名：caileme.team）是一个提供裁员相关信息和工具的公益性平台。本站提供的所有工具和内容仅供参考，不构成法律建议。</p>
           </section>
           <section>
             <h2 className="text-lg font-semibold text-black mb-3">二、法律合规声明</h2>

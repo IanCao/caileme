@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "关于我们 - 裁了么 共济社区",
-  description: "裁了么共济社区是一个帮助打工人应对裁员的工具平台。",
+  title: "关于我们 - 裁了么 牛马保护站",
+  description: "裁了么牛马保护站是一个帮助打工人应对裁员的工具平台。",
 };
 
 export default function AboutPage() {
@@ -10,7 +10,7 @@ export default function AboutPage() {
     <div className="min-h-screen bg-surface">
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <h1 className="text-3xl md:text-4xl font-bold text-center">
-          关于裁了么 共济社区
+          关于裁了么 牛马保护站
         </h1>
         <p className="mt-4 text-gray-500 text-center text-lg">
           让每一个打工人都能体面地应对裁员
@@ -21,7 +21,7 @@ export default function AboutPage() {
             <h2 className="text-xl font-bold mb-4">🎯 我们的使命</h2>
             <p className="text-sm text-gray-600 leading-relaxed">
               在裁员频繁的时代，很多人在收到裁员通知时不知所措，不了解自己的权益，也不知道如何争取合理赔偿。
-              <strong>裁了么 共济社区</strong>
+              <strong>裁了么 牛马保护站</strong>
               致力于提供专业的裁员信息、实用工具和行动指南，帮助每一位打工人在裁员面前都能从容应对。
             </p>
           </div>

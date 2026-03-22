@@ -4,9 +4,15 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  layoffNews, communityPosts, newsCities, postCategories,
-  type NewsItem,
+  layoffNews, communityPosts, newsCities,
+  type NewsItem, type CommunityPost,
 } from '@/data/communityData';
+
+type FeedItem =
+  | { type: 'news'; tag: '裁员情报'; data: NewsItem }
+  | { type: 'post'; tag: string; data: CommunityPost };
+
+const allTags = ['全部', '裁员情报', '经验分享', '避坑指南', '仲裁经验', '再就业'];
 
 function NewsModal({ item, onClose }: { item: NewsItem; onClose: () => void }) {
   useEffect(() => {
@@ -83,9 +89,8 @@ function NewsModal({ item, onClose }: { item: NewsItem; onClose: () => void }) {
 }
 
 export default function CommunityPage() {
-  const [activeTab, setActiveTab] = useState<'news' | 'posts'>('news');
+  const [activeTag, setActiveTag] = useState('全部');
   const [selectedCity, setSelectedCity] = useState('全部');
-  const [selectedCategory, setSelectedCategory] = useState('全部');
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
   const [showGroupToast, setShowGroupToast] = useState(false);
 
@@ -96,13 +101,20 @@ export default function CommunityPage() {
     }
   }, [showGroupToast]);
 
-  const filteredNews = selectedCity === '全部'
-    ? layoffNews
-    : layoffNews.filter(n => n.city === selectedCity);
+  const allItems: FeedItem[] = [
+    ...layoffNews.map((n): FeedItem => ({ type: 'news', tag: '裁员情报', data: n })),
+    ...communityPosts.map((p): FeedItem => ({ type: 'post', tag: p.category, data: p })),
+  ].sort((a, b) => {
+    const da = a.type === 'news' ? a.data.date : a.data.date;
+    const db = b.type === 'news' ? b.data.date : b.data.date;
+    return db.localeCompare(da);
+  });
 
-  const filteredPosts = selectedCategory === '全部'
-    ? communityPosts
-    : communityPosts.filter(p => p.category === selectedCategory);
+  const filteredItems = allItems.filter((item) => {
+    if (activeTag !== '全部' && item.tag !== activeTag) return false;
+    if (activeTag === '裁员情报' && selectedCity !== '全部' && item.type === 'news' && item.data.city !== selectedCity) return false;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-surface">
@@ -110,31 +122,45 @@ export default function CommunityPage() {
         <div className="text-center">
           <h1 className="text-3xl md:text-4xl font-bold">社区广场</h1>
           <p className="mt-3 text-gray-500 text-base md:text-lg">
-            裁员情报 · 经历分享 · 互助交流
+            裁员情报 · 经验分享 · 互助交流
           </p>
         </div>
 
-        {/* Tab */}
-        <div className="mt-8 flex justify-center">
-          <div className="inline-flex bg-white rounded-full p-1 border border-gray-200 shadow-sm">
+        {/* Tags */}
+        <div className="mt-8 flex flex-wrap justify-center gap-2">
+          {allTags.map((tag) => (
             <button
-              onClick={() => setActiveTab('news')}
-              className={`px-5 sm:px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                activeTab === 'news' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'
+              key={tag}
+              onClick={() => { setActiveTag(tag); setSelectedCity('全部'); }}
+              className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                activeTag === tag
+                  ? 'bg-black text-white shadow-sm'
+                  : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-400'
               }`}
             >
-              📰 裁员情报
+              {tag}
             </button>
-            <button
-              onClick={() => setActiveTab('posts')}
-              className={`px-5 sm:px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                activeTab === 'posts' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'
-              }`}
-            >
-              💬 经历分享
-            </button>
-          </div>
+          ))}
         </div>
+
+        {/* City sub-filter for 裁员情报 */}
+        {activeTag === '裁员情报' && (
+          <div className="mt-4 flex flex-wrap justify-center gap-1.5">
+            {newsCities.map((city) => (
+              <button
+                key={city}
+                onClick={() => setSelectedCity(city)}
+                className={`px-3 py-1 rounded-full text-xs transition-colors ${
+                  selectedCity === city
+                    ? 'bg-gray-700 text-white'
+                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                }`}
+              >
+                {city}
+              </button>
+            ))}
+          </div>
+        )}
 
         {/* 操作按钮 */}
         <div className="mt-6 flex flex-wrap justify-center gap-3">
@@ -144,14 +170,12 @@ export default function CommunityPage() {
           >
             ✏️ 匿名投稿
           </Link>
-          {activeTab === 'news' && (
-            <Link
-              href="/community/proof"
-              className="inline-flex items-center gap-1.5 border border-gray-300 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors"
-            >
-              📋 提交裁员证明
-            </Link>
-          )}
+          <Link
+            href="/community/proof"
+            className="inline-flex items-center gap-1.5 border border-gray-300 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors"
+          >
+            📋 提交裁员证明
+          </Link>
           <button
             onClick={() => setShowGroupToast(true)}
             className="inline-flex items-center gap-1.5 bg-green-500 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
@@ -160,108 +184,61 @@ export default function CommunityPage() {
           </button>
         </div>
 
-        {/* 裁员情报 */}
-        {activeTab === 'news' && (
-          <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {newsCities.map((city) => (
+        {/* Unified Feed */}
+        <div className="mt-8 space-y-4">
+          {filteredItems.length === 0 ? (
+            <div className="text-center py-12 text-gray-400 text-sm">暂无相关内容</div>
+          ) : (
+            filteredItems.map((item) =>
+              item.type === 'news' ? (
                 <button
-                  key={city}
-                  onClick={() => setSelectedCity(city)}
-                  className={`px-3 py-1 rounded-full text-xs sm:text-sm transition-colors ${
-                    selectedCity === city
-                      ? 'bg-black text-white'
-                      : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-400'
-                  }`}
+                  key={`news-${item.data.id}`}
+                  onClick={() => setSelectedNews(item.data)}
+                  className="w-full text-left bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer"
                 >
-                  {city}
-                </button>
-              ))}
-            </div>
-            <div className="mt-6 space-y-4">
-              {filteredNews.length === 0 ? (
-                <div className="text-center py-12 text-gray-400 text-sm">暂无该城市的裁员情报</div>
-              ) : (
-                filteredNews.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setSelectedNews(item)}
-                    className="w-full text-left bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                        <h3 className="font-semibold text-base sm:text-lg">{item.company}</h3>
-                        {item.verified ? (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">已核实</span>
-                        ) : (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700">待核实</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-xs sm:text-sm text-gray-400">{item.date}</span>
-                        <span className="text-gray-300">›</span>
-                      </div>
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-danger/10 text-danger font-medium">裁员情报</span>
+                      <h3 className="font-semibold text-base">{item.data.company}</h3>
+                      {item.data.verified && (
+                        <span className="text-xs px-1.5 py-0.5 rounded-full bg-success/10 text-success">✓ 已核实</span>
+                      )}
                     </div>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3">
-                      <span className="text-xs px-2 py-0.5 bg-surface rounded-lg text-gray-600">{item.city}</span>
-                      <span className="text-xs px-2 py-0.5 bg-surface rounded-lg text-gray-600">{item.industry}</span>
-                      <span className="text-xs px-2 py-0.5 bg-danger/5 rounded-lg text-danger">裁员 {item.ratio}</span>
-                      <span className="text-xs px-2 py-0.5 bg-accent/5 rounded-lg text-accent">赔偿 {item.compensation}</span>
-                    </div>
-                    <div className="text-xs sm:text-sm text-gray-500">
-                      <span>涉及：{item.departments}</span>
-                      <span className="mx-2">·</span>
-                      <span>来源：{item.source}</span>
-                    </div>
-                  </button>
-                ))
-              )}
-            </div>
-          </motion.div>
-        )}
-
-        {/* 经历分享 */}
-        {activeTab === 'posts' && (
-          <motion.div key="posts" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-            <div className="mt-8 flex flex-wrap gap-2">
-              {postCategories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs sm:text-sm transition-colors ${
-                    selectedCategory === cat
-                      ? 'bg-black text-white'
-                      : 'bg-white border border-gray-200 text-gray-600 hover:border-gray-400'
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-            <div className="mt-6 space-y-4">
-              {filteredPosts.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/community/post/${post.id}`}
-                  className="block bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all"
-                >
-                  <div className="flex items-center gap-2 sm:gap-3 mb-3">
-                    <span className="text-lg">{post.avatar}</span>
-                    <span className="text-xs font-medium text-gray-600">{post.nickname}</span>
-                    <span className="text-xs px-2.5 py-0.5 rounded-full bg-accent/10 text-accent">{post.category}</span>
-                    <span className="text-xs text-gray-400 ml-auto">{post.date}</span>
+                    <span className="text-xs text-gray-400 flex-shrink-0">{item.data.date}</span>
                   </div>
-                  <h3 className="font-semibold text-base sm:text-lg mb-2">{post.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{post.summary}</p>
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="text-xs text-gray-400">💬 {post.comments.length} 条评论</span>
-                    <span className="text-xs text-gray-400">�� {post.likes}</span>
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    <span className="text-xs px-2 py-0.5 bg-surface rounded text-gray-500">{item.data.city}</span>
+                    <span className="text-xs px-2 py-0.5 bg-surface rounded text-gray-500">{item.data.industry}</span>
+                    <span className="text-xs px-2 py-0.5 bg-danger/5 rounded text-danger">裁员 {item.data.ratio}</span>
+                    <span className="text-xs px-2 py-0.5 bg-accent/5 rounded text-accent">赔偿 {item.data.compensation}</span>
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    涉及：{item.data.departments} · 来源：{item.data.source}
+                  </div>
+                </button>
+              ) : (
+                <Link
+                  key={`post-${item.data.id}`}
+                  href={`/community/post/${item.data.id}`}
+                  className="block bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all"
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium">{item.data.category}</span>
+                    <span className="text-sm">{item.data.avatar}</span>
+                    <span className="text-xs text-gray-500">{item.data.nickname}</span>
+                    <span className="text-xs text-gray-400 ml-auto">{item.data.date}</span>
+                  </div>
+                  <h3 className="font-semibold text-base mb-1.5">{item.data.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{item.data.summary}</p>
+                  <div className="mt-3 flex items-center gap-4 text-xs text-gray-400">
+                    <span>💬 {item.data.comments.length} 条评论</span>
+                    <span>👍 {item.data.likes}</span>
                   </div>
                 </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
+              )
+            )
+          )}
+        </div>
 
         {/* 底部 */}
         <div className="mt-10 p-5 sm:p-6 bg-white rounded-2xl border border-gray-100 text-center">

@@ -6,11 +6,11 @@ import { FeedbackButton } from "@/components/FeedbackButton";
 
 export const metadata: Metadata = {
   title: {
-    default: "裁了么 共济社区 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
-    template: "%s | 裁了么 共济社区",
+    default: "裁了么 牛马保护站 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
+    template: "%s | 裁了么 牛马保护站",
   },
   description:
-    "裁了么共济社区是一个帮助打工人应对裁员的工具平台。提供裁员赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI裁员模拟等功能，帮助你争取合理赔偿，顺利过渡。",
+    "裁了么牛马保护站是一个帮助打工人应对裁员的工具平台。提供裁员赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI裁员模拟等功能，帮助你争取合理赔偿，顺利过渡。",
   keywords: [
     "裁员赔偿",
     "N+1",
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "AI裁员模拟",
     "裁了么",
   ],
-  authors: [{ name: "裁了么 共济社区" }],
+  authors: [{ name: "裁了么 牛马保护站" }],
   alternates: {
     canonical: "https://caileme.team",
   },
@@ -36,11 +36,11 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "裁了么 共济社区 - 裁员不是终点，而是下一段旅程的开始",
+    title: "裁了么 牛马保护站 - 裁员不是终点，而是下一段旅程的开始",
     description:
       "裁员赔偿计算器、失业金计算、维权百科、AI模拟裁员谈话。帮助你应对裁员，争取合理赔偿。",
     url: "https://caileme.team",
-    siteName: "裁了么 共济社区",
+    siteName: "裁了么 牛马保护站",
     locale: "zh_CN",
     type: "website",
     images: [
@@ -48,13 +48,13 @@ export const metadata: Metadata = {
         url: "https://caileme.team/og-image.png",
         width: 1200,
         height: 630,
-        alt: "裁了么 共济社区 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
+        alt: "裁了么 牛马保护站 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "裁了么 共济社区 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
+    title: "裁了么 牛马保护站 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
     description:
       "裁员赔偿计算器、失业金计算、维权百科、AI模拟裁员谈话。帮助你应对裁员，争取合理赔偿。",
     images: ["https://caileme.team/og-image.png"],
@@ -77,9 +77,9 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": "https://caileme.team/#website",
       url: "https://caileme.team",
-      name: "裁了么 共济社区",
+      name: "裁了么 牛马保护站",
       description:
-        "裁了么共济社区是一个帮助打工人应对裁员的工具平台。提供裁员赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI裁员模拟等功能。",
+        "裁了么牛马保护站是一个帮助打工人应对裁员的工具平台。提供裁员赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI裁员模拟等功能。",
       inLanguage: "zh-CN",
       potentialAction: {
         "@type": "SearchAction",
@@ -90,7 +90,7 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": "https://caileme.team/#organization",
-      name: "裁了么 共济社区",
+      name: "裁了么 牛马保护站",
       url: "https://caileme.team",
       logo: {
         "@type": "ImageObject",

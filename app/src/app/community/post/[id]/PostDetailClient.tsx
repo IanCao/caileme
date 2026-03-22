@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { allCommunityPosts } from '@/data/communityData';
+import { trackView, likePost } from '@/lib/api';
 
 export default function PostDetailClient({ params }: { params: { id: string } }) {
   const postId = params.id;
@@ -13,6 +14,27 @@ export default function PostDetailClient({ params }: { params: { id: string } })
   const [commentNickname, setCommentNickname] = useState('');
   const [commentSubmitting, setCommentSubmitting] = useState(false);
   const [commentSubmitted, setCommentSubmitted] = useState(false);
+
+  const [likes, setLikes] = useState(post?.likes ?? 0);
+  const [liked, setLiked] = useState(false);
+  const [likeAnimating, setLikeAnimating] = useState(false);
+  const viewTracked = useRef(false);
+
+  // Track view on mount (once)
+  useEffect(() => {
+    if (post && !viewTracked.current) {
+      viewTracked.current = true;
+      trackView(post.id);
+    }
+  }, [post]);
+
+  // Restore liked state from localStorage
+  useEffect(() => {
+    if (post) {
+      const stored = localStorage.getItem(`liked_${post.id}`);
+      if (stored === '1') setLiked(true);
+    }
+  }, [post]);
 
   useEffect(() => {
     if (showCommentToast) {
@@ -108,7 +130,27 @@ export default function PostDetailClient({ params }: { params: { id: string } })
 
           {/* 点赞 */}
           <div className="mt-6 flex items-center gap-4">
-            <span className="text-sm text-gray-500">👍 {post.likes} 人觉得有用</span>
+            <motion.button
+              onClick={async () => {
+                if (liked) return;
+                setLiked(true);
+                setLikes(prev => prev + 1);
+                setLikeAnimating(true);
+                localStorage.setItem(`liked_${post.id}`, '1');
+                setTimeout(() => setLikeAnimating(false), 300);
+                await likePost(post.id);
+              }}
+              animate={likeAnimating ? { scale: [1, 1.25, 1] } : {}}
+              transition={{ duration: 0.3 }}
+              className={`inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-full transition-colors ${
+                liked
+                  ? 'bg-blue-100 text-blue-600 cursor-default'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 cursor-pointer'
+              }`}
+              disabled={liked}
+            >
+              👍 {likes} 人觉得有用
+            </motion.button>
           </div>
 
           {/* 评论区 */}

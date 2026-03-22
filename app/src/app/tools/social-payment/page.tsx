@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { cityPolicies, getCityByCode } from "@/data/cityPolicies";
 import CitySelector from "@/components/CitySelector";
@@ -15,6 +16,14 @@ export default function SocialPaymentPage() {
     () => getCityByCode(cityCode) ?? cityPolicies[0],
     [cityCode]
   );
+  const [showShareCard, setShowShareCard] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
+
+  const minBase = Math.round(cityInfo.avgSalary * 0.6);
+  const pensionMonthly = Math.round(minBase * 0.2);
+  const medicalMonthly = Math.round(minBase * 0.08);
+  const totalMonthly = pensionMonthly + medicalMonthly;
 
   return (
     <div className="min-h-screen bg-surface">
@@ -80,6 +89,14 @@ export default function SocialPaymentPage() {
                     <p>• 医疗保险费率：各地不同，通常为缴费基数的6%-10%</p>
                     <p className="mt-1 text-accent">💡 建议：经济压力大时可按最低基数缴纳，保持社保连续性最重要</p>
                   </div>
+
+                  {/* 分享按钮 */}
+                  <button
+                    onClick={() => setShowShareCard(true)}
+                    className="mt-4 w-full bg-black text-white py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+                  >
+                    📤 分享结果
+                  </button>
                 </div>
               </div>
             </div>
@@ -227,6 +244,134 @@ export default function SocialPaymentPage() {
             ⚠️ 免责声明：各城市社保政策不同，且政策会定期调整。以上信息仅供参考，具体情况请咨询{cityInfo.name}社保局（热线12333）或专业律师。
           </p>
         </div>
+
+        {/* 分享卡片弹窗 */}
+        <AnimatePresence>
+          {showShareCard && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+              onClick={(e) => { if (e.target === e.currentTarget) setShowShareCard(false); }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white rounded-2xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto"
+              >
+                {/* 可截图的卡片区域 */}
+                <div ref={shareCardRef} style={{
+                  width: 400,
+                  background: "#ffffff",
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+                  padding: 0,
+                }}>
+                  <div style={{ padding: "28px 28px 24px" }}>
+                    {/* Logo + Brand */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                      <img src="/logo.png" width="32" height="32" style={{ borderRadius: 8 }} />
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1d1d1f", letterSpacing: -0.3 }}>裁了么</div>
+                        <div style={{ fontSize: 11, color: "#86868b" }}>社保缴纳计算结果</div>
+                      </div>
+                    </div>
+
+                    {/* City */}
+                    <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 20 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, color: "#86868b" }}>城市</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{cityInfo.name}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: "#86868b" }}>最低缴费基数</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>¥{fmt(minBase)}/月</span>
+                      </div>
+                    </div>
+
+                    {/* Insurance Items */}
+                    <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 20 }}>
+                      <div style={{ fontSize: 13, color: "#86868b", marginBottom: 12 }}>每月缴费明细（灵活就业）</div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, color: "#1d1d1f" }}>🛡️ 养老保险（20%）</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>¥{fmt(pensionMonthly)}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: "#1d1d1f" }}>🏥 医疗保险（8%）</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>¥{fmt(medicalMonthly)}</span>
+                      </div>
+                    </div>
+
+                    {/* Hero Total */}
+                    <div style={{ textAlign: "center" as const, marginBottom: 24 }}>
+                      <div style={{ fontSize: 13, color: "#86868b", marginBottom: 4 }}>每月合计缴费</div>
+                      <div style={{ fontSize: 44, fontWeight: 700, color: "#1d1d1f", letterSpacing: -2, lineHeight: 1 }}>¥{fmt(totalMonthly)}</div>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: "#86868b", marginTop: 8 }}>按最低基数 · 灵活就业社保</div>
+                    </div>
+
+                    {/* Footer */}
+                    <div style={{ borderTop: "1px solid #e5e5e7", paddingTop: 16, textAlign: "center" as const }}>
+                      <div style={{ fontSize: 12, color: "#86868b" }}>
+                        裁了么 · caileme.team
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 操作按钮（不在截图区域内） */}
+                <div style={{ padding: "0 24px 20px", display: "flex", gap: 12 }}>
+                  <button
+                    onClick={async () => {
+                      if (!shareCardRef.current) return;
+                      try {
+                        const html2canvas = (await import("html2canvas")).default;
+                        const canvas = await html2canvas(shareCardRef.current, {
+                          scale: 2,
+                          backgroundColor: "#ffffff",
+                          useCORS: true,
+                        });
+                        const link = document.createElement("a");
+                        link.download = "裁了么-社保缴纳计算结果.png";
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                      } catch (e) {
+                        console.error("Failed to generate image:", e);
+                      }
+                    }}
+                    style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "#0071e3", color: "#ffffff", fontSize: 14, fontWeight: 500, border: "none", cursor: "pointer" }}
+                  >
+                    💾 保存为图片
+                  </button>
+                  <button
+                    onClick={() => {
+                      const lines = [
+                        "【裁了么 · 社保缴纳计算结果】",
+                        `城市：${cityInfo.name}`,
+                        `最低缴费基数：¥${fmt(minBase)}/月`,
+                        `养老保险（20%）：¥${fmt(pensionMonthly)}/月`,
+                        `医疗保险（8%）：¥${fmt(medicalMonthly)}/月`,
+                        `每月合计：¥${fmt(totalMonthly)}`,
+                        "——裁了么 · caileme.team",
+                      ];
+                      const text = lines.join("\n");
+                      navigator.clipboard.writeText(text).then(() => {
+                        setShareCopied(true);
+                        setTimeout(() => setShareCopied(false), 2000);
+                      });
+                    }}
+                    style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "transparent", color: "#424245", fontSize: 14, fontWeight: 500, border: "1px solid #d2d2d7", cursor: "pointer" }}
+                  >
+                    {shareCopied ? "✅ 已复制" : "📋 复制文本"}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

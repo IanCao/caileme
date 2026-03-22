@@ -261,7 +261,7 @@ export default function LayoffTrackerPage() {
 
       {/* Share Card Modal */}
       {showShareCard && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowShareCard(false); }}>
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -278,10 +278,12 @@ export default function LayoffTrackerPage() {
             </div>
 
             {/* Share Card Content */}
+            <div className="overflow-x-auto flex justify-center">
             <div
               ref={shareCardRef}
               style={{
                 width: 400,
+                minWidth: 400,
                 background: "#ffffff",
                 borderRadius: 20,
                 overflow: "hidden",
@@ -354,9 +356,10 @@ export default function LayoffTrackerPage() {
                 </div>
               </div>
             </div>
+            </div>
 
             {/* Action buttons */}
-            <div className="flex gap-3 mt-4">
+            <div className="flex flex-col sm:flex-row gap-3 mt-4">
               <button
                 onClick={async () => {
                   try {

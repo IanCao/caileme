@@ -17,9 +17,21 @@ export default function FeedbackPage() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<{ description?: string; email?: string; type?: string }>({});
+
+  const validate = () => {
+    const newErrors: typeof errors = {};
+    if (!type) newErrors.type = "请选择反馈类型";
+    if (!description.trim()) newErrors.description = "请输入反馈内容";
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      newErrors.email = "请输入有效的邮箱地址";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validate()) return;
     setSubmitting(true);
 
     try {
@@ -126,7 +138,7 @@ export default function FeedbackPage() {
               <button
                 key={t}
                 type="button"
-                onClick={() => setType(t)}
+                onClick={() => { setType(t); setErrors((prev) => ({ ...prev, type: undefined })); }}
                 className={`px-4 py-2 text-sm rounded-full border transition-all duration-200 ${
                   type === t
                     ? "bg-[#0071e3] text-white border-[#0071e3]"
@@ -137,6 +149,7 @@ export default function FeedbackPage() {
               </button>
             ))}
           </div>
+          {errors.type && <p className="mt-1 text-xs text-red-500">{errors.type}</p>}
         </div>
 
         {/* Description */}
@@ -150,12 +163,13 @@ export default function FeedbackPage() {
           <textarea
             id="description"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => { setDescription(e.target.value); setErrors((prev) => ({ ...prev, description: undefined })); }}
             required
             rows={5}
             placeholder="请描述您的建议或遇到的问题..."
             className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm leading-relaxed placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] transition-all duration-200 resize-none bg-white"
           />
+          {errors.description && <p className="mt-1 text-xs text-red-500">{errors.description}</p>}
         </div>
 
         {/* Email */}
@@ -171,10 +185,11 @@ export default function FeedbackPage() {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setErrors((prev) => ({ ...prev, email: undefined })); }}
             placeholder="您的邮箱，方便我们回复您"
             className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 focus:border-[#0071e3] transition-all duration-200 bg-white"
           />
+          {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
         </div>
 
         {/* Submit */}

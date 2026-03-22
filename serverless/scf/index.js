@@ -10,11 +10,13 @@ const PATH_MAP = {
   "/submit": "/api/community/submit",
   "/comment": "/api/comment",
   "/like": "/api/like",
+  "/view": "/api/view",
   // 带 /api 前缀的也支持（直连时）
   "/api/feedback": "/api/feedback",
   "/api/community/submit": "/api/community/submit",
   "/api/comment": "/api/comment",
   "/api/like": "/api/like",
+  "/api/view": "/api/view",
 };
 
 exports.main_handler = async (event, context) => {

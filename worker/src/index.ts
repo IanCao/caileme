@@ -5,6 +5,7 @@
 //   POST   /api/feedback             - 提交反馈
 //   POST   /api/community/submit     - 提交社区帖子
 //   POST   /api/comment              - 提交评论
+//   POST   /api/view                 - 浏览计数
 //   POST   /api/like                 - 点赞
 // ==========================================
 
@@ -94,6 +95,25 @@ async function submitComment(env: Env, request: Request) {
   return json({ success: true, message: "评论提交成功，审核通过后将展示" }, 201);
 }
 
+async function trackView(env: Env, request: Request) {
+  let body: Record<string, string | undefined>;
+  try { body = await request.json(); } catch { return err("Invalid JSON"); }
+
+  const { postId, postType } = body;
+  if (!postId) return err("必填字段：postId");
+
+  const validTypes = ["community_post", "news"];
+  const safeType = validTypes.includes(postType || "") ? postType : "community_post";
+
+  if (safeType === "community_post") {
+    await env.DB.prepare(
+      "UPDATE community_posts SET view_count = view_count + 1 WHERE id = ?"
+    ).bind(postId).run();
+  }
+
+  return json({ success: true });
+}
+
 async function submitLike(env: Env, request: Request) {
   let body: Record<string, string | undefined>;
   try { body = await request.json(); } catch { return err("Invalid JSON"); }
@@ -140,6 +160,7 @@ export default {
       if (path === "/api/feedback" && method === "POST") return submitFeedback(env, request);
       if (path === "/api/community/submit" && method === "POST") return submitCommunityPost(env, request);
       if (path === "/api/comment" && method === "POST") return submitComment(env, request);
+      if (path === "/api/view" && method === "POST") return trackView(env, request);
       if (path === "/api/like" && method === "POST") return submitLike(env, request);
 
       return err("Not found", 404);

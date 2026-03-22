@@ -207,15 +207,54 @@ export function InteractiveSimulation() {
     }
 
     // Navigate to next step
+    // Helper: show next HR dialogue step with options
+    const showNextStep = (step: DialogueStep) => {
+      setCurrentStepId(step.id);
+      setTimeout(() => {
+        setIsTyping(true);
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            { role: step.role, content: step.message },
+          ]);
+          setIsTyping(false);
+          if (step.options && step.options.length > 0) {
+            setTimeout(() => setShowOptions(true), 400);
+          }
+        }, 800);
+      }, 1000);
+    };
+
     if (option.nextStepId) {
       const nextStep = selectedScenario?.dialogues.find(
         (d) => d.id === option.nextStepId
       );
       if (nextStep) {
-        setCurrentStepId(nextStep.id);
-
         if (nextStep.nextStepId === null && !nextStep.options) {
-          // End step (system message)
+          // End step reached — but if rounds remain, loop back
+          if (newRoundCount < maxRounds && selectedScenario) {
+            const stepsWithOptions = selectedScenario.dialogues.filter(
+              (d) => d.options && d.options.length > 0 && d.id !== currentStepId
+            );
+            if (stepsWithOptions.length > 0) {
+              // Show the end message, then continue with a new dialogue step
+              setTimeout(() => {
+                setIsTyping(true);
+                setTimeout(() => {
+                  setMessages((prev) => [
+                    ...prev,
+                    { role: "system", content: nextStep.message },
+                  ]);
+                  setIsTyping(false);
+                  // Pick a random step with options to continue
+                  const loopStep = stepsWithOptions[Math.floor(Math.random() * stepsWithOptions.length)];
+                  setTimeout(() => showNextStep(loopStep), 800);
+                }, 600);
+              }, 800);
+              return;
+            }
+          }
+          // No more rounds or no steps to loop — end
           setTimeout(() => {
             setIsTyping(true);
             setTimeout(() => {
@@ -228,20 +267,7 @@ export function InteractiveSimulation() {
             }, 600);
           }, 800);
         } else {
-          // Next HR message
-          setTimeout(() => {
-            setIsTyping(true);
-            setTimeout(() => {
-              setMessages((prev) => [
-                ...prev,
-                { role: nextStep.role, content: nextStep.message },
-              ]);
-              setIsTyping(false);
-              if (nextStep.options && nextStep.options.length > 0) {
-                setTimeout(() => setShowOptions(true), 400);
-              }
-            }, 800);
-          }, 1000);
+          showNextStep(nextStep);
         }
       }
     }
@@ -412,7 +438,7 @@ export function InteractiveSimulation() {
 
         {/* Share Card Modal */}
         {showShareCard && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={(e) => { if (e.target === e.currentTarget) setShowShareCard(false); }}>
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -429,10 +455,12 @@ export function InteractiveSimulation() {
               </div>
 
               {/* Share Card Content */}
+              <div className="overflow-x-auto flex justify-center">
               <div
                 ref={shareCardRef}
                 style={{
                   width: 400,
+                  minWidth: 400,
                   background: "#ffffff",
                   borderRadius: 20,
                   overflow: "hidden",
@@ -491,9 +519,10 @@ export function InteractiveSimulation() {
                   </div>
                 </div>
               </div>
+              </div>
 
               {/* Action buttons */}
-              <div className="flex gap-3 mt-4">
+              <div className="flex flex-col sm:flex-row gap-3 mt-4">
                 <button
                   onClick={async () => {
                     try {

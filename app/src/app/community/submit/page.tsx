@@ -357,10 +357,10 @@ export default function SubmitPage() {
               <p className="text-sm text-gray-500">
                 也可以直接发送邮件到{" "}
                 <a
-                  href="mailto:submit@caileme.com?subject=社区投稿"
+                  href="mailto:submit@caileme.team?subject=社区投稿"
                   className="text-[#0071e3] hover:underline font-medium"
                 >
-                  submit@caileme.com
+                  submit@caileme.team
                 </a>
                 ，附上截图和详细信息
               </p>

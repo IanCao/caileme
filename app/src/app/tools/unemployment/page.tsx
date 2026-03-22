@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cityPolicies, getCityByCode, getUnemploymentMonths } from "@/data/cityPolicies";
 import CitySelector from "@/components/CitySelector";
 
@@ -16,6 +16,9 @@ export default function UnemploymentCalculator() {
     cityName: string;
     notes: string;
   }>(null);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   const calculate = () => {
     const years = parseFloat(insuranceYears);
@@ -149,6 +152,14 @@ export default function UnemploymentCalculator() {
                   </div>
                 ) : null;
               })()}
+
+              {/* 分享按钮 */}
+              <button
+                onClick={() => setShowShareCard(true)}
+                className="mt-4 w-full bg-black text-white py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                📤 分享结果
+              </button>
             </motion.div>
           )}
         </motion.div>
@@ -236,6 +247,133 @@ export default function UnemploymentCalculator() {
             ⚠️ 免责声明：各城市失业金标准每年调整，本计算器数据仅供参考。实际金额请以当地社保局公布的最新标准为准。
           </p>
         </div>
+
+        {/* 分享卡片弹窗 */}
+        <AnimatePresence>
+          {showShareCard && result && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+              onClick={(e) => { if (e.target === e.currentTarget) setShowShareCard(false); }}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                className="bg-white rounded-2xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto"
+              >
+                {/* 可截图的卡片区域 */}
+                <div ref={shareCardRef} style={{
+                  width: 400,
+                  background: "#ffffff",
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif",
+                  boxShadow: "0 20px 60px rgba(0,0,0,0.12)",
+                  padding: 0,
+                }}>
+                  <div style={{ padding: "28px 28px 24px" }}>
+                    {/* Logo + Brand */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 28 }}>
+                      <img src="/logo.png" width="32" height="32" style={{ borderRadius: 8 }} />
+                      <div>
+                        <div style={{ fontSize: 16, fontWeight: 700, color: "#1d1d1f", letterSpacing: -0.3 }}>裁了么</div>
+                        <div style={{ fontSize: 11, color: "#86868b" }}>失业金估算结果</div>
+                      </div>
+                    </div>
+
+                    {/* Info Section */}
+                    <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 20 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, color: "#86868b" }}>城市</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{result.cityName}</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                        <span style={{ fontSize: 13, color: "#86868b" }}>失业保险缴纳年限</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{insuranceYears}年</span>
+                      </div>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: "#86868b" }}>最长领取月数</span>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>{result.totalMonths}个月</span>
+                      </div>
+                    </div>
+
+                    {/* Hero Amount */}
+                    <div style={{ textAlign: "center" as const, marginBottom: 24 }}>
+                      <div style={{ fontSize: 13, color: "#86868b", marginBottom: 4 }}>每月失业金</div>
+                      <div style={{ fontSize: 44, fontWeight: 700, color: "#1d1d1f", letterSpacing: -2, lineHeight: 1 }}>{fmt(result.monthlyAmount)}</div>
+                      <div style={{ fontSize: 14, fontWeight: 500, color: "#86868b", marginTop: 8 }}>{result.cityName}2026年标准</div>
+                    </div>
+
+                    {/* Total Estimate */}
+                    <div style={{ background: "#f5f5f7", borderRadius: 14, padding: "16px 18px", marginBottom: 24 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span style={{ fontSize: 13, color: "#86868b" }}>预计总金额</span>
+                        <span style={{ fontSize: 15, fontWeight: 700, color: "#1d1d1f" }}>{fmt(result.totalAmount)}</span>
+                      </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div style={{ borderTop: "1px solid #e5e5e7", paddingTop: 16, textAlign: "center" as const }}>
+                      <div style={{ fontSize: 12, color: "#86868b" }}>
+                        裁了么 · caileme.team
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 操作按钮（不在截图区域内） */}
+                <div style={{ padding: "0 24px 20px", display: "flex", gap: 12 }}>
+                  <button
+                    onClick={async () => {
+                      if (!shareCardRef.current) return;
+                      try {
+                        const html2canvas = (await import("html2canvas")).default;
+                        const canvas = await html2canvas(shareCardRef.current, {
+                          scale: 2,
+                          backgroundColor: "#ffffff",
+                          useCORS: true,
+                        });
+                        const link = document.createElement("a");
+                        link.download = "裁了么-失业金估算结果.png";
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                      } catch (e) {
+                        console.error("Failed to generate image:", e);
+                      }
+                    }}
+                    style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "#0071e3", color: "#ffffff", fontSize: 14, fontWeight: 500, border: "none", cursor: "pointer" }}
+                  >
+                    💾 保存为图片
+                  </button>
+                  <button
+                    onClick={() => {
+                      const lines = [
+                        "【裁了么 · 失业金估算结果】",
+                        `城市：${result.cityName}`,
+                        `缴纳年限：${insuranceYears}年`,
+                        `每月失业金：${fmt(result.monthlyAmount)}`,
+                        `可领取月数：${result.totalMonths}个月`,
+                        `预计总金额：${fmt(result.totalAmount)}`,
+                        "——裁了么 · caileme.team",
+                      ];
+                      const text = lines.join("\n");
+                      navigator.clipboard.writeText(text).then(() => {
+                        setShareCopied(true);
+                        setTimeout(() => setShareCopied(false), 2000);
+                      });
+                    }}
+                    style={{ flex: 1, padding: "10px 0", borderRadius: 12, backgroundColor: "transparent", color: "#424245", fontSize: 14, fontWeight: 500, border: "1px solid #d2d2d7", cursor: "pointer" }}
+                  >
+                    {shareCopied ? "✅ 已复制" : "📋 复制文本"}
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

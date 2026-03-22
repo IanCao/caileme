@@ -14,16 +14,16 @@ const tools = [
     icon: "🧮",
   },
   {
+    title: "裁员维权进度追踪器",
+    desc: "全流程清单管理，从收到通知到仲裁维权，一步步守护你的权益。",
+    href: "/layoff-tracker",
+    icon: "📋",
+  },
+  {
     title: "失业金计算器",
     desc: "覆盖全国20+城市2026年最新标准，预估每月领取金额和时长。",
     href: "/tools/unemployment",
     icon: "💰",
-  },
-  {
-    title: "社保断缴影响",
-    desc: "了解社保断缴对医保、购房、落户、购车的影响及应对方案。",
-    href: "/tools/social-insurance",
-    icon: "🛡️",
   },
 ];
 
@@ -212,9 +212,9 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <FadeInSection className="text-center mb-12 md:mb-16">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">裁员情报</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">保护站信息</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
-              关注行业最新被裁信息
+              裁了么社区最新动态
             </p>
           </FadeInSection>
 

@@ -118,7 +118,7 @@ export default function CommunityPage() {
     <div className="min-h-screen bg-surface">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 md:py-20">
         <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-bold">社区广场</h1>
+          <h1 className="text-3xl md:text-4xl font-bold">保护站信息</h1>
           <p className="mt-3 text-gray-500 text-base md:text-lg">
             被裁情报 · 经验分享 · 互助交流
           </p>

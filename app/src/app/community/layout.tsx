@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "社区广场 - 裁员情报与经历分享",
+  title: "保护站信息 - 裁了么社区",
   description:
     "实时追踪互联网行业裁员情报，分享真实裁员经历。覆盖全国20+城市，包含裁员信息、经验分享、避坑指南、仲裁经验等。",
   keywords: ["裁员情报", "裁员经历", "裁员社区", "劳动仲裁", "经验分享"],

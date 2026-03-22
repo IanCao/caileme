@@ -655,11 +655,13 @@ export default function SeveranceCalculator() {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
-                      className="bg-white rounded-2xl shadow-2xl max-w-sm w-full max-h-[90vh] overflow-y-auto"
+                      className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto"
                     >
                       {/* 可截图的卡片区域 */}
+                      <div className="overflow-x-auto flex justify-center" style={{ padding: "24px 24px 0" }}>
                       <div ref={shareCardRef} style={{
                         width: 400,
+                        minWidth: 400,
                         background: "#ffffff",
                         borderRadius: 20,
                         overflow: "hidden",
@@ -728,9 +730,10 @@ export default function SeveranceCalculator() {
                           </div>
                         </div>
                       </div>
+                      </div>
 
                       {/* 操作按钮（不在截图区域内） */}
-                      <div style={{ padding: "0 24px 20px", display: "flex", gap: 12 }}>
+                      <div className="flex flex-col sm:flex-row gap-3" style={{ padding: "12px 24px 20px" }}>
                         <button
                           onClick={async () => {
                             if (!shareCardRef.current) return;

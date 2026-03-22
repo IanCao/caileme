@@ -17,7 +17,11 @@ export async function submitFeedback(data: {
     const res = await fetch(`${API_BASE}/feedback`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({
+        content: data.description,
+        feedback_type: data.type,
+        email: data.email,
+      }),
     });
     if (!res.ok) throw new Error("Network error");
     return await res.json();
@@ -63,6 +67,30 @@ export async function submitComment(data: {
     return await res.json();
   } catch {
     return { success: false, message: "评论失败，请稍后重试" };
+  }
+}
+
+export async function trackView(postId: string): Promise<void> {
+  try {
+    await fetch(`${API_BASE}/view`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, postType: "community_post" }),
+    });
+  } catch {}
+}
+
+export async function likePost(postId: string): Promise<ApiResponse> {
+  try {
+    const res = await fetch(`${API_BASE}/like`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ postId, postType: "community_post" }),
+    });
+    if (!res.ok) throw new Error("Network error");
+    return await res.json();
+  } catch {
+    return { success: false, message: "点赞失败，请稍后重试" };
   }
 }
 

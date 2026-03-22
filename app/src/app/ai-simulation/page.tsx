@@ -48,13 +48,13 @@ export default function AISimulation() {
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-lg">🤖 AI 模拟场景</h3>
+                  <h3 className="font-semibold text-lg">🤖 自由对话场景</h3>
                   <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium">
                     即将上线
                   </span>
                 </div>
                 <p className="text-sm text-gray-500 mt-1">
-                  AI 驱动的自由对话模拟，体验更真实的裁员谈判场景
+                  AI 驱动的自由对话模拟，与虚拟HR进行开放式裁员谈判
                 </p>
               </div>
               <span className="text-accent text-xl">→</span>

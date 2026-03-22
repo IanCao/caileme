@@ -23,6 +23,8 @@ export function Footer() {
               <li><Link href="/tools/unemployment" className="text-sm text-gray-500 hover:text-black transition-colors">失业金计算器</Link></li>
               <li><Link href="/tools/social-insurance" className="text-sm text-gray-500 hover:text-black transition-colors">社保断缴影响</Link></li>
               <li><Link href="/tools/social-payment" className="text-sm text-gray-500 hover:text-black transition-colors">社保缴纳指南</Link></li>
+              <li><Link href="/layoff-tracker" className="text-sm text-gray-500 hover:text-black transition-colors">裁员维权进度追踪</Link></li>
+              <li><Link href="/guides/non-compete" className="text-sm text-gray-500 hover:text-black transition-colors">竞业限制评估</Link></li>
               <li><Link href="/tools" className="text-sm text-gray-500 hover:text-black transition-colors">官方维权资源</Link></li>
             </ul>
           </div>
@@ -44,7 +46,7 @@ export function Footer() {
           <div>
             <h4 className="text-sm font-semibold mb-3">更多</h4>
             <ul className="space-y-2">
-              <li><Link href="/community" className="text-sm text-gray-500 hover:text-black transition-colors">社区广场</Link></li>
+              <li><Link href="/community" className="text-sm text-gray-500 hover:text-black transition-colors">保护站信息</Link></li>
               <li><Link href="/feedback" className="text-sm text-gray-500 hover:text-black transition-colors">意见反馈</Link></li>
               <li><Link href="/about" className="text-sm text-gray-500 hover:text-black transition-colors">关于我们</Link></li>
               <li><Link href="/privacy" className="text-sm text-gray-500 hover:text-black transition-colors">隐私政策</Link></li>

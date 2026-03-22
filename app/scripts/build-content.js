@@ -190,7 +190,7 @@ if (fs.existsSync(contributorsFile)) {
       const itemMatch = line.match(/^\s+-\s+name:\s*"(.+)"/);
       if (itemMatch) {
         if (current) contributors.push(current);
-        current = { name: itemMatch[1], avatar: '', contribution: '' };
+        current = { name: itemMatch[1], avatar: '', contribution: '', link: '' };
         continue;
       }
       if (current) {
@@ -198,6 +198,8 @@ if (fs.existsSync(contributorsFile)) {
         if (avatarMatch) { current.avatar = avatarMatch[1]; continue; }
         const contribMatch = line.match(/^\s+contribution:\s*"(.+)"/);
         if (contribMatch) { current.contribution = contribMatch[1]; continue; }
+        const linkMatch = line.match(/^\s+link:\s*"(.*)"/);
+        if (linkMatch) { current.link = linkMatch[1]; continue; }
       }
     }
     if (current) contributors.push(current);

@@ -95,12 +95,12 @@ function getSummary(
 export function InteractiveSimulation() {
   const [phase, setPhase] = useState<"select" | "play" | "summary">("select");
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
-  const [currentStepId, setCurrentStepId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [totalScore, setTotalScore] = useState(0);
   const [maxScore, setMaxScore] = useState(0);
-  const [roundCount, setRoundCount] = useState(0);
   const [maxRounds, setMaxRounds] = useState(8);
+  const [questionQueue, setQuestionQueue] = useState<DialogueStep[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [showShareCard, setShowShareCard] = useState(false);
@@ -118,44 +118,56 @@ export function InteractiveSimulation() {
     scrollToBottom();
   }, [messages, showOptions]);
 
-  const getCurrentStep = (): DialogueStep | null => {
-    if (!selectedScenario || !currentStepId) return null;
-    return (
-      selectedScenario.dialogues.find((d) => d.id === currentStepId) ?? null
-    );
-  };
-
   const startScenario = (scenario: Scenario) => {
     setSelectedScenario(scenario);
     setPhase("play");
     setMessages([]);
     setTotalScore(0);
     setMaxScore(0);
-    setRoundCount(0);
+    setCurrentQuestionIndex(0);
     setShowOptions(false);
 
-    const firstStep = scenario.dialogues[0];
-    if (firstStep) {
-      setCurrentStepId(firstStep.id);
-      setIsTyping(true);
-      setTimeout(() => {
-        setMessages([{ role: firstStep.role, content: firstStep.message }]);
-        setIsTyping(false);
-        if (firstStep.options && firstStep.options.length > 0) {
-          setTimeout(() => setShowOptions(true), 400);
-        }
-      }, 800);
+    // Collect all question steps (those with options)
+    const questionSteps = scenario.dialogues.filter(d => d.options && d.options.length > 0);
+
+    // Shuffle
+    const shuffled = [...questionSteps].sort(() => Math.random() - 0.5);
+
+    // If not enough questions, cycle with reshuffling
+    let queue: DialogueStep[] = [];
+    while (queue.length < maxRounds) {
+      const remaining = maxRounds - queue.length;
+      queue = [...queue, ...shuffled.slice(0, Math.min(remaining, shuffled.length))];
+      shuffled.sort(() => Math.random() - 0.5);
     }
+    setQuestionQueue(queue);
+
+    // Show first question
+    const firstQ = queue[0];
+    setIsTyping(true);
+    setTimeout(() => {
+      setMessages([{
+        role: "system",
+        content: `开始 ${scenario.title} 模拟谈判，共 ${maxRounds} 轮。请仔细选择每轮的应对策略。`,
+      }]);
+      setIsTyping(false);
+      setTimeout(() => {
+        setIsTyping(true);
+        setTimeout(() => {
+          setMessages(prev => [...prev, { role: "hr", content: firstQ.message }]);
+          setIsTyping(false);
+          setTimeout(() => setShowOptions(true), 400);
+        }, 800);
+      }, 600);
+    }, 800);
   };
 
   const handleOptionSelect = async (option: ResponseOption) => {
     setShowOptions(false);
+    const currentStep = questionQueue[currentQuestionIndex];
+    const bestOption = currentStep.options!.reduce((a, b) => a.score > b.score ? a : b);
     const quality = getQuality(option.score);
-    const bestScore = getCurrentStep()?.options
-      ? Math.max(...(getCurrentStep()!.options!.map((o) => o.score)))
-      : option.score;
-
-    const newRoundCount = roundCount + 1;
+    const bestScore = bestOption.score;
 
     // Add user message
     setMessages((prev) => [...prev, { role: "user", content: option.text }]);
@@ -171,116 +183,77 @@ export function InteractiveSimulation() {
           quality,
         },
       ]);
+
+      // If not the best answer, show what the best answer was
+      if (option.score < bestScore) {
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: `💡 最佳选择应该是："${bestOption.text}"（得分: ${bestOption.score}）\n📝 ${bestOption.feedback}`,
+            },
+          ]);
+        }, 600);
+      }
+
       setTotalScore((prev) => prev + option.score);
       setMaxScore((prev) => prev + bestScore);
-      setRoundCount(newRoundCount);
-    }, 400);
 
-    // Try API first (will fallback to client-side)
-    if (selectedScenario) {
-      getAIResponse({
-        scenarioId: selectedScenario.id,
-        roundIndex: roundCount,
-        userChoice: option.text,
-        history: messages.map((m) => ({
-          role: m.role === "hr" ? "assistant" : "user",
-          content: m.content,
-        })),
-      });
-      // Fire-and-forget for now; use client-side logic regardless
-    }
+      const newIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(newIndex);
 
-    // Check if max rounds reached
-    if (newRoundCount >= maxRounds) {
-      setTimeout(() => {
-        setIsTyping(true);
-        setTimeout(() => {
-          setMessages((prev) => [
-            ...prev,
-            { role: "system", content: `谈判模拟已结束，共进行了 ${maxRounds} 轮对话。感谢你的参与！` },
-          ]);
-          setIsTyping(false);
-          setTimeout(() => setPhase("summary"), 1500);
-        }, 600);
-      }, 800);
-      return;
-    }
-
-    // Navigate to next step
-    // Helper: show next HR dialogue step with options
-    const showNextStep = (step: DialogueStep) => {
-      setCurrentStepId(step.id);
-      setTimeout(() => {
-        setIsTyping(true);
-        setTimeout(() => {
-          setMessages((prev) => [
-            ...prev,
-            { role: step.role, content: step.message },
-          ]);
-          setIsTyping(false);
-          if (step.options && step.options.length > 0) {
-            setTimeout(() => setShowOptions(true), 400);
-          }
-        }, 800);
-      }, 1000);
-    };
-
-    if (option.nextStepId) {
-      const nextStep = selectedScenario?.dialogues.find(
-        (d) => d.id === option.nextStepId
-      );
-      if (nextStep) {
-        if (nextStep.nextStepId === null && !nextStep.options) {
-          // End step reached — but if rounds remain, loop back
-          if (newRoundCount < maxRounds && selectedScenario) {
-            const stepsWithOptions = selectedScenario.dialogues.filter(
-              (d) => d.options && d.options.length > 0 && d.id !== currentStepId
-            );
-            if (stepsWithOptions.length > 0) {
-              // Show the end message, then continue with a new dialogue step
-              setTimeout(() => {
-                setIsTyping(true);
-                setTimeout(() => {
-                  setMessages((prev) => [
-                    ...prev,
-                    { role: "system", content: nextStep.message },
-                  ]);
-                  setIsTyping(false);
-                  // Pick a random step with options to continue
-                  const loopStep = stepsWithOptions[Math.floor(Math.random() * stepsWithOptions.length)];
-                  setTimeout(() => showNextStep(loopStep), 800);
-                }, 600);
-              }, 800);
-              return;
-            }
-          }
-          // No more rounds or no steps to loop — end
-          setTimeout(() => {
-            setIsTyping(true);
-            setTimeout(() => {
-              setMessages((prev) => [
-                ...prev,
-                { role: "system", content: nextStep.message },
-              ]);
-              setIsTyping(false);
-              setTimeout(() => setPhase("summary"), 1500);
-            }, 600);
-          }, 800);
-        } else {
-          showNextStep(nextStep);
-        }
+      // Fire-and-forget AI response (for analytics)
+      if (selectedScenario) {
+        getAIResponse({
+          scenarioId: selectedScenario.id,
+          roundIndex: currentQuestionIndex,
+          userChoice: option.text,
+          history: messages.map((m) => ({
+            role: m.role === "hr" ? "assistant" : "user",
+            content: m.content,
+          })),
+        });
       }
-    }
+
+      // Check if all rounds complete
+      if (newIndex >= maxRounds) {
+        setTimeout(() => {
+          setMessages((prev) => [
+            ...prev,
+            {
+              role: "system",
+              content: `谈判模拟已结束，共进行了 ${maxRounds} 轮对话。`,
+            },
+          ]);
+          setTimeout(() => setPhase("summary"), 1500);
+        }, 1200);
+      } else {
+        // Show next question
+        const nextQ = questionQueue[newIndex];
+        setTimeout(() => {
+          setIsTyping(true);
+          setTimeout(() => {
+            setMessages((prev) => [
+              ...prev,
+              { role: "hr", content: nextQ.message },
+            ]);
+            setIsTyping(false);
+            setTimeout(() => setShowOptions(true), 400);
+          }, 800);
+        }, 1200);
+      }
+    }, 400);
   };
 
   const resetAll = () => {
     setPhase("select");
     setSelectedScenario(null);
-    setCurrentStepId(null);
     setMessages([]);
     setTotalScore(0);
     setMaxScore(0);
-    setRoundCount(0);
+    setQuestionQueue([]);
+    setCurrentQuestionIndex(0);
     setShowOptions(false);
     setIsTyping(false);
   };
@@ -289,13 +262,6 @@ export function InteractiveSimulation() {
   if (phase === "select") {
     return (
       <div className="space-y-6">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold">🎭 互动模拟场景</h2>
-          <p className="mt-2 text-gray-500">
-            选择一个场景，AI扮演HR与你实时互动
-          </p>
-        </div>
-
         {/* Round selector */}
         <div className="flex items-center justify-center gap-3">
           <span className="text-sm text-gray-500 font-medium">谈判轮次</span>
@@ -375,7 +341,7 @@ export function InteractiveSimulation() {
         >
           <div className="text-5xl font-bold">{pct}%</div>
           <div className="mt-1 text-white/80 text-sm">
-            得分 {totalScore} / {maxScore}（共 {roundCount} 轮选择）
+            得分 {totalScore} / {maxScore}（共 {maxRounds} 轮选择）
           </div>
         </div>
 
@@ -581,7 +547,7 @@ export function InteractiveSimulation() {
   }
 
   // Play screen
-  const currentStep = getCurrentStep();
+  const currentQuestion = questionQueue[currentQuestionIndex];
 
   return (
     <div className="space-y-4">
@@ -596,7 +562,7 @@ export function InteractiveSimulation() {
         {selectedScenario && (
           <div className="flex items-center gap-2">
             <span className="text-sm text-gray-400">
-              第 {Math.min(roundCount + 1, maxRounds)}/{maxRounds} 轮
+              第 {Math.min(currentQuestionIndex + 1, maxRounds)}/{maxRounds} 轮
             </span>
             <span className="text-sm text-gray-300">·</span>
             <span className="text-sm text-gray-400">
@@ -723,7 +689,7 @@ export function InteractiveSimulation() {
           )}
 
           {/* Options */}
-          {showOptions && currentStep?.options && (
+          {showOptions && currentQuestion?.options && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -732,7 +698,7 @@ export function InteractiveSimulation() {
               <p className="text-xs text-gray-400 text-center mb-2">
                 选择你的回应：
               </p>
-              {currentStep.options.map((option) => (
+              {currentQuestion.options.map((option) => (
                 <button
                   key={option.id}
                   onClick={() => handleOptionSelect(option)}

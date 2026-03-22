@@ -10,3 +10,8 @@ dist/
 .dev.vars
 app/commu.png
 app/logo.png
+
+# Generated build artifacts (rebuilt from MD source files)
+app/src/data/generatedPosts.json
+app/src/data/generatedNews.json
+app/src/data/generatedContributors.json

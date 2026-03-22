@@ -65,3 +65,22 @@ export async function submitComment(data: {
     return { success: false, message: "评论失败，请稍后重试" };
   }
 }
+
+export async function getAIResponse(data: {
+  scenarioId: string;
+  roundIndex: number;
+  userChoice: string;
+  history: { role: string; content: string }[];
+}): Promise<{ hrResponse: string; feedback: string; score: number } | null> {
+  try {
+    const res = await fetch(`${API_BASE}/ai-simulation`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("Network error");
+    return await res.json();
+  } catch {
+    return null; // fallback to client-side logic
+  }
+}

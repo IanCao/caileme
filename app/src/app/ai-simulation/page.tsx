@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+import { InteractiveSimulation } from "@/components/InteractiveSimulation";
 
 interface Message {
   role: "hr" | "user" | "system";
@@ -131,7 +132,7 @@ export default function AISimulation() {
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(0);
   const [selectedRounds, setSelectedRounds] = useState<number>(10);
-  const [showDevToast, setShowDevToast] = useState(false);
+  const [showInteractive, setShowInteractive] = useState(false);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const chatAreaRef = useRef<HTMLDivElement>(null);
 
@@ -157,13 +158,6 @@ export default function AISimulation() {
     }
   }, [visibleCount]);
 
-  useEffect(() => {
-    if (showDevToast) {
-      const timer = setTimeout(() => setShowDevToast(false), 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [showDevToast]);
-
   const startScenario = (key: string) => {
     setSelectedScenario(key);
     setVisibleCount(0);
@@ -188,7 +182,7 @@ export default function AISimulation() {
         </motion.div>
 
         {/* 场景选择 */}
-        {!selectedScenario && (
+        {!selectedScenario && !showInteractive && (
           <motion.div
             className="mt-12 space-y-4"
             initial={{ opacity: 0, y: 20 }}
@@ -218,35 +212,36 @@ export default function AISimulation() {
 
             {/* 互动模拟场景按钮 */}
             <button
-              onClick={() => setShowDevToast(true)}
-              className="w-full text-left bg-gradient-to-r from-accent/5 to-purple-50 rounded-2xl p-6 border-2 border-dashed border-accent/30 hover:border-accent/60 transition-colors"
+              onClick={() => setShowInteractive(true)}
+              className="w-full text-left bg-gradient-to-r from-accent/5 to-purple-50 rounded-2xl p-6 border-2 border-accent/20 hover:border-accent/50 hover:shadow-md transition-all duration-200"
             >
               <div className="flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="font-semibold text-lg">🎭 互动模拟场景</h3>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium">即将上线</span>
+                    <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium">NEW</span>
                   </div>
                   <p className="text-sm text-gray-500 mt-1">
-                    自由对话模式，AI扮演HR与你实时互动，根据你的回答给出专业建议
+                    5大裁员场景自由对话，选择你的回应，获得即时反馈和评分
                   </p>
                 </div>
-                <span className="text-accent text-xl">✨</span>
+                <span className="text-accent text-xl">→</span>
               </div>
             </button>
           </motion.div>
         )}
 
-        {/* 开发中提示 Toast */}
-        {showDevToast && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium"
-          >
-            🚀 互动模拟场景正在开发中，敬请期待！
-          </motion.div>
+        {/* 互动模拟界面 */}
+        {showInteractive && !selectedScenario && (
+          <div className="mt-8">
+            <button
+              onClick={() => setShowInteractive(false)}
+              className="mb-6 text-sm text-gray-500 hover:text-black transition-colors"
+            >
+              ← 返回选择模式
+            </button>
+            <InteractiveSimulation />
+          </div>
         )}
 
         {/* 对话界面 */}

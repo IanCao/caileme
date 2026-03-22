@@ -2,14 +2,55 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "劳动仲裁流程指南 - 从申请到开庭全流程",
+  title: "劳动仲裁流程指南 - 从申请到开庭胜诉全流程 | 裁了么",
   description:
-    "劳动仲裁怎么申请？需要什么材料？流程是什么？这份指南帮你了解劳动仲裁全流程。",
+    "劳动仲裁详细流程：申请条件、所需材料、开庭流程、时间周期、费用说明。附仲裁申请书模板和常见问题解答。2026年最新劳动仲裁指南，帮你成功维权。",
+  keywords: [
+    "劳动仲裁流程",
+    "劳动仲裁怎么申请",
+    "劳动仲裁需要什么材料",
+    "劳动仲裁时间",
+    "劳动仲裁费用",
+    "仲裁申请书模板",
+    "裁员仲裁",
+  ],
 };
 
 export default function ArbitrationGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "劳动仲裁流程指南 - 从申请到开庭全流程",
+              description:
+                "劳动仲裁怎么申请？需要什么材料？流程是什么？这份指南帮你了解劳动仲裁全流程。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/arbitration",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "劳动仲裁流程指南", item: "https://caileme.team/guides/arbitration" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
           <Link href="/guides" className="hover:text-black transition-colors">裁员指南</Link>

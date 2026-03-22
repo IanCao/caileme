@@ -48,6 +48,8 @@ const guides = [
 export default function HomePage() {
   return (
     <div>
+      <h1 className="sr-only">裁了么 - 裁员赔偿计算器、失业金计算、维权指南、AI裁员模拟</h1>
+
       {/* Hero Section — CSS animations, no JS library needed */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-blue-50" />
@@ -59,13 +61,13 @@ export default function HomePage() {
             🛡️ 打工人的权益保障平台
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight leading-tight text-gray-900 animate-fade-up-delay-1">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight leading-tight text-gray-900 animate-fade-up-delay-1">
             知道权利 才能守住权利
             <br />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-400">
               每个打工人都值得被认真对待
             </span>
-          </h1>
+          </h2>
 
           <p className="mt-6 text-base sm:text-lg md:text-xl text-gray-500 max-w-2xl mx-auto animate-fade-up-delay-2">
             赔偿计算 · 权益指南 · 谈判模拟 · 被裁情报
@@ -252,6 +254,123 @@ export default function HomePage() {
               查看全部情报 →
             </Link>
           </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 md:py-24 bg-surface">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: [
+                {
+                  "@type": "Question",
+                  name: "裁员赔偿N+1是什么意思？",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "N+1是最常见的裁员赔偿标准。N代表工作年限对应的经济补偿月数（每满一年支付一个月工资），+1是指额外支付一个月工资作为代通知金。例如工作3年，N+1就是4个月工资。",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "被裁员当天应该做什么？",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "首先不要签署任何文件，要求公司出具书面裁员通知。立即开始录音取证，拍照保存工牌、工位、考勤记录等。详细记录HR的谈话内容，了解自己的赔偿方案后再做决定。",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "失业金怎么领取？需要什么条件？",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "领取失业金需满足：①累计缴纳失业保险满1年；②非因本人意愿中断就业（被裁员符合条件）；③已办理失业登记。在离职后60天内到当地社保局办理。",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "社保断缴有什么影响？",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "社保断缴主要影响：①医保断缴次月起无法报销（有60-90天缓冲期）；②影响购房资格（需连续缴纳）；③影响落户积分；④养老保险是累计计算，断缴不影响但需累计满15年。",
+                  },
+                },
+                {
+                  "@type": "Question",
+                  name: "裁员和主动辞职的赔偿区别是什么？",
+                  acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "裁员（公司单方面解除劳动合同）：公司需支付N+1或2N经济补偿金。主动辞职：员工无法获得经济补偿。因此千万不要签署辞职信或离职申请，被裁时应要求公司出具解除劳动合同通知书。",
+                  },
+                },
+              ],
+            }),
+          }}
+        />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <FadeInSection className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">常见问题</h2>
+            <p className="mt-4 text-gray-500 text-base sm:text-lg">
+              裁员维权最常被问到的问题
+            </p>
+          </FadeInSection>
+
+          <FadeInSection>
+            <div className="space-y-4">
+              <details className="group bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <summary className="flex items-center justify-between cursor-pointer p-5 sm:p-6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                  <h3 className="text-base sm:text-lg pr-4">裁员赔偿N+1是什么意思？</h3>
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform text-xl flex-shrink-0">▼</span>
+                </summary>
+                <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-gray-600 leading-relaxed">
+                  N+1是最常见的裁员赔偿标准。N代表工作年限对应的经济补偿月数（每满一年支付一个月工资），+1是指额外支付一个月工资作为代通知金。例如工作3年，N+1就是4个月工资。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <summary className="flex items-center justify-between cursor-pointer p-5 sm:p-6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                  <h3 className="text-base sm:text-lg pr-4">被裁员当天应该做什么？</h3>
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform text-xl flex-shrink-0">▼</span>
+                </summary>
+                <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-gray-600 leading-relaxed">
+                  首先不要签署任何文件，要求公司出具书面裁员通知。立即开始录音取证，拍照保存工牌、工位、考勤记录等。详细记录HR的谈话内容，了解自己的赔偿方案后再做决定。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <summary className="flex items-center justify-between cursor-pointer p-5 sm:p-6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                  <h3 className="text-base sm:text-lg pr-4">失业金怎么领取？需要什么条件？</h3>
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform text-xl flex-shrink-0">▼</span>
+                </summary>
+                <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-gray-600 leading-relaxed">
+                  领取失业金需满足：①累计缴纳失业保险满1年；②非因本人意愿中断就业（被裁员符合条件）；③已办理失业登记。在离职后60天内到当地社保局办理。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <summary className="flex items-center justify-between cursor-pointer p-5 sm:p-6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                  <h3 className="text-base sm:text-lg pr-4">社保断缴有什么影响？</h3>
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform text-xl flex-shrink-0">▼</span>
+                </summary>
+                <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-gray-600 leading-relaxed">
+                  社保断缴主要影响：①医保断缴次月起无法报销（有60-90天缓冲期）；②影响购房资格（需连续缴纳）；③影响落户积分；④养老保险是累计计算，断缴不影响但需累计满15年。
+                </div>
+              </details>
+
+              <details className="group bg-white rounded-2xl border border-gray-100 overflow-hidden">
+                <summary className="flex items-center justify-between cursor-pointer p-5 sm:p-6 font-semibold text-gray-900 hover:bg-gray-50 transition-colors">
+                  <h3 className="text-base sm:text-lg pr-4">裁员和主动辞职的赔偿区别是什么？</h3>
+                  <span className="text-gray-400 group-open:rotate-180 transition-transform text-xl flex-shrink-0">▼</span>
+                </summary>
+                <div className="px-5 sm:px-6 pb-5 sm:pb-6 text-gray-600 leading-relaxed">
+                  裁员（公司单方面解除劳动合同）：公司需支付N+1或2N经济补偿金。主动辞职：员工无法获得经济补偿。因此千万不要签署辞职信或离职申请，被裁时应要求公司出具解除劳动合同通知书。
+                </div>
+              </details>
+            </div>
+          </FadeInSection>
         </div>
       </section>
 

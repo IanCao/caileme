@@ -2,14 +2,54 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "被裁后的职业重启指南 - 从低谷到重新出发",
+  title: "被裁后职业重启指南 - 从低谷到重新出发 | 裁了么",
   description:
-    "被裁员不是终点。这份指南从心态调整、简历优化、求职策略、面试准备到灵活就业，帮你系统性地完成职业重启。",
+    "被裁员后如何重新找工作？职业重启完整指南：心态调整、简历优化、面试技巧、如何解释被裁经历、副业方向、转型建议。已帮助数千名打工人成功再就业。",
+  keywords: [
+    "被裁后怎么找工作",
+    "裁员后简历怎么写",
+    "被裁怎么解释",
+    "裁员后面试",
+    "职业重启",
+    "再就业指南",
+  ],
 };
 
 export default function CareerRestartGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "被裁后的职业重启指南",
+              description:
+                "被裁员不是终点。这份指南从心态调整、简历优化、求职策略、面试准备到灵活就业，帮你系统性地完成职业重启。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/career-restart",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "被裁后的职业重启指南", item: "https://caileme.team/guides/career-restart" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">

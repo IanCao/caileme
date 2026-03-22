@@ -2,14 +2,55 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "裁员谈判技巧 - 如何争取更好的赔偿方案",
+  title: "裁员谈判技巧 - 如何争取N+1以上赔偿方案 | 裁了么",
   description:
-    "被裁员怎么跟HR谈判？掌握这些话术和策略，争取更好的赔偿方案。",
+    "裁员谈判实战技巧：如何从N争取到N+1甚至2N赔偿？谈判话术模板、常见HR压价套路应对、赔偿方案对比分析。帮你在裁员谈判中争取最大利益。",
+  keywords: [
+    "裁员谈判技巧",
+    "裁员赔偿谈判",
+    "如何争取更多赔偿",
+    "HR裁员谈判",
+    "N+1谈判",
+    "裁员补偿谈判话术",
+    "被裁怎么谈赔偿",
+  ],
 };
 
 export default function NegotiationGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "裁员谈判技巧 - 如何争取更好的赔偿方案",
+              description:
+                "被裁员怎么跟HR谈判？掌握这些话术和策略，争取更好的赔偿方案。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/negotiation",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "裁员谈判技巧", item: "https://caileme.team/guides/negotiation" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
           <Link href="/guides" className="hover:text-black transition-colors">

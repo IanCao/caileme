@@ -2,14 +2,54 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "竞业限制指南 - 竞业协议、补偿标准、违约金全解析",
+  title: "竞业限制完全指南 - 竞业协议、补偿标准、违约金 | 裁了么",
   description:
-    "竞业限制完全指南：了解竞业限制的法律依据、适用人群、补偿标准（月均工资30%）、最长期限（2年）、违约金合理性评估，以及常见问题解答。",
+    "竞业限制全面解析：竞业协议是否有效？补偿标准是多少？违约金怎么算？哪些情况可以不遵守竞业限制？2026年最新竞业限制法律解读。",
+  keywords: [
+    "竞业限制",
+    "竞业协议",
+    "竞业补偿标准",
+    "竞业违约金",
+    "竞业限制怎么解除",
+    "竞业限制补偿金多少",
+  ],
 };
 
 export default function NonCompeteGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "竞业限制指南 - 竞业协议补偿标准全解析",
+              description:
+                "竞业限制完全指南：了解竞业限制的法律依据、适用人群、补偿标准（月均工资30%）、最长期限（2年）、违约金合理性评估，以及常见问题解答。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/non-compete",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "竞业限制指南", item: "https://caileme.team/guides/non-compete" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">
           <Link href="/guides" className="hover:text-black transition-colors">

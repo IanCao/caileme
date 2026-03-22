@@ -1,15 +1,16 @@
-import { Metadata } from "next";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "离职后社保缴纳指南 - 灵活就业社保、居民社保、代缴方式",
-  description:
-    "离职后如何继续缴纳社保？灵活就业社保、城镇居民社保、社保代缴全解析。了解各地缴费标准、办理流程、注意事项。",
+  title: '灵活就业社保缴纳计算器 - 离职后社保自己交多少钱 | 裁了么',
+  description: '离职后社保自己交多少钱？灵活就业社保缴纳计算器，计算养老保险和医疗保险每月费用。覆盖全国20+城市2026年最新缴费基数。',
+  keywords: ['灵活就业社保', '自己交社保多少钱', '离职后社保怎么交', '灵活就业养老保险', '社保缴纳计算器'],
+  openGraph: {
+    title: '灵活就业社保缴纳计算器',
+    description: '计算离职后自己缴纳社保的每月费用。',
+    url: 'https://caileme.team/tools/social-payment',
+  },
 };
 
-export default function SocialPaymentLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return <>{children}</>;
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return children;
 }

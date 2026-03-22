@@ -2,14 +2,55 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "离职后社保公积金处理 - 完整指南",
+  title: "离职后社保公积金怎么办 - 断缴影响与处理指南 | 裁了么",
   description:
-    "离职后医保断缴怎么办？公积金能提取吗？失业金怎么领？这份指南帮你搞清楚离职后社保公积金的所有问题。",
+    "离职后社保怎么交？公积金怎么提取？完整指南：医保断缴缓冲期、灵活就业参保、失业金申领条件、公积金提取流程。附全国各城市社保政策和办理时间节点。",
+  keywords: [
+    "离职后社保怎么交",
+    "社保断缴怎么办",
+    "公积金提取",
+    "灵活就业社保",
+    "失业金申领条件",
+    "社保转移",
+    "离职后医保",
+  ],
 };
 
 export default function SocialInsuranceGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "离职后社保公积金处理完整指南",
+              description:
+                "离职后医保断缴怎么办？公积金能提取吗？失业金怎么领？这份指南帮你搞清楚离职后社保公积金的所有问题。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/social-insurance-guide",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "离职后社保公积金处理", item: "https://caileme.team/guides/social-insurance-guide" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">

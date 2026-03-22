@@ -2,9 +2,16 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "裁员指南 - 从裁员到再出发的完整攻略",
+  title: "裁员维权百科 - 被裁员怎么办完整攻略 | 裁了么",
   description:
-    "裁员当天怎么办？如何谈判争取更好赔偿？仲裁流程是什么？最全裁员指南帮你避坑。",
+    "最全裁员维权指南：被裁当天怎么办、裁员谈判技巧、劳动仲裁流程、证据收集方法、社保公积金处理、竞业限制解读、职业重启攻略。7篇深度指南帮你从容应对裁员。",
+  keywords: [
+    "裁员指南",
+    "被裁员怎么办",
+    "裁员维权",
+    "劳动法裁员",
+    "裁员赔偿标准",
+  ],
 };
 
 const guides = [

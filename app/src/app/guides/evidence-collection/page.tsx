@@ -2,14 +2,54 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "证据收集完全手册 - 裁员维权必备",
+  title: "裁员证据收集手册 - 录音取证、劳动合同、工资流水 | 裁了么",
   description:
-    "录音是否合法？微信聊天记录能当证据吗？这份手册教你如何正确收集和保全证据，为可能的劳动仲裁做好准备。",
+    "裁员维权证据收集完全手册：录音是否合法？需要哪些证据？劳动合同、工资流水、考勤记录、裁员通知等关键证据的保存方法和注意事项。",
+  keywords: [
+    "裁员证据收集",
+    "裁员录音合法吗",
+    "劳动仲裁需要什么证据",
+    "裁员取证",
+    "劳动合同保存",
+    "工资流水证据",
+  ],
 };
 
 export default function EvidenceCollectionGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "证据收集完全手册 - 裁员维权必备",
+              description:
+                "录音是否合法？微信聊天记录能当证据吗？这份手册教你如何正确收集和保全证据，为可能的劳动仲裁做好准备。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/evidence-collection",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "证据收集完全手册", item: "https://caileme.team/guides/evidence-collection" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">

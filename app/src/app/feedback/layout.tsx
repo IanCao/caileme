@@ -1,8 +1,8 @@
-import { Metadata } from "next";
+import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: "功能反馈 - 帮助我们改进",
-  description: "提交功能建议、内容纠错、数据更新、Bug反馈。你的反馈帮助裁了么牛马保护站变得更好。",
+  title: '意见反馈 - 裁了么',
+  description: '向裁了么提交意见反馈、功能建议或数据纠错。',
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

@@ -5,26 +5,44 @@ import { Footer } from "@/components/Footer";
 import { FeedbackButton } from "@/components/FeedbackButton";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://caileme.team"),
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: "/icon.png",
+    apple: "/logo.png",
+  },
   title: {
-    default: "裁了么 牛马保护站 - 被裁赔偿计算器 | 维权百科 | AI被裁模拟",
-    template: "%s | 裁了么 牛马保护站",
+    default: "裁了么 - 被裁员怎么办？赔偿计算器 | 维权指南 | AI裁员模拟",
+    template: "%s | 裁了么",
   },
   description:
-    "裁了么牛马保护站是一个帮助被裁打工人维权的工具平台。提供被裁赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI被裁模拟等功能，帮助你争取合理赔偿，顺利过渡。",
+    "裁了么是帮助被裁打工人维权的免费工具平台。提供裁员赔偿计算器（N+1/2N）、失业金计算器、社保断缴影响查询、劳动仲裁指南、AI裁员谈判模拟。覆盖全国20+城市2026年最新政策数据，已帮助10000+打工人。",
   keywords: [
     "裁员赔偿",
-    "N+1",
     "裁员赔偿计算器",
+    "N+1赔偿",
+    "2N赔偿",
+    "经济补偿金",
     "失业金计算",
+    "失业金怎么领",
+    "失业保险金",
     "社保断缴",
+    "社保断缴影响",
+    "离职后社保怎么交",
     "裁员指南",
+    "被裁员怎么办",
     "裁员谈判",
+    "劳动仲裁",
+    "劳动仲裁流程",
+    "裁员维权",
     "AI裁员模拟",
     "裁了么",
+    "裁员补偿标准2026",
+    "互联网裁员",
   ],
-  authors: [{ name: "裁了么 牛马保护站" }],
+  authors: [{ name: "裁了么" }],
   alternates: {
-    canonical: "https://caileme.team",
+    canonical: "/",
   },
   verification: {
     google: "GOOGLE_VERIFICATION_CODE",
@@ -45,10 +63,10 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://caileme.team/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "裁了么 牛马保护站 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
+        url: "/logo.png",
+        width: 1416,
+        height: 1402,
+        alt: "裁了么",
       },
     ],
   },
@@ -57,7 +75,7 @@ export const metadata: Metadata = {
     title: "裁了么 牛马保护站 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
     description:
       "裁员赔偿计算器、失业金计算、维权百科、AI模拟裁员谈话。帮助你应对裁员，争取合理赔偿。",
-    images: ["https://caileme.team/og-image.png"],
+    images: ["/logo.png"],
   },
   robots: {
     index: true,
@@ -67,6 +85,9 @@ export const metadata: Metadata = {
     "applicable-device": "pc,mobile",
     renderer: "webkit",
     "force-rendering": "webkit",
+    "apple-mobile-web-app-capable": "yes",
+    "apple-mobile-web-app-status-bar-style": "default",
+    "apple-mobile-web-app-title": "裁了么",
   },
 };
 

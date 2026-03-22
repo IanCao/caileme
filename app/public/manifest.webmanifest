@@ -1,0 +1,14 @@
+{
+  "name": "裁了么 - 被裁员维权工具平台",
+  "short_name": "裁了么",
+  "description": "帮助被裁打工人维权的免费工具平台",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0071e3",
+  "icons": [
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "lang": "zh-CN",
+  "categories": ["utilities", "productivity"]
+}

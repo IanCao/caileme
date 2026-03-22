@@ -2,14 +2,55 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "裁员当天怎么办 - 完整行动清单",
+  title: "被裁员当天怎么办 - 完整行动清单与注意事项 | 裁了么",
   description:
-    "收到裁员通知不要慌。这份清单告诉你裁员当天要做什么、不要做什么，帮你冷静应对，保护自己的权益。",
+    "被裁员当天第一步做什么？完整行动清单：不要签字、录音取证、保存工牌、记录HR谈话内容。了解裁员赔偿标准N+1和2N的区别，避免被HR话术套路。2026年最新裁员应对指南。",
+  keywords: [
+    "被裁员当天怎么办",
+    "裁员当天注意事项",
+    "裁员不要签字",
+    "裁员录音取证",
+    "HR裁员话术",
+    "裁员行动清单",
+    "被裁员第一步",
+  ],
 };
 
 export default function LayoffDayGuide() {
   return (
     <div className="min-h-screen bg-surface">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify([
+            {
+              "@context": "https://schema.org",
+              "@type": "Article",
+              headline: "裁员当天怎么办 - 完整行动清单",
+              description:
+                "收到裁员通知不要慌。这份清单告诉你裁员当天要做什么、不要做什么，帮你冷静应对，保护自己的权益。",
+              author: { "@type": "Organization", name: "裁了么" },
+              publisher: {
+                "@type": "Organization",
+                name: "裁了么",
+                logo: { "@type": "ImageObject", url: "https://caileme.team/logo.png" },
+              },
+              datePublished: "2026-03-01",
+              dateModified: "2026-03-22",
+              mainEntityOfPage: "https://caileme.team/guides/layoff-day",
+            },
+            {
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "首页", item: "https://caileme.team" },
+                { "@type": "ListItem", position: 2, name: "维权百科", item: "https://caileme.team/guides" },
+                { "@type": "ListItem", position: 3, name: "裁员当天怎么办", item: "https://caileme.team/guides/layoff-day" },
+              ],
+            },
+          ]),
+        }}
+      />
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-sm text-gray-400 mb-8">

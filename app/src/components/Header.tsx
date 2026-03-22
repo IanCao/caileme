@@ -23,7 +23,7 @@ export function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <img src="/logo.png" alt="裁了么" width={36} height={36} className="rounded" />
-          <span className="text-xl font-bold tracking-tight">裁了么<span className="text-sm font-normal text-gray-400 ml-1">保护站信息</span></span>
+          <span className="text-xl font-bold tracking-tight">裁了么<span className="text-sm font-normal text-gray-400 ml-1">牛马保护站</span></span>
         </Link>
 
         {/* Desktop Nav */}

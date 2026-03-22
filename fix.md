@@ -72,3 +72,14 @@
 5. AI模拟裁员的对话增加到10轮 可以支持用户自己选择轮次
 6. logo 我想要是线条化的，盾牌是黑边的 里面的牛马是红色的
 7. 功能反馈、匿名投稿、发评论增加下后端腾讯云serverless的接口，然后腾讯云的serverless转发到cloudflare，同时提醒审核通过后就会展示出来
+
+# 第七版FIX
+  1. Severance N vs +1 display: Need to separate N (经济补偿金) and +1 (代通知金) in the 预计到手总额 section. Currently they show together. Need to show them as separate line items with different calculation bases.
+  2. Legal aid → merge into tools: Remove paid legal aid, remove city filter, keep only free resources, merge into tools page.
+  3. Progress tracker → merge into tools: Move layoff-tracker into tools, add links to site tools/content, add local storage notice.
+  4. Homepage subscription: Remove SubscribeBox from homepage.
+  5. AI interactive scenario: Add user interaction scenario (the "即将上线" button should now work).
+  6. Community QR code: Use commu.png from `app/commu.png`, display in community page.
+  7. Wording: Change "裁员" wording to be from workers' perspective ("被裁" not "裁员").
+  8. Logo: Use logo.png from `app/logo.png`.
+  9. Unemployment data fix: Update several city figures—成都 1864→2000+, 武汉 1920→2000+, 西安 needs adjustment.

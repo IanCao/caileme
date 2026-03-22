@@ -9,10 +9,10 @@ import {
 } from '@/data/communityData';
 
 type FeedItem =
-  | { type: 'news'; tag: '裁员情报'; data: NewsItem }
+  | { type: 'news'; tag: '被裁情报'; data: NewsItem }
   | { type: 'post'; tag: string; data: CommunityPost };
 
-const allTags = ['全部', '裁员情报', '经验分享', '避坑指南', '仲裁经验', '再就业'];
+const allTags = ['全部', '被裁情报', '经验分享', '避坑指南', '仲裁经验', '再就业'];
 
 function NewsModal({ item, onClose }: { item: NewsItem; onClose: () => void }) {
   useEffect(() => {
@@ -57,7 +57,7 @@ function NewsModal({ item, onClose }: { item: NewsItem; onClose: () => void }) {
         <div className="flex flex-wrap gap-1.5 mb-4">
           <span className="text-xs px-2.5 py-1 bg-surface rounded-lg text-gray-600">{item.city}</span>
           <span className="text-xs px-2.5 py-1 bg-surface rounded-lg text-gray-600">{item.industry}</span>
-          <span className="text-xs px-2.5 py-1 bg-danger/5 rounded-lg text-danger">裁员 {item.ratio}</span>
+          <span className="text-xs px-2.5 py-1 bg-danger/5 rounded-lg text-danger">被裁 {item.ratio}</span>
           <span className="text-xs px-2.5 py-1 bg-accent/5 rounded-lg text-accent">赔偿 {item.compensation}</span>
         </div>
 
@@ -102,7 +102,7 @@ export default function CommunityPage() {
   }, [showGroupToast]);
 
   const allItems: FeedItem[] = [
-    ...layoffNews.map((n): FeedItem => ({ type: 'news', tag: '裁员情报', data: n })),
+    ...layoffNews.map((n): FeedItem => ({ type: 'news', tag: '被裁情报', data: n })),
     ...communityPosts.map((p): FeedItem => ({ type: 'post', tag: p.category, data: p })),
   ].sort((a, b) => {
     const da = a.type === 'news' ? a.data.date : a.data.date;
@@ -112,7 +112,7 @@ export default function CommunityPage() {
 
   const filteredItems = allItems.filter((item) => {
     if (activeTag !== '全部' && item.tag !== activeTag) return false;
-    if (activeTag === '裁员情报' && selectedCity !== '全部' && item.type === 'news' && item.data.city !== selectedCity) return false;
+    if (activeTag === '被裁情报' && selectedCity !== '全部' && item.type === 'news' && item.data.city !== selectedCity) return false;
     return true;
   });
 
@@ -122,7 +122,7 @@ export default function CommunityPage() {
         <div className="text-center">
           <h1 className="text-3xl md:text-4xl font-bold">社区广场</h1>
           <p className="mt-3 text-gray-500 text-base md:text-lg">
-            裁员情报 · 经验分享 · 互助交流
+            被裁情报 · 经验分享 · 互助交流
           </p>
         </div>
 
@@ -144,7 +144,7 @@ export default function CommunityPage() {
         </div>
 
         {/* City sub-filter for 裁员情报 */}
-        {activeTag === '裁员情报' && (
+        {activeTag === '被裁情报' && (
           <div className="mt-4 flex flex-wrap justify-center gap-1.5">
             {newsCities.map((city) => (
               <button

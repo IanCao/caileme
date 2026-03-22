@@ -4,12 +4,12 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "权益保障工具箱 - 赔偿计算、失业金、社保、法律援助",
   description:
-    "免费裁员工具箱：赔偿计算器、失业金计算器、社保断缴影响查询、法律援助、仲裁指引。覆盖全国20+城市2026年最新数据。",
+    "免费被裁维权工具箱：赔偿计算器、失业金计算器、社保断缴影响查询、法律援助、仲裁指引。覆盖全国20+城市2026年最新数据。",
 };
 
 const calculatorTools = [
   {
-    title: "裁员赔偿计算器",
+    title: "被裁赔偿计算器",
     desc: "输入前12个月收入明细，精准计算N、N+1、2N赔偿金额。自动对比当地社平工资3倍上限，引导你选择适合自己的赔偿方案。",
     href: "/tools/severance",
     icon: "🧮",
@@ -26,7 +26,7 @@ const calculatorTools = [
   },
   {
     title: "社保断缴影响查询",
-    desc: "裁员后社保断缴会影响什么？选择你所在城市，查看医保、购房、落户、购车、生育、养老全方位影响及应对方案。",
+    desc: "被裁后社保断缴会影响什么？选择你所在城市，查看医保、购房、落户、购车、生育、养老全方位影响及应对方案。",
     href: "/tools/social-insurance",
     icon: "🛡️",
     tag: "必看",
@@ -35,6 +35,14 @@ const calculatorTools = [
 ];
 
 const moreTools = [
+  {
+    title: "维权进度追踪",
+    desc: "从收到通知到再就业的全程检查清单。勾选已完成步骤，记录笔记。数据保存在浏览器本地，完全隐私。",
+    href: "/layoff-tracker",
+    icon: "📋",
+    tag: "实用",
+    tagColor: "bg-purple-100 text-purple-700",
+  },
   {
     title: "竞业限制评估",
     desc: "评估竞业限制协议是否合理。了解竞业补偿标准（月均工资30%）、限制期限、违约金合理性等。",
@@ -191,7 +199,7 @@ export default function ToolsPage() {
         {/* 官方资源 */}
         <div className="mt-10 sm:mt-12 space-y-4 sm:space-y-6">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-            <span>🏛️</span> 官方维权资源
+            <span>⚖️</span> 免费法律援助 &amp; 官方资源
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {officialResources.map((res, i) => (

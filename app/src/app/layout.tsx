@@ -6,11 +6,11 @@ import { FeedbackButton } from "@/components/FeedbackButton";
 
 export const metadata: Metadata = {
   title: {
-    default: "裁了么 牛马保护站 - 裁员赔偿计算器 | 维权百科 | AI裁员模拟",
+    default: "裁了么 牛马保护站 - 被裁赔偿计算器 | 维权百科 | AI被裁模拟",
     template: "%s | 裁了么 牛马保护站",
   },
   description:
-    "裁了么牛马保护站是一个帮助打工人应对裁员的工具平台。提供裁员赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI裁员模拟等功能，帮助你争取合理赔偿，顺利过渡。",
+    "裁了么牛马保护站是一个帮助被裁打工人维权的工具平台。提供被裁赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI被裁模拟等功能，帮助你争取合理赔偿，顺利过渡。",
   keywords: [
     "裁员赔偿",
     "N+1",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "裁了么 牛马保护站 - 知道权利，才能守住权利",
     description:
-      "裁员赔偿计算器、失业金计算、维权百科、AI模拟裁员谈话。帮助你应对裁员，争取合理赔偿。",
+      "被裁赔偿计算器、失业金计算、维权百科、AI模拟被裁谈话。帮助你应对被裁，争取合理赔偿。",
     url: "https://caileme.team",
     siteName: "裁了么 牛马保护站",
     locale: "zh_CN",

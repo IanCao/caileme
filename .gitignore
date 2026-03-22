@@ -8,3 +8,5 @@ dist/
 *.tsbuildinfo
 .wrangler/
 .dev.vars
+app/commu.png
+app/logo.png

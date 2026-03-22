@@ -1,5 +1,5 @@
 // 社区内容数据 - MVP阶段前端写死，后续迁移到MD/后端
-// 裁员情报 + 经历分享帖子
+// 被裁情报 + 经历分享帖子
 
 export interface NewsItem {
   id: number;

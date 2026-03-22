@@ -162,14 +162,14 @@ export default function UnemploymentCalculator() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {cityPolicies.slice(0, 10).map((c) => (
+                {cityPolicies.map((c) => (
                   <tr key={c.code}>
-                    <td className="py-2 font-medium">{c.name}</td>
-                    <td className="py-2 text-accent">{fmt(c.unemploymentBase)}</td>
+                    <td className="py-2 font-medium whitespace-nowrap">{c.name}</td>
+                    <td className="py-2 text-accent font-medium whitespace-nowrap">{fmt(c.unemploymentBase)}</td>
                     <td className="py-2 text-gray-500 text-xs">{c.unemploymentNotes}</td>
                     <td className="py-2">
                       {c.unemploymentUrl ? (
-                        <a href={c.unemploymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline">查看 →</a>
+                        <a href={c.unemploymentUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-accent hover:underline whitespace-nowrap">查看 →</a>
                       ) : <span className="text-xs text-gray-300">-</span>}
                     </td>
                   </tr>

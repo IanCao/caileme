@@ -27,12 +27,12 @@ const tools = [
 
 const guides = [
   {
-    title: "裁员当天怎么办",
-    desc: "收到裁员通知后的第一步该做什么？完整行动清单。",
+    title: "被裁当天怎么办",
+    desc: "收到被裁通知后的第一步该做什么？完整行动清单。",
     href: "/guides/layoff-day",
   },
   {
-    title: "裁员谈判技巧",
+    title: "被裁谈判技巧",
     desc: "如何跟HR谈判争取更好的赔偿方案？",
     href: "/guides/negotiation",
   },
@@ -45,13 +45,13 @@ const guides = [
 
 // 贡献者/投稿人数据
 const contributors = [
-  { name: "匿名打工人", avatar: "👨‍💻", contribution: "分享大厂裁员经历" },
+  { name: "匿名打工人", avatar: "👨‍💻", contribution: "分享大厂被裁经历" },
   { name: "前端小张", avatar: "👩‍💻", contribution: "避坑指南投稿" },
   { name: "产品小王", avatar: "👨‍🎓", contribution: "仲裁全记录" },
   { name: "运营老李", avatar: "👨‍💼", contribution: "再就业经验" },
   { name: "测试老陈", avatar: "🧑‍🔧", contribution: "社保补缴攻略" },
   { name: "后端小赵", avatar: "👩‍🎓", contribution: "仲裁2N经历" },
-  { name: "设计师小林", avatar: "👩‍🎨", contribution: "裁员谈判策略" },
+  { name: "设计师小林", avatar: "👩‍🎨", contribution: "被裁谈判策略" },
   { name: "数据分析师", avatar: "📊", contribution: "城市数据贡献" },
   { name: "法务顾问", avatar: "⚖️", contribution: "法律知识审核" },
   { name: "HR转型者", avatar: "🤝", contribution: "HR视角分享" },
@@ -150,7 +150,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            赔偿计算 · 权益指南 · 谈判模拟 · 裁员情报
+            赔偿计算 · 权益指南 · 谈判模拟 · 被裁情报
             <br />
             一个平台，全部搞定
           </m.p>
@@ -171,7 +171,7 @@ export default function HomePage() {
               href="/guides"
               className="border border-gray-300 text-gray-700 px-8 py-3.5 rounded-full text-base font-medium hover:bg-gray-50 transition-colors"
             >
-              查看裁员指南
+              查看维权指南
             </Link>
           </m.div>
         </div>
@@ -238,7 +238,7 @@ export default function HomePage() {
           <m.div className="text-center mb-12 md:mb-16" {...fadeUp}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">实用指南</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
-              从裁员到再出发，每一步都有指导
+              从被裁到再出发，每一步都有指导
             </p>
           </m.div>
 
@@ -283,9 +283,9 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
           <m.div {...fadeUp}>
             <div className="text-4xl sm:text-5xl mb-6">🤖</div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 裁员模拟</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 被裁模拟</h2>
             <p className="mt-4 text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-              模拟HR裁员对话，提前练习应对策略。
+              模拟被裁谈话场景，提前练习应对策略。
               <br />
               知己知彼，谈判不慌。
             </p>
@@ -299,13 +299,13 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 裁员情报预览 */}
+      {/* 被裁情报预览 */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <m.div className="text-center mb-12 md:mb-16" {...fadeUp}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">裁员情报</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
-              关注行业最新裁员信息
+              关注行业最新被裁信息
             </p>
           </m.div>
 
@@ -329,7 +329,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex flex-wrap gap-2 text-xs text-gray-500">
                   <span className="px-2 py-0.5 bg-gray-100 rounded">{item.city}</span>
-                  <span className="px-2 py-0.5 bg-gray-100 rounded">裁员 {item.ratio}</span>
+                  <span className="px-2 py-0.5 bg-gray-100 rounded">被裁 {item.ratio}</span>
                   <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
                 </div>
               </m.div>

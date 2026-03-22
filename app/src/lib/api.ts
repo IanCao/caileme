@@ -1,7 +1,7 @@
 // Tencent Cloud Serverless API (SCF → Cloudflare Worker)
 // All submissions go through Tencent Cloud SCF, which forwards to Cloudflare for storage
 
-const API_BASE = "https://service-xxx.gz.tencentapigw.com/release";
+const API_BASE = "https://1256007055-7opxncjdg9.ap-hongkong.tencentscf.com";
 
 export interface ApiResponse {
   success: boolean;

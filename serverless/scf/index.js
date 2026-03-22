@@ -1,7 +1,7 @@
 // 腾讯云 SCF 云函数 - 转发请求到 Cloudflare Worker
 // 运行时: Node.js 18.x
 
-const CF_WORKER_URL = process.env.CF_WORKER_URL || "https://caileme-api.xxx.workers.dev";
+const CF_WORKER_URL = process.env.CF_WORKER_URL || "https://caileme-api.caileme.workers.dev";
 const CF_AUTH_TOKEN = process.env.CF_AUTH_TOKEN || "";
 
 // 路径映射：SCF路径 → Worker API路径

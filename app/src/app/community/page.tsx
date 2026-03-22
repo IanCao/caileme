@@ -1,43 +1,100 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  layoffNews, communityPosts, newsCities, postCategories,
+  type NewsItem,
+} from '@/data/communityData';
 
-const layoffNews = [
-  { id: 1, company: '某大厂A', industry: '电商', city: '北京', date: '2026年3月', ratio: '约15%', compensation: 'N+1', departments: '社区团购、本地生活', source: '多名员工确认', verified: true },
-  { id: 2, company: '某科技公司B', industry: '云计算', city: '上海', date: '2026年3月', ratio: '约20%', compensation: 'N+3', departments: '海外业务、非核心部门', source: '内部邮件', verified: true },
-  { id: 3, company: '某互联网C', industry: '社交', city: '深圳', date: '2026年2月', ratio: '整个事业部', compensation: 'N+1', departments: '教育事业部', source: '媒体报道', verified: true },
-  { id: 4, company: '某游戏公司D', industry: '游戏', city: '广州', date: '2026年2月', ratio: '约30%', compensation: 'N', departments: '多个项目组', source: '脉脉爆料', verified: false },
-  { id: 5, company: '某出行平台E', industry: '出行', city: '北京', date: '2026年1月', ratio: '约10%', compensation: 'N+1', departments: '国际化业务', source: '多名员工确认', verified: true },
-  { id: 6, company: '某金融科技F', industry: '金融', city: '杭州', date: '2026年1月', ratio: '约25%', compensation: 'N+1', departments: '信贷、保险', source: '内部消息', verified: false },
-  { id: 7, company: '某教育公司G', industry: '教育', city: '成都', date: '2026年1月', ratio: '约40%', compensation: 'N', departments: 'K12业务', source: '媒体报道', verified: true },
-  { id: 8, company: '某电商H', industry: '电商', city: '武汉', date: '2025年12月', ratio: '约20%', compensation: 'N+1', departments: '自营物流', source: '内部消息', verified: false },
-  { id: 9, company: '某AI公司I', industry: 'AI', city: '南京', date: '2026年2月', ratio: '约15%', compensation: 'N+2', departments: '商业化部门', source: '多名员工确认', verified: true },
-  { id: 10, company: '某直播平台J', industry: '娱乐', city: '杭州', date: '2026年3月', ratio: '约10%', compensation: 'N+1', departments: '海外业务', source: '脉脉爆料', verified: false },
-];
+function NewsModal({ item, onClose }: { item: NewsItem; onClose: () => void }) {
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = ''; };
+  }, []);
 
-const communityPosts = [
-  { id: 1, nickname: '匿名打工人', title: '大厂5年被裁经历，最终拿到N+3', content: '工作5年突然被约谈，一开始HR只给N，我坚持不签字，最后谈到了N+3。分享一下我的谈判过程和心路历程...', category: '经验分享', date: '2026-03-18', likes: 128 },
-  { id: 2, nickname: '前端小张', title: '千万不要写辞职信！我的血泪教训', content: '被HR谈话后稀里糊涂签了"主动辞职"的文件，结果一分钱赔偿都没拿到。希望大家不要犯我同样的错...', category: '避坑指南', date: '2026-03-15', likes: 256 },
-  { id: 3, nickname: '产品小王', title: '劳动仲裁全记录：从申请到胜诉', content: '公司违法裁员拒绝赔偿，我申请了劳动仲裁。整个过程花了2个月，最终裁决2N赔偿。分享完整流程...', category: '仲裁经验', date: '2026-03-10', likes: 342 },
-  { id: 4, nickname: '运营老李', title: '被裁后3个月找到新工作的经验', content: '年初被裁后经历了一段迷茫期，后来通过调整心态、优化简历、扩大求职渠道，最终找到了更好的工作...', category: '再就业', date: '2026-03-05', likes: 89 },
-  { id: 5, nickname: '测试老陈', title: '社保断缴3个月后的补缴经验', content: '被裁后没有及时处理社保，断缴了3个月。后来通过灵活就业方式补缴成功，这里记录一下流程...', category: '经验分享', date: '2026-03-01', likes: 67 },
-  { id: 6, nickname: '后端小赵', title: '仲裁拿到2N赔偿的详细经过', content: '公司以"绩效不合格"为由裁员，我收集了所有证据，最终仲裁胜诉拿到2N。详细分享证据准备和庭审过程...', category: '仲裁经验', date: '2026-02-25', likes: 456 },
-];
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        className="bg-white rounded-2xl max-w-lg w-full max-h-[80vh] overflow-y-auto p-6 shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <h2 className="text-xl font-bold">{item.company}</h2>
+              {item.verified ? (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-success/10 text-success">已核实</span>
+              ) : (
+                <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700">待核实</span>
+              )}
+            </div>
+            <p className="text-sm text-gray-400">{item.date}</p>
+          </div>
+          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg transition-colors">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
 
-const newsCities = [
-  '全部', '北京', '上海', '深圳', '广州', '杭州', '南京', '苏州',
-  '成都', '武汉', '西安', '重庆', '天津', '长沙', '郑州', '厦门',
-  '青岛', '东莞', '合肥', '佛山', '无锡',
-];
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          <span className="text-xs px-2.5 py-1 bg-surface rounded-lg text-gray-600">{item.city}</span>
+          <span className="text-xs px-2.5 py-1 bg-surface rounded-lg text-gray-600">{item.industry}</span>
+          <span className="text-xs px-2.5 py-1 bg-danger/5 rounded-lg text-danger">裁员 {item.ratio}</span>
+          <span className="text-xs px-2.5 py-1 bg-accent/5 rounded-lg text-accent">赔偿 {item.compensation}</span>
+        </div>
 
-const postCategories = ['全部', '经验分享', '避坑指南', '仲裁经验', '再就业'];
+        <div className="border-t border-gray-100 pt-4">
+          <div className="text-gray-700 leading-relaxed space-y-1">
+            {item.detail.split('\n').map((line, i) => {
+              const clean = line.replace(/\*\*/g, '');
+              if (line.startsWith('**') && line.includes('**：')) {
+                return <p key={i} className="font-bold text-black mt-3 mb-1">{clean}</p>;
+              }
+              if (line.startsWith('- ')) {
+                return <p key={i} className="pl-4 text-sm">• {line.slice(2)}</p>;
+              }
+              if (line.startsWith('⚠️')) {
+                return <p key={i} className="mt-3 text-sm text-yellow-700 bg-yellow-50 p-2 rounded-lg">{line}</p>;
+              }
+              if (line.trim() === '') return <br key={i} />;
+              return <p key={i} className="text-sm">{clean}</p>;
+            })}
+          </div>
+        </div>
+
+        <div className="mt-4 pt-3 border-t border-gray-100 text-xs text-gray-400">
+          来源：{item.source}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
 export default function CommunityPage() {
   const [activeTab, setActiveTab] = useState<'news' | 'posts'>('news');
   const [selectedCity, setSelectedCity] = useState('全部');
   const [selectedCategory, setSelectedCategory] = useState('全部');
+  const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
+  const [showGroupToast, setShowGroupToast] = useState(false);
+
+  useEffect(() => {
+    if (showGroupToast) {
+      const timer = setTimeout(() => setShowGroupToast(false), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [showGroupToast]);
 
   const filteredNews = selectedCity === '全部'
     ? layoffNews
@@ -57,15 +114,13 @@ export default function CommunityPage() {
           </p>
         </div>
 
-        {/* Tab 切换 */}
+        {/* Tab */}
         <div className="mt-8 flex justify-center">
           <div className="inline-flex bg-white rounded-full p-1 border border-gray-200 shadow-sm">
             <button
               onClick={() => setActiveTab('news')}
               className={`px-5 sm:px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                activeTab === 'news'
-                  ? 'bg-black text-white shadow-sm'
-                  : 'text-gray-500 hover:text-black'
+                activeTab === 'news' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'
               }`}
             >
               📰 裁员动态
@@ -73,9 +128,7 @@ export default function CommunityPage() {
             <button
               onClick={() => setActiveTab('posts')}
               className={`px-5 sm:px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                activeTab === 'posts'
-                  ? 'bg-black text-white shadow-sm'
-                  : 'text-gray-500 hover:text-black'
+                activeTab === 'posts' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'
               }`}
             >
               💬 经历分享
@@ -83,7 +136,7 @@ export default function CommunityPage() {
           </div>
         </div>
 
-        {/* 投稿入口 */}
+        {/* 操作按钮 */}
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <Link
             href="/community/submit"
@@ -99,17 +152,17 @@ export default function CommunityPage() {
               📋 提交裁员证明
             </Link>
           )}
+          <button
+            onClick={() => setShowGroupToast(true)}
+            className="inline-flex items-center gap-1.5 bg-green-500 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
+          >
+            💬 加入社群
+          </button>
         </div>
 
-        {/* 裁员动态 Tab */}
+        {/* 裁员动态 */}
         {activeTab === 'news' && (
-          <motion.div
-            key="news"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {/* 城市筛选 */}
+          <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="mt-8 flex flex-wrap gap-2">
               {newsCities.map((city) => (
                 <button
@@ -125,16 +178,16 @@ export default function CommunityPage() {
                 </button>
               ))}
             </div>
-
-            {/* 动态列表 */}
             <div className="mt-6 space-y-4">
               {filteredNews.length === 0 ? (
-                <div className="text-center py-12 text-gray-400 text-sm">
-                  暂无该城市的裁员动态
-                </div>
+                <div className="text-center py-12 text-gray-400 text-sm">暂无该城市的裁员动态</div>
               ) : (
                 filteredNews.map((item) => (
-                  <div key={item.id} className="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100">
+                  <button
+                    key={item.id}
+                    onClick={() => setSelectedNews(item)}
+                    className="w-full text-left bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all cursor-pointer"
+                  >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                         <h3 className="font-semibold text-base sm:text-lg">{item.company}</h3>
@@ -144,35 +197,32 @@ export default function CommunityPage() {
                           <span className="text-xs px-2 py-0.5 rounded-full bg-yellow-100 text-yellow-700">待核实</span>
                         )}
                       </div>
-                      <span className="text-xs sm:text-sm text-gray-400 flex-shrink-0">{item.date}</span>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-xs sm:text-sm text-gray-400">{item.date}</span>
+                        <span className="text-gray-300">›</span>
+                      </div>
                     </div>
                     <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-3">
-                      <span className="text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 bg-surface rounded-lg text-gray-600">{item.city}</span>
-                      <span className="text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 bg-surface rounded-lg text-gray-600">{item.industry}</span>
-                      <span className="text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 bg-danger/5 rounded-lg text-danger">裁员 {item.ratio}</span>
-                      <span className="text-xs px-2 py-0.5 sm:px-2.5 sm:py-1 bg-accent/5 rounded-lg text-accent">赔偿 {item.compensation}</span>
+                      <span className="text-xs px-2 py-0.5 bg-surface rounded-lg text-gray-600">{item.city}</span>
+                      <span className="text-xs px-2 py-0.5 bg-surface rounded-lg text-gray-600">{item.industry}</span>
+                      <span className="text-xs px-2 py-0.5 bg-danger/5 rounded-lg text-danger">裁员 {item.ratio}</span>
+                      <span className="text-xs px-2 py-0.5 bg-accent/5 rounded-lg text-accent">赔偿 {item.compensation}</span>
                     </div>
                     <div className="text-xs sm:text-sm text-gray-500">
                       <span>涉及：{item.departments}</span>
                       <span className="mx-2">·</span>
                       <span>来源：{item.source}</span>
                     </div>
-                  </div>
+                  </button>
                 ))
               )}
             </div>
           </motion.div>
         )}
 
-        {/* 经历分享 Tab */}
+        {/* 经历分享 */}
         {activeTab === 'posts' && (
-          <motion.div
-            key="posts"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            {/* 分类筛选 */}
+          <motion.div key="posts" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="mt-8 flex flex-wrap gap-2">
               {postCategories.map((cat) => (
                 <button
@@ -188,28 +238,32 @@ export default function CommunityPage() {
                 </button>
               ))}
             </div>
-
-            {/* 帖子列表 */}
             <div className="mt-6 space-y-4">
               {filteredPosts.map((post) => (
-                <div key={post.id} className="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 card-hover">
+                <Link
+                  key={post.id}
+                  href={`/community/post/${post.id}`}
+                  className="block bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all"
+                >
                   <div className="flex items-center gap-2 sm:gap-3 mb-3">
+                    <span className="text-lg">{post.avatar}</span>
+                    <span className="text-xs font-medium text-gray-600">{post.nickname}</span>
                     <span className="text-xs px-2.5 py-0.5 rounded-full bg-accent/10 text-accent">{post.category}</span>
-                    <span className="text-xs text-gray-400">{post.date}</span>
+                    <span className="text-xs text-gray-400 ml-auto">{post.date}</span>
                   </div>
                   <h3 className="font-semibold text-base sm:text-lg mb-2">{post.title}</h3>
-                  <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{post.content}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{post.summary}</p>
                   <div className="mt-4 flex items-center justify-between">
-                    <span className="text-xs text-gray-400">{post.nickname}</span>
-                    <span className="text-xs text-gray-400">👍 {post.likes}</span>
+                    <span className="text-xs text-gray-400">💬 {post.comments.length} 条评论</span>
+                    <span className="text-xs text-gray-400">�� {post.likes}</span>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </motion.div>
         )}
 
-        {/* 底部投稿 CTA */}
+        {/* 底部 */}
         <div className="mt-10 p-5 sm:p-6 bg-white rounded-2xl border border-gray-100 text-center">
           <h3 className="font-semibold mb-2">📢 有信息要分享？</h3>
           <p className="text-sm text-gray-500 mb-4">匿名投稿裁员信息或经历，帮助更多人</p>
@@ -228,15 +282,28 @@ export default function CommunityPage() {
             ⚠️ 免责声明：裁员信息来自公开报道和用户投稿，可能存在不准确之处。所有信息仅供参考，不代表本站立场。如信息有误，请联系我们更正。
           </p>
         </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-400">
-            更多内容正在路上...欢迎
-            <Link href="/community/submit" className="text-accent hover:underline mx-1">投稿</Link>
-            分享你的经历
-          </p>
-        </div>
       </div>
+
+      {/* News Modal */}
+      <AnimatePresence>
+        {selectedNews && (
+          <NewsModal item={selectedNews} onClose={() => setSelectedNews(null)} />
+        )}
+      </AnimatePresence>
+
+      {/* 社群 Toast */}
+      <AnimatePresence>
+        {showGroupToast && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium max-w-sm text-center"
+          >
+            💬 社群功能即将上线，敬请期待！
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

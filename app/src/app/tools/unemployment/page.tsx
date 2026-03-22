@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { cityPolicies, getCityByCode, getUnemploymentMonths } from "@/data/cityPolicies";
+import CitySelector from "@/components/CitySelector";
 
 export default function UnemploymentCalculator() {
   const [city, setCity] = useState("beijing");
@@ -70,17 +71,7 @@ export default function UnemploymentCalculator() {
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 所在城市
               </label>
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 text-base bg-white"
-              >
-                {cityPolicies.map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.name}（{c.province}）
-                  </option>
-                ))}
-              </select>
+              <CitySelector value={city} onChange={setCity} />
               {cityInfo && (
                 <p className="mt-2 text-xs text-gray-400">
                   {cityInfo.name}失业金标准：{fmt(cityInfo.unemploymentBase)}/月 · {cityInfo.unemploymentNotes}

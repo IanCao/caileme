@@ -6,6 +6,7 @@ import {
   getCityByCode,
   type CityPolicy,
 } from "@/data/cityPolicies";
+import CitySelector from "@/components/CitySelector";
 
 function fmt(n: number): string {
   return n.toLocaleString("zh-CN");
@@ -145,38 +146,7 @@ export default function SocialInsurancePage() {
             </span>
             <label className="text-sm font-semibold">选择你的城市</label>
           </div>
-          <select
-            value={cityCode}
-            onChange={(e) => setCityCode(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 text-base bg-white"
-          >
-            {cityPolicies.map((c) => (
-              <option key={c.code} value={c.code}>
-                {c.name}（{c.province}）
-              </option>
-            ))}
-          </select>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {["beijing", "shanghai", "guangzhou", "shenzhen", "hangzhou", "chengdu"].map(
-              (code) => {
-                const c = getCityByCode(code);
-                if (!c) return null;
-                return (
-                  <button
-                    key={code}
-                    onClick={() => setCityCode(code)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      cityCode === code
-                        ? "bg-black text-white"
-                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                    }`}
-                  >
-                    {c.name}
-                  </button>
-                );
-              }
-            )}
-          </div>
+          <CitySelector value={cityCode} onChange={setCityCode} />
           <p className="mt-3 text-xs text-gray-400">
             {cityInfo.name}社平工资：{fmt(cityInfo.avgSalary)}/月 · 失业金标准：
             {fmt(cityInfo.unemploymentBase)}/月 · 购房需连续{cityInfo.housePurchaseMonths}个月社保

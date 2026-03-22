@@ -36,28 +36,20 @@ const calculatorTools = [
 
 const moreTools = [
   {
-    title: "年假补偿计算器",
-    desc: "计算未休年假的经济补偿。根据工龄和剩余年假天数，按300%日工资标准计算应得补偿。",
-    href: "/tools/severance",
-    icon: "📅",
-    tag: "实用",
-    tagColor: "bg-accent/10 text-accent",
-  },
-  {
     title: "竞业限制评估",
     desc: "评估竞业限制协议是否合理。了解竞业补偿标准（月均工资30%）、限制期限、违约金合理性等。",
-    href: "/guides/negotiation",
+    href: "/guides/non-compete",
     icon: "📜",
     tag: "重要",
     tagColor: "bg-yellow-100 text-yellow-700",
   },
   {
-    title: "经济补偿税计算",
-    desc: "裁员赔偿金超过当地平均工资3倍部分需缴个税。计算你的赔偿金实际到手金额。",
-    href: "/tools/severance",
-    icon: "💳",
-    tag: "进阶",
-    tagColor: "bg-purple-100 text-purple-700",
+    title: "社保缴纳指南",
+    desc: "离职后如何继续缴纳社保？灵活就业社保、城镇居民社保、代缴方式全解析，附各城市缴费参考。",
+    href: "/tools/social-payment",
+    icon: "🏥",
+    tag: "必看",
+    tagColor: "bg-green-100 text-green-700",
   },
 ];
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cityPolicies, getCityByCode } from "@/data/cityPolicies";
+import CitySelector from "@/components/CitySelector";
 
 type Situation = "negotiation" | "no_notice" | "illegal" | null;
 
@@ -72,7 +73,7 @@ export default function SeveranceCalculator() {
     if (isYearsCapped) compensationMonths = 12;
 
     const n = compensationMonths * effectiveSalary;
-    const n1 = n + effectiveSalary;
+    const n1 = n + avgSalary; // +1 代通知金按实际工资，不受3倍封顶
     const n2 = compensationMonths * 2 * effectiveSalary;
 
     let recommended: string;
@@ -184,17 +185,7 @@ export default function SeveranceCalculator() {
                 <span className="w-6 h-6 bg-black text-white text-xs rounded-full flex items-center justify-center font-bold">1</span>
                 <label className="text-sm font-semibold">选择所在城市</label>
               </div>
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 text-base bg-white"
-              >
-                {cityPolicies.map((c) => (
-                  <option key={c.code} value={c.code}>
-                    {c.name}（{c.province}）
-                  </option>
-                ))}
-              </select>
+              <CitySelector value={city} onChange={setCity} />
               {cityInfo && (
                 <p className="mt-2 text-xs text-gray-400">
                   {cityInfo.name}社平工资：{fmt(cityInfo.avgSalary)}/月，3倍上限：{fmt(cityInfo.avgSalary3x)}/月
@@ -384,7 +375,7 @@ export default function SeveranceCalculator() {
 
               {/* 2N 违法裁员定义 */}
               <AnimatePresence>
-                {(situation === "illegal" || showIllegalInfo) && (
+                {showIllegalInfo && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
@@ -460,6 +451,58 @@ export default function SeveranceCalculator() {
                 </div>
               </div>
 
+              {/* 饼图展示 */}
+              {(() => {
+                const parts: { label: string; value: number; color: string }[] = [];
+                parts.push({ label: result.recommended, value: result.recommendedAmount, color: "#1a1a1a" });
+                if (result.annualLeavePay > 0) parts.push({ label: "年假补偿", value: result.annualLeavePay, color: "#0071e3" });
+                if (result.taxAmount > 0) parts.push({ label: "个税扣除", value: result.taxAmount, color: "#ff3b30" });
+                const total = parts.reduce((s, p) => s + p.value, 0);
+                if (total <= 0) return null;
+
+                let cumAngle = 0;
+                const slices = parts.map((p) => {
+                  const angle = (p.value / total) * 360;
+                  const startAngle = cumAngle;
+                  cumAngle += angle;
+                  const startRad = ((startAngle - 90) * Math.PI) / 180;
+                  const endRad = ((cumAngle - 90) * Math.PI) / 180;
+                  const largeArc = angle > 180 ? 1 : 0;
+                  const x1 = 50 + 40 * Math.cos(startRad);
+                  const y1 = 50 + 40 * Math.sin(startRad);
+                  const x2 = 50 + 40 * Math.cos(endRad);
+                  const y2 = 50 + 40 * Math.sin(endRad);
+                  const d = angle >= 359.99
+                    ? `M50,10 A40,40 0 1,1 49.99,10 Z`
+                    : `M50,50 L${x1},${y1} A40,40 0 ${largeArc},1 ${x2},${y2} Z`;
+                  return { ...p, d, pct: Math.round((p.value / total) * 100) };
+                });
+
+                return (
+                  <div className="mb-6 p-5 bg-white rounded-2xl border border-gray-100">
+                    <h4 className="text-sm font-semibold mb-4 text-center">💰 金额构成</h4>
+                    <div className="flex items-center justify-center gap-8">
+                      <svg viewBox="0 0 100 100" className="w-32 h-32">
+                        {slices.map((s, i) => (
+                          <path key={i} d={s.d} fill={s.color} opacity={s.label === "个税扣除" ? 0.5 : 1} />
+                        ))}
+                        <circle cx="50" cy="50" r="20" fill="white" />
+                      </svg>
+                      <div className="space-y-2">
+                        {slices.map((s, i) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <span className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: s.color, opacity: s.label === "个税扣除" ? 0.5 : 1 }} />
+                            <span className="text-xs text-gray-600">{s.label}</span>
+                            <span className="text-xs font-medium">{s.pct}%</span>
+                            <span className="text-xs text-gray-400">{fmt(s.value)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+
               {/* 详细信息 */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm p-3 bg-surface rounded-lg">
@@ -515,6 +558,9 @@ export default function SeveranceCalculator() {
                 <div className={`p-5 rounded-xl text-center ${situation === "no_notice" ? "ring-2 ring-black" : "bg-surface"}`}>
                   <div className="text-xs text-gray-500 mb-1">代通知金（N+1）</div>
                   <div className="text-xl font-bold">{fmt(result.n1)}</div>
+                  {result.isCapped && (
+                    <div className="text-[10px] text-gray-400 mt-1">+1按实际工资{fmt(result.avgSalary)}</div>
+                  )}
                 </div>
                 <div className={`p-5 rounded-xl text-center ${situation === "illegal" ? "ring-2 ring-danger" : "bg-surface"}`}>
                   <div className="text-xs text-gray-500 mb-1">违法裁员（2N）</div>

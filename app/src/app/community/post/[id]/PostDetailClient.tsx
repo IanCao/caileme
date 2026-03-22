@@ -9,6 +9,10 @@ export default function PostDetailClient({ params }: { params: { id: string } })
   const postId = params.id;
   const post = communityPosts.find(p => p.id === postId);
   const [showCommentToast, setShowCommentToast] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [commentNickname, setCommentNickname] = useState('');
+  const [commentSubmitting, setCommentSubmitting] = useState(false);
+  const [commentSubmitted, setCommentSubmitted] = useState(false);
 
   useEffect(() => {
     if (showCommentToast) {
@@ -124,12 +128,51 @@ export default function PostDetailClient({ params }: { params: { id: string } })
             </div>
 
             {/* 发表评论 */}
-            <button
-              onClick={() => setShowCommentToast(true)}
-              className="mt-6 w-full bg-black text-white py-3 rounded-xl text-sm font-medium hover:bg-gray-800 transition-colors"
-            >
-              💬 发表评论
-            </button>
+            <div className="mt-6 bg-white rounded-xl p-4 border border-gray-100">
+              {commentSubmitted ? (
+                <div className="text-center py-4">
+                  <p className="text-sm text-success font-medium">✅ 评论提交成功！</p>
+                  <p className="text-xs text-amber-600 mt-1">审核通过后将展示在评论区</p>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="text"
+                    value={commentNickname}
+                    onChange={(e) => setCommentNickname(e.target.value)}
+                    placeholder="昵称（选填，默认匿名）"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm mb-2 focus:outline-none focus:border-accent"
+                  />
+                  <textarea
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="写下你的评论..."
+                    rows={3}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm resize-none focus:outline-none focus:border-accent"
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!commentText.trim()) return;
+                      setCommentSubmitting(true);
+                      try {
+                        const { submitComment } = await import("@/lib/api");
+                        await submitComment({
+                          postId,
+                          nickname: commentNickname || "匿名打工人",
+                          content: commentText,
+                        });
+                      } catch { /* fallback */ }
+                      setCommentSubmitting(false);
+                      setCommentSubmitted(true);
+                    }}
+                    disabled={!commentText.trim() || commentSubmitting}
+                    className="mt-2 w-full bg-black text-white py-2.5 rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50"
+                  >
+                    {commentSubmitting ? "提交中..." : "💬 发表评论"}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </motion.article>
       </div>

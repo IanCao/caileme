@@ -7,31 +7,32 @@ export default function Logo({ size = 32 }: { size?: number }) {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      {/* Shield */}
+      {/* Shield outline */}
       <path
         d="M32 4L8 15v18c0 15 10.5 24.5 24 28 13.5-3.5 24-13 24-28V15L32 4z"
-        fill="#34C759"
-        rx="4"
+        fill="white"
+        stroke="#1a1a1a"
+        strokeWidth="2.5"
       />
-      {/* Bull/ox silhouette */}
-      <g fill="#fff">
+      {/* Bull/ox in red */}
+      <g fill="#dc2626">
         {/* Horns */}
         <path d="M18 24c0-4 3-8 6-10l1.5 2.5C23 18.5 21.5 21 22 24h-4z" />
         <path d="M46 24c0-4-3-8-6-10l-1.5 2.5C41 18.5 42.5 21 42 24h4z" />
         {/* Head */}
         <ellipse cx="32" cy="30" rx="10" ry="9" />
-        {/* Eyes */}
-        <ellipse cx="27.5" cy="28.5" rx="1.5" ry="1.5" fill="#34C759" />
-        <ellipse cx="36.5" cy="28.5" rx="1.5" ry="1.5" fill="#34C759" />
-        {/* Nostrils */}
-        <ellipse cx="29.5" cy="33" rx="1.2" ry="1" fill="#34C759" />
-        <ellipse cx="34.5" cy="33" rx="1.2" ry="1" fill="#34C759" />
         {/* Ears */}
         <ellipse cx="20" cy="25" rx="3" ry="2" transform="rotate(-30 20 25)" />
         <ellipse cx="44" cy="25" rx="3" ry="2" transform="rotate(30 44 25)" />
         {/* Body */}
         <path d="M22 37c0 0 2 8 10 8s10-8 10-8c-2 2-6 3-10 3s-8-1-10-3z" />
       </g>
+      {/* Eyes - white */}
+      <ellipse cx="27.5" cy="28.5" rx="1.5" ry="1.5" fill="white" />
+      <ellipse cx="36.5" cy="28.5" rx="1.5" ry="1.5" fill="white" />
+      {/* Nostrils - white */}
+      <ellipse cx="29.5" cy="33" rx="1.2" ry="1" fill="white" />
+      <ellipse cx="34.5" cy="33" rx="1.2" ry="1" fill="white" />
     </svg>
   );
 }

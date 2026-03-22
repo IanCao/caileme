@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { useEffect, useRef } from "react";
 
 const tools = [
@@ -113,6 +113,7 @@ function ScrollingAvatars() {
 
 export default function HomePage() {
   return (
+    <LazyMotion features={domAnimation}>
     <div>
       {/* Hero Section */}
       <section className="relative overflow-hidden">
@@ -121,29 +122,29 @@ export default function HomePage() {
         <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-purple-100/30 rounded-full blur-3xl" />
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-32 text-center">
-          <motion.div
+          <m.div
             className="inline-block mb-6 px-4 py-1.5 rounded-full bg-black/5 text-sm text-gray-600"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             🛡️ 打工人的权益保障平台
-          </motion.div>
+          </m.div>
 
-          <motion.h1
+          <m.h1
             className="text-3xl sm:text-4xl md:text-6xl font-bold tracking-tight leading-tight text-gray-900"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            裁员不是终点
+            知道权利 才能守住权利
             <br />
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-gray-900 to-gray-400">
-              而是下一段旅程的开始
+              每个打工人都值得被认真对待
             </span>
-          </motion.h1>
+          </m.h1>
 
-          <motion.p
+          <m.p
             className="mt-6 text-base sm:text-lg md:text-xl text-gray-500 max-w-2xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -152,9 +153,9 @@ export default function HomePage() {
             赔偿计算 · 权益指南 · 谈判模拟 · 裁员情报
             <br />
             一个平台，全部搞定
-          </motion.p>
+          </m.p>
 
-          <motion.div
+          <m.div
             className="mt-10 flex flex-col sm:flex-row gap-4 justify-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -172,7 +173,7 @@ export default function HomePage() {
             >
               查看裁员指南
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -189,16 +190,16 @@ export default function HomePage() {
       {/* Tools Section */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div className="text-center mb-12 md:mb-16" {...fadeUp}>
+          <m.div className="text-center mb-12 md:mb-16" {...fadeUp}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">权益保障工具箱</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
               用数据武装自己，合理维护你的合法权益
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {tools.map((tool, i) => (
-              <motion.div
+              <m.div
                 key={tool.href}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -216,7 +217,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </Link>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
@@ -234,16 +235,16 @@ export default function HomePage() {
       {/* Guides Section */}
       <section className="py-16 md:py-24 bg-surface">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div className="text-center mb-12 md:mb-16" {...fadeUp}>
+          <m.div className="text-center mb-12 md:mb-16" {...fadeUp}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">实用指南</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
               从裁员到再出发，每一步都有指导
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
             {guides.map((guide, i) => (
-              <motion.div
+              <m.div
                 key={guide.href}
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -262,7 +263,7 @@ export default function HomePage() {
                     </div>
                   </div>
                 </Link>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
@@ -280,7 +281,7 @@ export default function HomePage() {
       {/* AI Simulation Section */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <motion.div {...fadeUp}>
+          <m.div {...fadeUp}>
             <div className="text-4xl sm:text-5xl mb-6">🤖</div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 裁员模拟</h2>
             <p className="mt-4 text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
@@ -294,19 +295,19 @@ export default function HomePage() {
             >
               开始模拟
             </Link>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
       {/* 裁员情报预览 */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div className="text-center mb-12 md:mb-16" {...fadeUp}>
+          <m.div className="text-center mb-12 md:mb-16" {...fadeUp}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">裁员情报</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
               关注行业最新裁员信息
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {[
@@ -315,7 +316,7 @@ export default function HomePage() {
               { company: "某互联网C", date: "2026年2月", city: "深圳", ratio: "整个事业部", compensation: "N+1" },
               { company: "某游戏公司D", date: "2026年1月", city: "广州", ratio: "约30%", compensation: "N" },
             ].map((item, i) => (
-              <motion.div
+              <m.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -331,7 +332,7 @@ export default function HomePage() {
                   <span className="px-2 py-0.5 bg-gray-100 rounded">裁员 {item.ratio}</span>
                   <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
@@ -349,16 +350,16 @@ export default function HomePage() {
       {/* 荣誉榜 */}
       <section className="py-16 md:py-24 bg-surface">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <motion.div className="text-center mb-12" {...fadeUp}>
+          <m.div className="text-center mb-12" {...fadeUp}>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">🏆 荣誉榜</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
               感谢这些勇敢的分享者，他们的经历帮助了无数人
             </p>
-          </motion.div>
+          </m.div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {honorBoard.map((item, i) => (
-              <motion.div
+              <m.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -373,7 +374,7 @@ export default function HomePage() {
                 </div>
                 <h3 className="font-semibold text-base sm:text-lg">{item.name}</h3>
                 <p className="mt-1 text-sm text-gray-500">{item.desc}</p>
-              </motion.div>
+              </m.div>
             ))}
           </div>
 
@@ -410,5 +411,6 @@ export default function HomePage() {
         </div>
       </section>
     </div>
+    </LazyMotion>
   );
 }

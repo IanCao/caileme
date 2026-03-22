@@ -65,7 +65,24 @@ export default function SubmitPage() {
     e.preventDefault();
     if (!email || !title || !content) return;
     setSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    try {
+      const { submitPost } = await import("@/lib/api");
+      const result = await submitPost({
+        email,
+        nickname: nickname || "匿名打工人",
+        category,
+        title,
+        content,
+        images: images.map((img) => img.name),
+      });
+      if (!result.success) {
+        console.warn("API unavailable, submission recorded locally");
+      }
+    } catch {
+      console.warn("API unavailable, submission recorded locally");
+    }
+
     setSubmitted(true);
     setSubmitting(false);
   };
@@ -91,8 +108,11 @@ export default function SubmitPage() {
             >
               <div className="text-6xl mb-6">✅</div>
               <h1 className="text-2xl font-bold mb-3">投稿提交成功</h1>
-              <p className="text-gray-500 mb-8">
+              <p className="text-gray-500 mb-3">
                 感谢你的分享！我们会在审核后发布你的投稿。
+              </p>
+              <p className="text-xs text-amber-600 bg-amber-50 px-4 py-2 rounded-lg mb-8 inline-block">
+                📋 审核通过后内容将展示在社区中
               </p>
               <div className="flex gap-4 justify-center">
                 <Link

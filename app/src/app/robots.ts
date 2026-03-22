@@ -38,6 +38,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: "https://caileme.com/sitemap.xml",
+    sitemap: "https://caileme.team/sitemap.xml",
   };
 }

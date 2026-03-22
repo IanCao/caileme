@@ -250,6 +250,22 @@ async function uploadImage(env: Env, request: Request) {
   return json({ success: true, key, url: `/cdn/${key}` }, 201);
 }
 
+async function submitComment(env: Env, request: Request) {
+  let body: Record<string, string | undefined>;
+  try { body = await request.json(); } catch { return err("Invalid JSON"); }
+
+  const { postId, nickname, content, email } = body;
+  if (!postId || !content) return err("必填字段：postId, content");
+  if ((content?.length || 0) > 2000) return err("评论最长2000字");
+  if (email && !isValidEmail(email)) return err("邮箱格式不正确");
+
+  await env.DB.prepare(
+    "INSERT INTO comments (post_id, nickname, content, email, status) VALUES (?, ?, ?, ?, 'pending')"
+  ).bind(postId, nickname || "匿名打工人", content, email || null).run();
+
+  return json({ success: true, message: "评论提交成功，审核通过后将展示" }, 201);
+}
+
 // ============================
 // Main router
 // ============================
@@ -276,6 +292,7 @@ export default {
       if (path === "/api/subscribe" && method === "POST") return subscribe(env, request);
       if (path === "/api/subscribe" && method === "DELETE") return unsubscribe(env, request);
       if (path === "/api/upload" && method === "POST") return uploadImage(env, request);
+      if (path === "/api/comment" && method === "POST") return submitComment(env, request);
 
       return err("Not found", 404);
     } catch (e) {

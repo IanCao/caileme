@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: "裁了么 牛马保护站 - 裁员不是终点，而是下一段旅程的开始",
+    title: "裁了么 牛马保护站 - 知道权利，才能守住权利",
     description:
       "裁员赔偿计算器、失业金计算、维权百科、AI模拟裁员谈话。帮助你应对裁员，争取合理赔偿。",
     url: "https://caileme.team",
@@ -114,6 +114,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Preconnect to CDN */}
+        <link rel="preconnect" href="https://static.cloudflareinsights.com" />
+        <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
         {/* Cloudflare Web Analytics */}
         <script
           defer

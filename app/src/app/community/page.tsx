@@ -170,12 +170,6 @@ export default function CommunityPage() {
           >
             ✏️ 匿名投稿
           </Link>
-          <Link
-            href="/community/proof"
-            className="inline-flex items-center gap-1.5 border border-gray-300 text-gray-700 px-5 py-2 rounded-full text-sm font-medium hover:bg-white transition-colors"
-          >
-            📋 提交裁员证明
-          </Link>
           <button
             onClick={() => setShowGroupToast(true)}
             className="inline-flex items-center gap-1.5 bg-green-500 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
@@ -247,9 +241,6 @@ export default function CommunityPage() {
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/community/submit" className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
               匿名投稿
-            </Link>
-            <Link href="/community/proof" className="border border-gray-300 text-gray-700 px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors">
-              提交裁员证明
             </Link>
           </div>
         </div>

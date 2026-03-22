@@ -122,6 +122,27 @@ export default function NegotiationGuide() {
             <Link href="/ai-simulation" className="block text-sm text-accent hover:underline">→ AI裁员模拟 - 提前练习谈判</Link>
           </div>
         </div>
+
+        {/* 相关工具 */}
+        <div className="mt-10 p-6 bg-white rounded-2xl border border-gray-100">
+          <h3 className="font-semibold mb-3">🔧 相关工具</h3>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/tools/severance" className="flex-1 flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-2xl">🧮</span>
+              <div>
+                <div className="text-sm font-medium">被裁赔偿计算器</div>
+                <div className="text-xs text-gray-400">精准计算N、N+1、2N赔偿金额</div>
+              </div>
+            </Link>
+            <Link href="/ai-simulation" className="flex-1 flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-2xl">🤖</span>
+              <div>
+                <div className="text-sm font-medium">AI裁员模拟</div>
+                <div className="text-xs text-gray-400">模拟HR谈话，练习应对策略</div>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

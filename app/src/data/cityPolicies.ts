@@ -128,8 +128,8 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 2098,
     unemploymentNotes: "2026年标准约¥2098/月（按最低工资¥2330的90%计算）",
     unemploymentUrl: "http://cdhrss.chengdu.gov.cn",
-    housePurchaseMonths: 24,
-    housePurchaseNote: "连续缴纳24个月社保",
+    housePurchaseMonths: 12,
+    housePurchaseNote: "非本地户籍需12个月社保，本地户籍不限",
     medicalGraceDays: 90,
   },
   {
@@ -156,8 +156,8 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 2139,
     unemploymentNotes: "2026年标准约¥2139/月（按最低工资90%计算）",
     unemploymentUrl: "https://xahrss.xa.gov.cn",
-    housePurchaseMonths: 24,
-    housePurchaseNote: "连续缴纳24个月社保",
+    housePurchaseMonths: 12,
+    housePurchaseNote: "非本地户籍需12个月社保或个税，本地户籍不限",
     medicalGraceDays: 90,
   },
   {
@@ -170,8 +170,8 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 1680,
     unemploymentNotes: "按最低工资标准的80%发放，即¥2100×80%=¥1680/月",
     unemploymentUrl: "https://rlsbj.cq.gov.cn",
-    housePurchaseMonths: 12,
-    housePurchaseNote: "连续缴纳12个月社保",
+    housePurchaseMonths: 0,
+    housePurchaseNote: "本地户籍不限购，外地户籍需1年社保或个税",
     medicalGraceDays: 90,
   },
   {
@@ -198,8 +198,8 @@ export const cityPolicies: CityPolicy[] = [
     unemploymentBase: 1680,
     unemploymentNotes: "按最低工资标准的80%发放，即¥2100×80%=¥1680/月",
     unemploymentUrl: "https://rsj.changsha.gov.cn",
-    housePurchaseMonths: 24,
-    housePurchaseNote: "连续缴纳24个月社保",
+    housePurchaseMonths: 12,
+    housePurchaseNote: "非本地户籍需12个月社保或个税",
     medicalGraceDays: 60,
   },
   {

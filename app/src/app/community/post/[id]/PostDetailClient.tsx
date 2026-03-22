@@ -115,14 +115,16 @@ export default function PostDetailClient({ params }: { params: { id: string } })
           <div className="mt-8">
             <h3 className="text-lg font-bold mb-4">💬 评论 ({post.comments.length})</h3>
             <div className="space-y-4">
-              {post.comments.map((comment) => (
-                <div key={comment.id} className="bg-white rounded-xl p-4 border border-gray-100">
+              {post.comments.map((comment, idx) => (
+                <div key={idx} className="bg-white rounded-xl p-4 border border-gray-100">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">{comment.nickname}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm">{comment.avatar}</span>
+                      <span className="text-sm font-medium">{comment.nickname}</span>
+                    </div>
                     <span className="text-xs text-gray-400">{comment.date}</span>
                   </div>
                   <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
-                  <div className="mt-2 text-xs text-gray-400">👍 {comment.likes}</div>
                 </div>
               ))}
             </div>

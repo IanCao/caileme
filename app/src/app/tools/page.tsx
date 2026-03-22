@@ -61,51 +61,14 @@ const moreTools = [
   },
 ];
 
-const freeLegalAid = [
+const legalResources = [
   {
     title: "12348 法律援助热线",
-    desc: "全国免费法律咨询热线，可申请免费律师代理",
+    desc: "全国免费法律咨询热线，经济困难者可申请免费律师代理",
     icon: "⚖️",
-    contact: "拨打 12348",
-    tags: ["免费", "全国"],
+    action: "拨打 12348",
+    actionType: "phone" as const,
   },
-  {
-    title: "法律援助中心",
-    desc: "各地司法局设立，经济困难者可获免费法律服务",
-    icon: "🏛️",
-    href: "https://www.12348.gov.cn",
-    tags: ["免费", "政府"],
-  },
-  {
-    title: "工会法律援助",
-    desc: "各地工会免费提供劳动争议法律咨询和代理",
-    icon: "🤝",
-    contact: "拨打 12351",
-    tags: ["免费", "工会"],
-  },
-  {
-    title: "劳动仲裁（免费）",
-    desc: "劳动仲裁完全免费，不需要律师也可以自己申请",
-    icon: "📋",
-    href: "/guides/arbitration",
-    tags: ["免费", "仲裁"],
-    isInternal: true,
-  },
-  {
-    title: "公益律师服务",
-    desc: "各地律师协会组织的公益法律服务",
-    icon: "👨‍⚖️",
-    tags: ["免费", "公益"],
-  },
-  {
-    title: "大学法律诊所",
-    desc: "各大学法学院设立的法律诊所，提供免费法律咨询",
-    icon: "🎓",
-    tags: ["免费", "高校"],
-  },
-];
-
-const officialResources = [
   {
     title: "12333 劳动保障热线",
     desc: "全国统一服务热线，免费咨询劳动权益、社保、失业金等",
@@ -114,16 +77,32 @@ const officialResources = [
     actionType: "phone" as const,
   },
   {
-    title: "12348 法律援助热线",
-    desc: "免费法律咨询，经济困难者可申请免费律师代理",
-    icon: "⚖️",
-    action: "拨打 12348",
+    title: "12351 工会维权热线",
+    desc: "各地工会免费提供劳动争议法律咨询和代理服务",
+    icon: "🤝",
+    action: "拨打 12351",
     actionType: "phone" as const,
+  },
+  {
+    title: "法律援助中心",
+    desc: "各地司法局设立的法律援助机构，免费法律服务",
+    icon: "🏛️",
+    action: "访问网站",
+    actionType: "link" as const,
+    href: "https://www.12348.gov.cn",
+  },
+  {
+    title: "劳动仲裁（免费）",
+    desc: "劳动仲裁完全免费，不需要律师也可以自己申请",
+    icon: "📋",
+    action: "查看指南",
+    actionType: "internal" as const,
+    href: "/guides/arbitration",
   },
   {
     title: "中国裁判文书网",
     desc: "查阅劳动争议判例，了解类似案件判决结果",
-    icon: "📋",
+    icon: "📖",
     action: "访问网站",
     actionType: "link" as const,
     href: "https://wenshu.court.gov.cn",
@@ -131,25 +110,10 @@ const officialResources = [
   {
     title: "全国劳动仲裁委查询",
     desc: "查找你所在城市的劳动仲裁委地址和联系方式",
-    icon: "🏛️",
+    icon: "🏢",
     action: "查询入口",
     actionType: "link" as const,
     href: "http://www.mohrss.gov.cn",
-  },
-  {
-    title: "国家信访局投诉平台",
-    desc: "劳动仲裁和诉讼都无法解决时的最后申诉渠道",
-    icon: "📝",
-    action: "访问平台",
-    actionType: "link" as const,
-    href: "https://www.gjxfj.gov.cn",
-  },
-  {
-    title: "工会法律服务",
-    desc: "各地工会为会员提供免费法律咨询和援助",
-    icon: "🤝",
-    action: "联系当地工会",
-    actionType: "info" as const,
   },
   {
     title: "劳动法全文查询",
@@ -168,12 +132,12 @@ const officialResources = [
     href: "http://si.12333.gov.cn",
   },
   {
-    title: "法律援助中心查询",
-    desc: "查找最近的法律援助中心，获取免费法律服务",
-    icon: "🏢",
-    action: "查询地址",
+    title: "国家信访局投诉平台",
+    desc: "劳动仲裁和诉讼都无法解决时的最后申诉渠道",
+    icon: "📝",
+    action: "访问平台",
     actionType: "link" as const,
-    href: "https://www.12348.gov.cn",
+    href: "https://www.gjxfj.gov.cn",
   },
 ];
 
@@ -244,62 +208,23 @@ export default function ToolsPage() {
           </div>
         </div>
 
-        {/* 免费法律援助 */}
+        {/* 免费法律援助 & 官方资源 */}
         <div className="mt-10 sm:mt-12">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
-            <span>⚖️</span> 免费法律援助
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {freeLegalAid.map((aid, i) => (
-              <div key={i} className="bg-white rounded-xl p-4 border border-gray-100 hover:border-gray-200 transition-colors">
-                <div className="flex items-start gap-3">
-                  <div className="text-2xl flex-shrink-0">{aid.icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <h3 className="font-semibold text-sm">{aid.title}</h3>
-                      {aid.tags.map((tag, j) => (
-                        <span key={j} className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-50 text-green-700">{tag}</span>
-                      ))}
-                    </div>
-                    <p className="text-gray-500 text-xs leading-relaxed mb-2">{aid.desc}</p>
-                    {aid.href ? (
-                      aid.isInternal ? (
-                        <Link href={aid.href} className="text-accent text-xs font-medium hover:underline">查看详情 →</Link>
-                      ) : (
-                        <a href={aid.href} target="_blank" rel="noopener noreferrer" className="text-accent text-xs font-medium hover:underline">访问网站 ↗</a>
-                      )
-                    ) : aid.contact ? (
-                      <span className="text-accent text-xs font-medium">{aid.contact}</span>
-                    ) : null}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 官方资源 */}
-        <div className="mt-10 sm:mt-12 space-y-4 sm:space-y-6">
-          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
             <span>⚖️</span> 免费法律援助 &amp; 官方资源
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {officialResources.map((res, i) => (
-              <div key={i} className="bg-white rounded-xl p-4 border border-gray-100">
+            {legalResources.map((res, i) => (
+              <div key={i} className="bg-white rounded-xl p-4 border border-gray-100 hover:border-gray-200 transition-colors">
                 <div className="text-2xl mb-2">{res.icon}</div>
                 <h3 className="font-semibold text-sm mb-1">{res.title}</h3>
                 <p className="text-gray-500 text-xs leading-relaxed mb-2">{res.desc}</p>
                 {res.actionType === 'link' ? (
-                  <a
-                    href={res.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-accent text-sm font-medium hover:underline"
-                  >
-                    {res.action} ↗
-                  </a>
+                  <a href={res.href} target="_blank" rel="noopener noreferrer" className="text-accent text-xs font-medium hover:underline">{res.action} ↗</a>
+                ) : res.actionType === 'internal' ? (
+                  <Link href={res.href!} className="text-accent text-xs font-medium hover:underline">{res.action} →</Link>
                 ) : (
-                  <span className="text-accent text-sm font-medium">{res.action}</span>
+                  <span className="text-accent text-xs font-medium">{res.action}</span>
                 )}
               </div>
             ))}

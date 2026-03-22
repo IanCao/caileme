@@ -116,6 +116,27 @@ export default function ArbitrationGuide() {
             <Link href="/tools/severance" className="block text-sm text-accent hover:underline">→ 赔偿计算器</Link>
           </div>
         </div>
+
+        {/* 相关工具 */}
+        <div className="mt-10 p-6 bg-white rounded-2xl border border-gray-100">
+          <h3 className="font-semibold mb-3">🔧 相关工具</h3>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/tools/severance" className="flex-1 flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-2xl">🧮</span>
+              <div>
+                <div className="text-sm font-medium">被裁赔偿计算器</div>
+                <div className="text-xs text-gray-400">精准计算N、N+1、2N赔偿金额</div>
+              </div>
+            </Link>
+            <Link href="/guides/evidence-collection" className="flex-1 flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors">
+              <span className="text-2xl">📸</span>
+              <div>
+                <div className="text-sm font-medium">证据收集手册</div>
+                <div className="text-xs text-gray-400">合法有效地收集和保全证据</div>
+              </div>
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

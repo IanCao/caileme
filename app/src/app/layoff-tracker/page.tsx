@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useLayoffProgress } from "@/hooks/useLayoffProgress";
@@ -11,6 +11,8 @@ export default function LayoffTrackerPage() {
   const { progress, isLoading, toggleStep, updateStepNotes, toggleCheckItem, resetProgress, getProgressPercentage } = useLayoffProgress();
   const [filter, setFilter] = useState<"all" | Step["category"]>("all");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   const filteredSteps = filter === "all"
     ? layoffSteps
@@ -31,12 +33,20 @@ export default function LayoffTrackerPage() {
               </p>
             </div>
             {progress && progress.completedSteps.length > 0 && (
-              <button
-                onClick={() => setShowResetConfirm(true)}
-                className="text-sm text-red-600 hover:text-red-700 font-medium"
-              >
-                重置进度
-              </button>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowShareCard(true)}
+                  className="text-sm text-accent hover:text-accent/80 font-medium"
+                >
+                  📤 分享进度
+                </button>
+                <button
+                  onClick={() => setShowResetConfirm(true)}
+                  className="text-sm text-red-600 hover:text-red-700 font-medium"
+                >
+                  重置进度
+                </button>
+              </div>
             )}
           </div>
 
@@ -185,6 +195,33 @@ export default function LayoffTrackerPage() {
                 </div>
               </motion.div>
             )}
+
+            {/* 相关权益工具 */}
+            <div className="mt-10 p-6 bg-white rounded-2xl border border-gray-100">
+              <h3 className="font-semibold mb-4">🔧 相关权益工具</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {[
+                  { title: "被裁赔偿计算器", desc: "精准计算N、N+1、2N赔偿金额", href: "/tools/severance", icon: "🧮" },
+                  { title: "失业金计算器", desc: "查询你所在城市的失业金标准", href: "/tools/unemployment", icon: "💰" },
+                  { title: "社保断缴影响", desc: "了解断缴对医保、购房等的影响", href: "/tools/social-insurance", icon: "🛡️" },
+                  { title: "仲裁流程指南", desc: "劳动仲裁全流程详解", href: "/guides/arbitration", icon: "⚖️" },
+                  { title: "被裁谈判技巧", desc: "如何跟HR谈判争取更好方案", href: "/guides/negotiation", icon: "💪" },
+                  { title: "AI裁员模拟", desc: "模拟HR谈话，练习应对策略", href: "/ai-simulation", icon: "🤖" },
+                ].map((tool) => (
+                  <Link
+                    key={tool.href}
+                    href={tool.href}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-surface hover:bg-gray-100 transition-colors"
+                  >
+                    <span className="text-2xl">{tool.icon}</span>
+                    <div>
+                      <div className="text-sm font-medium">{tool.title}</div>
+                      <div className="text-xs text-gray-400">{tool.desc}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </>
         )}
       </div>
@@ -216,6 +253,167 @@ export default function LayoffTrackerPage() {
                 className="flex-1 text-sm px-4 py-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors"
               >
                 确认重置
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Share Card Modal */}
+      {showShareCard && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-lg">分享维权进度</h3>
+              <button
+                onClick={() => setShowShareCard(false)}
+                className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Share Card Content */}
+            <div
+              ref={shareCardRef}
+              style={{
+                width: 400,
+                background: "#ffffff",
+                borderRadius: 16,
+                overflow: "hidden",
+                fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+              }}
+            >
+              {/* Gradient top bar */}
+              <div
+                style={{
+                  height: 8,
+                  background: "linear-gradient(to right, #4ade80, #22c55e)",
+                }}
+              />
+
+              <div style={{ padding: "24px 28px 20px" }}>
+                {/* Title */}
+                <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: "#111" }}>
+                  📋 维权进度 · 追踪卡
+                </div>
+
+                {/* Progress info */}
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                    <span style={{ fontSize: 14, color: "#6b7280" }}>完成进度</span>
+                    <span style={{ fontSize: 22, fontWeight: 700, color: "#16a34a" }}>{progressPercentage}%</span>
+                  </div>
+                  {/* Progress bar */}
+                  <div style={{ height: 8, background: "#f3f4f6", borderRadius: 4, overflow: "hidden", marginBottom: 6 }}>
+                    <div
+                      style={{
+                        height: "100%",
+                        width: `${progressPercentage}%`,
+                        background: "linear-gradient(to right, #4ade80, #22c55e)",
+                        borderRadius: 4,
+                      }}
+                    />
+                  </div>
+                  <div style={{ fontSize: 13, color: "#9ca3af", textAlign: "right" as const }}>
+                    {progress?.completedSteps.length || 0}/{layoffSteps.length} 步骤
+                  </div>
+                </div>
+
+                {/* Divider */}
+                <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
+
+                {/* Completed steps */}
+                {progress && progress.completedSteps.length > 0 && (
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "#111", marginBottom: 10 }}>
+                      ✅ 已完成
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      {layoffSteps
+                        .filter((s) => progress.completedSteps.includes(s.id))
+                        .slice(0, 8)
+                        .map((step) => (
+                          <div key={step.id} style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                            <span style={{ color: "#22c55e", flexShrink: 0 }}>{step.icon}</span>
+                            <span>{step.title}</span>
+                          </div>
+                        ))}
+                      {progress.completedSteps.length > 8 && (
+                        <div style={{ fontSize: 12, color: "#9ca3af" }}>
+                          ...还有 {progress.completedSteps.length - 8} 个步骤
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Footer */}
+                <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
+                <div style={{ textAlign: "center" as const }}>
+                  <div style={{ fontSize: 13, color: "#9ca3af", marginBottom: 2 }}>
+                    帮助你的牛马朋友们 →
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>
+                    裁了么 · caileme.team
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Action buttons */}
+            <div className="flex gap-3 mt-4">
+              <button
+                onClick={async () => {
+                  try {
+                    const html2canvas = (await import("html2canvas")).default;
+                    if (shareCardRef.current) {
+                      const canvas = await html2canvas(shareCardRef.current, {
+                        scale: 2,
+                        backgroundColor: "#ffffff",
+                        useCORS: true,
+                      });
+                      const link = document.createElement("a");
+                      link.download = "维权进度追踪卡.png";
+                      link.href = canvas.toDataURL("image/png");
+                      link.click();
+                    }
+                  } catch {
+                    alert("保存失败，请尝试截图保存");
+                  }
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                💾 保存为图片
+              </button>
+              <button
+                onClick={() => {
+                  const completedNames = layoffSteps
+                    .filter((s) => progress?.completedSteps.includes(s.id))
+                    .map((s) => `${s.icon} ${s.title}`);
+                  const text = [
+                    `📋 维权进度 · 追踪卡`,
+                    ``,
+                    `完成进度: ${progressPercentage}% (${progress?.completedSteps.length || 0}/${layoffSteps.length}步骤)`,
+                    ``,
+                    `✅ 已完成:`,
+                    ...completedNames.map((n) => `· ${n}`),
+                    ``,
+                    `帮助你的牛马朋友们 → caileme.team`,
+                  ].join("\n");
+                  navigator.clipboard.writeText(text).then(() => {
+                    alert("已复制到剪贴板！");
+                  }).catch(() => {
+                    alert("复制失败，请手动复制");
+                  });
+                }}
+                className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
+              >
+                📋 复制文本
               </button>
             </div>
           </motion.div>

@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { LazyMotion, domAnimation, m } from "framer-motion";
 import { useEffect, useRef } from "react";
+import contributorsData from "@/data/generatedContributors.json";
+
+const contributors: { name: string; avatar: string; contribution: string }[] = contributorsData;
 
 const tools = [
   {
@@ -41,30 +44,6 @@ const guides = [
     desc: "从申请到开庭，劳动仲裁全流程详解。",
     href: "/guides/arbitration",
   },
-];
-
-// 贡献者/投稿人数据
-const contributors = [
-  { name: "匿名打工人", avatar: "👨‍💻", contribution: "分享大厂被裁经历" },
-  { name: "前端小张", avatar: "👩‍💻", contribution: "避坑指南投稿" },
-  { name: "产品小王", avatar: "👨‍🎓", contribution: "仲裁全记录" },
-  { name: "运营老李", avatar: "👨‍💼", contribution: "再就业经验" },
-  { name: "测试老陈", avatar: "🧑‍🔧", contribution: "社保补缴攻略" },
-  { name: "后端小赵", avatar: "👩‍🎓", contribution: "仲裁2N经历" },
-  { name: "设计师小林", avatar: "👩‍🎨", contribution: "被裁谈判策略" },
-  { name: "数据分析师", avatar: "📊", contribution: "城市数据贡献" },
-  { name: "法务顾问", avatar: "⚖️", contribution: "法律知识审核" },
-  { name: "HR转型者", avatar: "🤝", contribution: "HR视角分享" },
-  { name: "创业者老刘", avatar: "🚀", contribution: "职业转型指南" },
-  { name: "自由职业者", avatar: "💡", contribution: "灵活就业经验" },
-];
-
-// 荣誉榜数据
-const honorBoard = [
-  { title: "最佳经验分享", name: "后端小赵", desc: "详细记录仲裁全过程，帮助500+人了解维权流程" },
-  { title: "最受欢迎避坑指南", name: "前端小张", desc: "血泪教训分享，阅读量破万" },
-  { title: "数据贡献之星", name: "数据分析师", desc: "整理20+城市最新政策数据" },
-  { title: "最暖心回复", name: "运营老李", desc: "在社区积极回复帮助他人" },
 ];
 
 const fadeUp = {
@@ -348,49 +327,6 @@ export default function HomePage() {
               className="inline-block text-accent font-medium hover:underline"
             >
               查看全部情报 →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* 荣誉榜 */}
-      <section className="py-16 md:py-24 bg-surface">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <m.div className="text-center mb-12" {...fadeUp}>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">🏆 荣誉榜</h2>
-            <p className="mt-4 text-gray-500 text-base sm:text-lg">
-              感谢这些勇敢的分享者，他们的经历帮助了无数人
-            </p>
-          </m.div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {honorBoard.map((item, i) => (
-              <m.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100"
-              >
-                <div className="flex items-center gap-3 mb-3">
-                  <span className="text-lg">🏅</span>
-                  <span className="text-xs px-2.5 py-0.5 rounded-full bg-yellow-50 text-yellow-700 font-medium">
-                    {item.title}
-                  </span>
-                </div>
-                <h3 className="font-semibold text-base sm:text-lg">{item.name}</h3>
-                <p className="mt-1 text-sm text-gray-500">{item.desc}</p>
-              </m.div>
-            ))}
-          </div>
-
-          <div className="text-center mt-10">
-            <p className="text-gray-500 text-sm mb-4">每一份分享都是力量，团结起来守护我们的权益</p>
-            <Link
-              href="/community/submit"
-              className="inline-block bg-black text-white px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
-            >
-              ✏️ 我也要贡献
             </Link>
           </div>
         </div>

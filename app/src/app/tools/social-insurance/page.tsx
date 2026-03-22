@@ -29,22 +29,28 @@ function getImpacts(city: CityPolicy) {
         `${city.name}最低工资 ${fmt(city.minWage)} 元/月，灵活就业医保缴费基数参考此标准`,
       ],
       solution:
-        `建议：离职后${graceDays}天内以灵活就业身份续缴医保（${city.name}可到社保局办理）。过渡期购买短期商业医疗险。`,
+        `建议：离职后${graceDays}天内以灵活就业身份续缴医保（${city.name}可到社保局办理）。过渡期购买短期商业医疗险。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
     },
     {
       icon: "🏠",
       title: "购房资格",
-      severity: city.housePurchaseMonths >= 48 ? "高" : "中",
-      severityColor: city.housePurchaseMonths >= 48 ? "text-red-600" : "text-yellow-600",
-      bgColor: city.housePurchaseMonths >= 48 ? "bg-red-50" : "bg-yellow-50",
-      content: [
+      severity: city.housePurchaseMonths > 0 ? (city.housePurchaseMonths >= 48 ? "高" : "中") : "低",
+      severityColor: city.housePurchaseMonths > 0 ? (city.housePurchaseMonths >= 48 ? "text-red-600" : "text-yellow-600") : "text-green-600",
+      bgColor: city.housePurchaseMonths > 0 ? (city.housePurchaseMonths >= 48 ? "bg-red-50" : "bg-yellow-50") : "bg-green-50",
+      content: city.housePurchaseMonths > 0 ? [
         `${city.name}购房要求：${city.housePurchaseNote}`,
-        `需连续缴纳社保 ${city.housePurchaseMonths} 个月（${Math.round(city.housePurchaseMonths / 12)} 年）`,
+        `需连续缴纳社保 ${city.housePurchaseMonths} 个月`,
         "断缴将导致连续缴费月数重新计算",
-        "非本地户籍受影响最大",
+        "非本地户籍受影响最大，本地户籍通常不限",
+      ] : [
+        `${city.name}购房不强制要求连续社保缴纳`,
+        `${city.housePurchaseNote || '本地户籍不受社保限制'}`,
+        "具体政策以当地住建局最新规定为准",
       ],
-      solution:
-        "建议：如有购房计划，务必确保社保不断缴。可通过灵活就业或代缴（注意风险）维持。",
+      solution: city.housePurchaseMonths > 0
+        ? `建议：如有购房计划，务必确保社保不断缴。可通过灵活就业维持。\n📎 详情请咨询${city.name}12333热线或当地社保局`
+        : `建议：${city.name}购房对社保要求较低，但建议维持社保连续性以备不时之需。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
+      officialUrl: `拨打${city.name}住建局热线或访问当地住建局官网查询最新政策`,
     },
     {
       icon: "💰",
@@ -60,7 +66,7 @@ function getImpacts(city: CityPolicy) {
         "累计缴费满1年可申领，最长可领24个月",
       ],
       solution:
-        `建议：被裁员后尽快到${city.name}社保局办理失业登记。领失业金的同时国家代缴医保，一举两得。`,
+        `建议：被裁员后尽快到${city.name}社保局办理失业登记。领失业金的同时国家代缴医保，一举两得。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
     },
     {
       icon: "📋",
@@ -74,7 +80,7 @@ function getImpacts(city: CityPolicy) {
         "断缴可能导致之前累计清零",
         `${city.name}具体落户政策请咨询当地人社局（12333热线）`,
       ],
-      solution: "建议：如正在办理落户，断缴影响极大，需尽快处理续缴问题。",
+      solution: `建议：如正在办理落户，断缴影响极大，需尽快处理续缴问题。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
     },
     {
       icon: "🚗",
@@ -87,7 +93,7 @@ function getImpacts(city: CityPolicy) {
         "断缴将重新计算连续缴费时间",
         `具体要求以${city.name}最新政策为准`,
       ],
-      solution: "建议：如有购车需求，注意维持社保连续性。",
+      solution: `建议：如有购车需求，注意维持社保连续性。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
     },
     {
       icon: "👶",
@@ -100,7 +106,7 @@ function getImpacts(city: CityPolicy) {
         "断缴后无法享受生育津贴和报销",
         "配偶一方缴纳也可享受部分待遇",
       ],
-      solution: "建议：如有生育计划，务必保持社保连续缴纳。",
+      solution: `建议：如有生育计划，务必保持社保连续缴纳。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
     },
     {
       icon: "👴",
@@ -115,7 +121,7 @@ function getImpacts(city: CityPolicy) {
         "可通过灵活就业身份继续缴纳",
       ],
       solution:
-        "建议：养老保险影响相对较小，短期断缴问题不大，但建议尽快续缴。",
+        `建议：养老保险影响相对较小，短期断缴问题不大，但建议尽快续缴。\n📎 详情请咨询${city.name}12333热线或当地社保局`,
     },
   ];
 }

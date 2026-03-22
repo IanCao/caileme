@@ -59,6 +59,7 @@ export function mdToPost(content: string): CommunityPost | null {
       content: body,
       category: meta.category || '经验分享',
       date: meta.date || new Date().toISOString().split('T')[0],
+      city: meta.city || '',
       likes: meta.likes || 0,
       comments: [],
     };
@@ -76,7 +77,7 @@ export function mdToNews(content: string): NewsItem | null {
     if (!meta.id || !meta.company) return null;
     
     return {
-      id: Number(meta.id),
+      id: String(meta.id),
       company: meta.company,
       industry: meta.industry || '未知',
       city: meta.city || '未知',
@@ -85,6 +86,7 @@ export function mdToNews(content: string): NewsItem | null {
       compensation: meta.compensation || '未知',
       departments: meta.departments || '未知',
       source: meta.source || 'MD文件投稿',
+      sourceUrl: meta.sourceUrl || '',
       verified: meta.verified || false,
       detail: body,
     };

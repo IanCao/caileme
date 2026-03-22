@@ -102,11 +102,15 @@ export function InteractiveSimulation() {
   const [roundCount, setRoundCount] = useState(0);
   const [showOptions, setShowOptions] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [showShareCard, setShowShareCard] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const shareCardRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
   };
 
   useEffect(() => {
@@ -344,20 +348,182 @@ export function InteractiveSimulation() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <button
             onClick={() => startScenario(selectedScenario)}
-            className="flex-1 py-3 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+            className="py-3 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
           >
             🔄 重新挑战
           </button>
           <button
             onClick={resetAll}
-            className="flex-1 py-3 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
+            className="py-3 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
           >
             📋 选择其他场景
           </button>
+          <button
+            onClick={() => setShowShareCard(true)}
+            className="py-3 rounded-xl bg-accent text-white text-sm font-medium hover:bg-accent/90 transition-colors"
+          >
+            📤 分享成绩
+          </button>
         </div>
+
+        {/* Share Card Modal */}
+        {showShareCard && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-white rounded-2xl p-6 max-w-md w-full max-h-[90vh] overflow-y-auto"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-lg">分享成绩单</h3>
+                <button
+                  onClick={() => setShowShareCard(false)}
+                  className="text-gray-400 hover:text-gray-600 text-xl leading-none"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Share Card Content */}
+              <div
+                ref={shareCardRef}
+                style={{
+                  width: 400,
+                  background: "#ffffff",
+                  borderRadius: 16,
+                  overflow: "hidden",
+                  fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                }}
+              >
+                {/* Gradient top bar */}
+                <div
+                  style={{
+                    height: 8,
+                    background: pct >= 80
+                      ? "linear-gradient(to right, #22c55e, #059669)"
+                      : pct >= 60
+                        ? "linear-gradient(to right, #eab308, #f97316)"
+                        : "linear-gradient(to right, #ef4444, #ec4899)",
+                  }}
+                />
+
+                <div style={{ padding: "24px 28px 20px" }}>
+                  {/* Title */}
+                  <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 20, color: "#111" }}>
+                    🤖 AI裁员模拟 · 成绩单
+                  </div>
+
+                  {/* Info rows */}
+                  <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 14, color: "#6b7280" }}>场景</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>{selectedScenario.title}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 14, color: "#6b7280" }}>得分</span>
+                      <span style={{ fontSize: 22, fontWeight: 700, color: pct >= 80 ? "#16a34a" : pct >= 60 ? "#ca8a04" : "#dc2626" }}>{pct}%</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <span style={{ fontSize: 14, color: "#6b7280" }}>评价</span>
+                      <span style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>{summary.emoji} {summary.title}</span>
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
+
+                  {/* Key tips */}
+                  <div style={{ marginBottom: 20 }}>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "#111", marginBottom: 10 }}>
+                      💡 关键提示
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                      <div style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                        <span style={{ color: "#22c55e", flexShrink: 0 }}>·</span>
+                        <span>保持冷静，不被HR话术影响判断</span>
+                      </div>
+                      <div style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                        <span style={{ color: "#22c55e", flexShrink: 0 }}>·</span>
+                        <span>了解法定赔偿标准(N+1)，不轻易让步</span>
+                      </div>
+                      <div style={{ fontSize: 13, color: "#4b5563", display: "flex", alignItems: "flex-start", gap: 6 }}>
+                        <span style={{ color: "#22c55e", flexShrink: 0 }}>·</span>
+                        <span>不要当场签字，保留协商空间</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Footer */}
+                  <div style={{ height: 1, background: "#f3f4f6", marginBottom: 16 }} />
+                  <div style={{ textAlign: "center" as const }}>
+                    <div style={{ fontSize: 13, color: "#9ca3af", marginBottom: 2 }}>
+                      帮助你的牛马朋友们 →
+                    </div>
+                    <div style={{ fontSize: 14, fontWeight: 600, color: "#111" }}>
+                      裁了么 · caileme.team
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={async () => {
+                    try {
+                      const html2canvas = (await import("html2canvas")).default;
+                      if (shareCardRef.current) {
+                        const canvas = await html2canvas(shareCardRef.current, {
+                          scale: 2,
+                          backgroundColor: "#ffffff",
+                          useCORS: true,
+                        });
+                        const link = document.createElement("a");
+                        link.download = `AI模拟成绩单-${selectedScenario.title}.png`;
+                        link.href = canvas.toDataURL("image/png");
+                        link.click();
+                      }
+                    } catch {
+                      alert("保存失败，请尝试截图保存");
+                    }
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                >
+                  💾 保存为图片
+                </button>
+                <button
+                  onClick={() => {
+                    const text = [
+                      `🤖 AI裁员模拟 · 成绩单`,
+                      ``,
+                      `场景: ${selectedScenario.title}`,
+                      `得分: ${pct}%`,
+                      `评价: ${summary.emoji} ${summary.title}`,
+                      ``,
+                      `💡 关键提示:`,
+                      `· 保持冷静，不被HR话术影响判断`,
+                      `· 了解法定赔偿标准(N+1)，不轻易让步`,
+                      `· 不要当场签字，保留协商空间`,
+                      ``,
+                      `帮助你的牛马朋友们 → caileme.team`,
+                    ].join("\n");
+                    navigator.clipboard.writeText(text).then(() => {
+                      alert("已复制到剪贴板！");
+                    }).catch(() => {
+                      alert("复制失败，请手动复制");
+                    });
+                  }}
+                  className="flex-1 py-2.5 rounded-xl bg-gray-100 text-gray-700 text-sm font-medium hover:bg-gray-200 transition-colors"
+                >
+                  📋 复制文本
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
       </motion.div>
     );
   }

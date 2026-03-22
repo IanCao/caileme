@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  layoffNews, communityPosts, newsCities,
+  allLayoffNews, allCommunityPosts, newsCities,
   type NewsItem, type CommunityPost,
 } from '@/data/communityData';
 
@@ -92,18 +92,11 @@ export default function CommunityPage() {
   const [activeTag, setActiveTag] = useState('全部');
   const [selectedCity, setSelectedCity] = useState('全部');
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
-  const [showGroupToast, setShowGroupToast] = useState(false);
-
-  useEffect(() => {
-    if (showGroupToast) {
-      const timer = setTimeout(() => setShowGroupToast(false), 2500);
-      return () => clearTimeout(timer);
-    }
-  }, [showGroupToast]);
+  const [showGroupModal, setShowGroupModal] = useState(false);
 
   const allItems: FeedItem[] = [
-    ...layoffNews.map((n): FeedItem => ({ type: 'news', tag: '被裁情报', data: n })),
-    ...communityPosts.map((p): FeedItem => ({ type: 'post', tag: p.category, data: p })),
+    ...allLayoffNews.map((n): FeedItem => ({ type: 'news', tag: '被裁情报', data: n })),
+    ...allCommunityPosts.map((p): FeedItem => ({ type: 'post', tag: p.category, data: p })),
   ].sort((a, b) => {
     const da = a.type === 'news' ? a.data.date : a.data.date;
     const db = b.type === 'news' ? b.data.date : b.data.date;
@@ -171,7 +164,7 @@ export default function CommunityPage() {
             ✏️ 匿名投稿
           </Link>
           <button
-            onClick={() => setShowGroupToast(true)}
+            onClick={() => setShowGroupModal(true)}
             className="inline-flex items-center gap-1.5 bg-green-500 text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-green-600 transition-colors"
           >
             💬 加入社群
@@ -259,16 +252,33 @@ export default function CommunityPage() {
         )}
       </AnimatePresence>
 
-      {/* 社群 Toast */}
+      {/* 社群二维码弹窗 */}
       <AnimatePresence>
-        {showGroupToast && (
+        {showGroupModal && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-6 py-3 rounded-full shadow-lg text-sm font-medium max-w-sm text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            onClick={() => setShowGroupModal(false)}
           >
-            💬 社群功能即将上线，敬请期待！
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-white rounded-2xl p-6 max-w-sm w-full text-center shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 className="text-lg font-bold mb-2">加入打工人互助社群</h3>
+              <p className="text-sm text-gray-500 mb-4">扫描下方二维码，加入社群</p>
+              <img src="/commu.jpg" alt="社群二维码" className="w-64 h-64 mx-auto rounded-xl object-cover" />
+              <button
+                onClick={() => setShowGroupModal(false)}
+                className="mt-4 text-sm text-gray-500 hover:text-gray-700"
+              >
+                关闭
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

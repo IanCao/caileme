@@ -7,6 +7,7 @@ import CitySelector from "@/components/CitySelector";
 
 export default function UnemploymentCalculator() {
   const [city, setCity] = useState("beijing");
+  const [tablePage, setTablePage] = useState(1);
   const [insuranceYears, setInsuranceYears] = useState("");
   const [result, setResult] = useState<null | {
     monthlyAmount: number;
@@ -44,6 +45,10 @@ export default function UnemploymentCalculator() {
 
   const cityInfo = getCityByCode(city);
 
+  const PAGE_SIZE = 10;
+  const totalPages = Math.ceil(cityPolicies.length / PAGE_SIZE);
+  const pagedCities = cityPolicies.slice((tablePage - 1) * PAGE_SIZE, tablePage * PAGE_SIZE);
+
   return (
     <div className="min-h-screen bg-surface">
       <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
@@ -55,7 +60,7 @@ export default function UnemploymentCalculator() {
             失业金计算器
           </h1>
           <p className="mt-4 text-gray-500 text-center text-lg">
-            覆盖全国20+城市2026年最新标准
+            覆盖全国30+城市2026年最新标准
           </p>
         </motion.div>
 
@@ -162,7 +167,7 @@ export default function UnemploymentCalculator() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {cityPolicies.map((c) => (
+                {pagedCities.map((c) => (
                   <tr key={c.code}>
                     <td className="py-2 font-medium whitespace-nowrap">{c.name}</td>
                     <td className="py-2 text-accent font-medium whitespace-nowrap">{fmt(c.unemploymentBase)}</td>
@@ -176,6 +181,40 @@ export default function UnemploymentCalculator() {
                 ))}
               </tbody>
             </table>
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-4 pt-3 border-t border-gray-100">
+                <span className="text-xs text-gray-400">
+                  共 {cityPolicies.length} 个城市，第 {tablePage}/{totalPages} 页
+                </span>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setTablePage(p => Math.max(1, p - 1))}
+                    disabled={tablePage === 1}
+                    className="px-3 py-1 text-xs rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                  >
+                    上一页
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setTablePage(p)}
+                      className={`w-7 h-7 text-xs rounded-lg transition-colors ${
+                        tablePage === p ? "bg-black text-white" : "border border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setTablePage(p => Math.min(totalPages, p + 1))}
+                    disabled={tablePage === totalPages}
+                    className="px-3 py-1 text-xs rounded-lg border border-gray-200 disabled:opacity-30 hover:bg-gray-50 transition-colors"
+                  >
+                    下一页
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 

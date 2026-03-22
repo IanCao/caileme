@@ -8,7 +8,7 @@ import { layoffSteps, stepCategories, Step } from "@/data/layoffSteps";
 import { StepCard } from "@/components/StepCard";
 
 export default function LayoffTrackerPage() {
-  const { progress, isLoading, toggleStep, updateStepNotes, resetProgress, getProgressPercentage } = useLayoffProgress();
+  const { progress, isLoading, toggleStep, updateStepNotes, toggleCheckItem, resetProgress, getProgressPercentage } = useLayoffProgress();
   const [filter, setFilter] = useState<"all" | Step["category"]>("all");
   const [showResetConfirm, setShowResetConfirm] = useState(false);
 
@@ -61,6 +61,22 @@ export default function LayoffTrackerPage() {
             <p className="mt-1 text-xs text-gray-400">
               已完成 {progress?.completedSteps.length || 0} / {layoffSteps.length} 个步骤
             </p>
+            {/* Category Progress */}
+            {progress && progress.completedSteps.length > 0 && (
+              <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {stepCategories.filter(c => c.id !== "all").map(cat => {
+                  const catSteps = layoffSteps.filter(s => s.category === cat.id);
+                  const catCompleted = catSteps.filter(s => progress.completedSteps.includes(s.id)).length;
+                  return (
+                    <div key={cat.id} className="p-2 bg-surface rounded-lg text-center">
+                      <div className="text-lg">{cat.icon}</div>
+                      <div className="text-xs font-medium text-gray-600 mt-1">{cat.label}</div>
+                      <div className="text-xs text-gray-400">{catCompleted}/{catSteps.length}</div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
               数据保存在浏览器本地，不会上传到服务器
@@ -132,8 +148,10 @@ export default function LayoffTrackerPage() {
                     isCompleted={progress?.completedSteps.includes(step.id) || false}
                     notes={progress?.stepProgress[step.id]?.notes || ""}
                     index={layoffSteps.indexOf(step)}
+                    checkedItems={progress?.stepProgress[step.id]?.checkedItems || []}
                     onToggle={() => toggleStep(step.id)}
                     onNotesChange={(notes) => updateStepNotes(step.id, notes)}
+                    onCheckItem={(item) => toggleCheckItem(step.id, item)}
                   />
                 </div>
               ))}

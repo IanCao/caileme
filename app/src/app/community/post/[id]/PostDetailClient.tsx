@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { communityPosts } from '@/data/communityData';
+import { allCommunityPosts } from '@/data/communityData';
 
 export default function PostDetailClient({ params }: { params: { id: string } }) {
   const postId = params.id;
-  const post = communityPosts.find(p => p.id === postId);
+  const post = allCommunityPosts.find(p => p.id === postId);
   const [showCommentToast, setShowCommentToast] = useState(false);
   const [commentText, setCommentText] = useState('');
   const [commentNickname, setCommentNickname] = useState('');

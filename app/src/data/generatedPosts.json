@@ -1,0 +1,14 @@
+[
+  {
+    "id": "md-example-post",
+    "nickname": "社区贡献者",
+    "avatar": "✍️",
+    "title": "示例文章：如何通过MD文件投稿",
+    "summary": "这是一个示例MD文件，展示如何通过添加MD文件来发布社区内容。",
+    "content": "\n# 如何通过MD文件投稿\n\n只需在 `content/posts/` 目录下创建一个 `.md` 文件即可。\n\n## 文件格式\n\n文件头部使用 YAML front matter 定义元数据，正文使用 Markdown 格式。\n\n## 支持的分类\n\n- 经验分享\n- 避坑指南\n- 仲裁经验\n- 再就业\n\n投稿后重新构建即可生效。\n",
+    "category": "经验分享",
+    "date": "2026-03-22",
+    "likes": 0,
+    "comments": []
+  }
+]

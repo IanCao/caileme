@@ -557,3 +557,16 @@ export const newsCities = [
 ];
 
 export const postCategories = ["全部", "经验分享", "避坑指南", "仲裁经验", "再就业"];
+
+// 合并MD文件生成的内容
+let generatedPosts: CommunityPost[] = [];
+let generatedNews: NewsItem[] = [];
+try {
+  generatedPosts = require('./generatedPosts.json');
+} catch {}
+try {
+  generatedNews = require('./generatedNews.json');
+} catch {}
+
+export const allCommunityPosts = [...communityPosts, ...generatedPosts];
+export const allLayoffNews = [...layoffNews, ...generatedNews];

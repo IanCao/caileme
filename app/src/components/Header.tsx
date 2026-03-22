@@ -11,7 +11,7 @@ const navItems = [
   { label: "维权百科", href: "/guides" },
   { label: "AI模拟", href: "/ai-simulation" },
   { label: "牛马保护站", href: "/community" },
-  { label: "我的收藏", href: "/bookmarks" },
+
 ];
 
 export function Header() {

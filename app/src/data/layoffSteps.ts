@@ -7,6 +7,7 @@ export interface Step {
   category: "preparation" | "negotiation" | "process" | "aftercare";
   order: number;
   link?: { href: string; label: string };
+  checkItems?: string[];
 }
 
 export const layoffSteps: Step[] = [
@@ -23,6 +24,7 @@ export const layoffSteps: Step[] = [
     icon: "📋",
     category: "preparation",
     order: 1,
+    checkItems: ["已收到书面裁员通知（加盖公章）", "已拍照保存通知内容", "已记录谈话时间和参与人员", "确认裁员理由是否合法"],
   },
   {
     id: "rights",
@@ -38,6 +40,7 @@ export const layoffSteps: Step[] = [
     category: "preparation",
     order: 2,
     link: { href: "/guides", label: "查看维权百科" },
+    checkItems: ["已使用赔偿计算器估算金额", "已了解N/N+1/2N区别", "确认是否存在违法裁员情况"],
   },
   {
     id: "evidence",
@@ -52,6 +55,7 @@ export const layoffSteps: Step[] = [
     icon: "📁",
     category: "preparation",
     order: 3,
+    checkItems: ["已保存劳动合同复印件", "已保存近12个月工资条/银行流水", "已保存绩效考核记录", "已保存与HR/管理层沟通记录", "已保存考勤记录"],
   },
   {
     id: "negotiate",
@@ -67,6 +71,7 @@ export const layoffSteps: Step[] = [
     icon: "💬",
     category: "negotiation",
     order: 4,
+    checkItems: ["已明确赔偿诉求底线", "谈判过程已录音", "未签署任何文件", "已记录公司提出的方案"],
   },
   {
     id: "calculate",
@@ -82,6 +87,7 @@ export const layoffSteps: Step[] = [
     category: "negotiation",
     order: 5,
     link: { href: "/tools/severance", label: "打开赔偿计算器" },
+    checkItems: ["已核对月均工资（含奖金补贴）", "已确认工作年限", "已计算未休年假天数", "已了解个税影响"],
   },
   {
     id: "sign",
@@ -98,6 +104,7 @@ export const layoffSteps: Step[] = [
     category: "process",
     order: 6,
     link: { href: "/guides/non-compete", label: "了解竞业限制" },
+    checkItems: ["已仔细阅读协议全部条款", "确认赔偿金额正确", "确认离职原因表述", "确认竞业限制条款", "已保留签署好的协议副本"],
   },
   {
     id: "procedures",
@@ -114,6 +121,7 @@ export const layoffSteps: Step[] = [
     category: "process",
     order: 7,
     link: { href: "/tools/social-insurance", label: "查看社保断缴影响" },
+    checkItems: ["已领取离职证明", "已办理社保转移/封存", "已办理公积金提取或转移", "已办理失业登记", "已完成工作交接"],
   },
   {
     id: "unemployment",
@@ -130,6 +138,7 @@ export const layoffSteps: Step[] = [
     category: "aftercare",
     order: 8,
     link: { href: "/tools/unemployment", label: "打开失业金计算器" },
+    checkItems: ["已办理失业登记", "已准备好所需材料", "已提交失业金申请", "已了解领取期限和认证要求"],
   },
   {
     id: "prepare",
@@ -145,6 +154,7 @@ export const layoffSteps: Step[] = [
     icon: "📄",
     category: "aftercare",
     order: 9,
+    checkItems: ["已更新简历", "已准备面试问题", "已整理项目经验", "已开通招聘平台账号"],
   },
   {
     id: "reemployment",
@@ -160,6 +170,7 @@ export const layoffSteps: Step[] = [
     icon: "🚀",
     category: "aftercare",
     order: 10,
+    checkItems: ["已确认新offer薪酬福利", "已了解新公司背景", "已确认社保连续性"],
   },
 ];
 

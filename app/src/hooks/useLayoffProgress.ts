@@ -8,6 +8,7 @@ export interface StepProgress {
   completed: boolean;
   notes: string;
   completedAt?: string;
+  checkedItems?: string[];
 }
 
 export interface LayoffProgress {
@@ -143,6 +144,33 @@ export function useLayoffProgress() {
     }
   };
 
+  // 切换检查项
+  const toggleCheckItem = (stepId: string, item: string) => {
+    if (!progress) return;
+
+    const existing = progress.stepProgress[stepId]?.checkedItems || [];
+    const newCheckedItems = existing.includes(item)
+      ? existing.filter((i) => i !== item)
+      : [...existing, item];
+
+    const newProgress: LayoffProgress = {
+      ...progress,
+      stepProgress: {
+        ...progress.stepProgress,
+        [stepId]: {
+          ...progress.stepProgress[stepId],
+          stepId,
+          completed: progress.stepProgress[stepId]?.completed || false,
+          notes: progress.stepProgress[stepId]?.notes || "",
+          checkedItems: newCheckedItems,
+        },
+      },
+      lastUpdated: new Date().toISOString(),
+    };
+
+    saveProgress(newProgress);
+  };
+
   // 重置进度
   const resetProgress = () => {
     const initialProgress: LayoffProgress = {
@@ -167,6 +195,7 @@ export function useLayoffProgress() {
     uncompleteStep,
     updateStepNotes,
     toggleStep,
+    toggleCheckItem,
     resetProgress,
     getProgressPercentage,
   };

@@ -10,11 +10,13 @@ interface StepCardProps {
   isCompleted: boolean;
   notes: string;
   index: number;
+  checkedItems: string[];
   onToggle: () => void;
   onNotesChange: (notes: string) => void;
+  onCheckItem: (item: string) => void;
 }
 
-export function StepCard({ step, isCompleted, notes, index, onToggle, onNotesChange }: StepCardProps) {
+export function StepCard({ step, isCompleted, notes, index, checkedItems, onToggle, onNotesChange, onCheckItem }: StepCardProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [tempNotes, setTempNotes] = useState(notes);
@@ -109,6 +111,41 @@ export function StepCard({ step, isCompleted, notes, index, onToggle, onNotesCha
               transition={{ duration: 0.2 }}
               className="mt-4 pt-4 border-t border-gray-100"
             >
+              {/* Check Items */}
+              {step.checkItems && step.checkItems.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-sm font-medium text-gray-700 mb-2">✅ 检查清单</h4>
+                  <div className="space-y-2">
+                    {step.checkItems.map((item, i) => {
+                      const isChecked = checkedItems.includes(item);
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => onCheckItem(item)}
+                          className="flex items-center gap-2.5 w-full text-left group"
+                        >
+                          <span className={`w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                            isChecked ? "bg-green-500 border-green-500 text-white" : "border-gray-300 group-hover:border-gray-400"
+                          }`}>
+                            {isChecked && (
+                              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </span>
+                          <span className={`text-sm transition-colors ${isChecked ? "text-green-700 line-through" : "text-gray-600"}`}>
+                            {item}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-2 text-xs text-gray-400">
+                    已完成 {checkedItems.filter(ci => step.checkItems?.includes(ci)).length}/{step.checkItems.length} 项
+                  </div>
+                </div>
+              )}
+
               {/* Tips */}
               <div className="mb-4">
                 <h4 className="text-sm font-medium text-gray-700 mb-2">💡 建议</h4>

@@ -61,6 +61,50 @@ const moreTools = [
   },
 ];
 
+const freeLegalAid = [
+  {
+    title: "12348 法律援助热线",
+    desc: "全国免费法律咨询热线，可申请免费律师代理",
+    icon: "⚖️",
+    contact: "拨打 12348",
+    tags: ["免费", "全国"],
+  },
+  {
+    title: "法律援助中心",
+    desc: "各地司法局设立，经济困难者可获免费法律服务",
+    icon: "🏛️",
+    href: "https://www.12348.gov.cn",
+    tags: ["免费", "政府"],
+  },
+  {
+    title: "工会法律援助",
+    desc: "各地工会免费提供劳动争议法律咨询和代理",
+    icon: "🤝",
+    contact: "拨打 12351",
+    tags: ["免费", "工会"],
+  },
+  {
+    title: "劳动仲裁（免费）",
+    desc: "劳动仲裁完全免费，不需要律师也可以自己申请",
+    icon: "📋",
+    href: "/guides/arbitration",
+    tags: ["免费", "仲裁"],
+    isInternal: true,
+  },
+  {
+    title: "公益律师服务",
+    desc: "各地律师协会组织的公益法律服务",
+    icon: "👨‍⚖️",
+    tags: ["免费", "公益"],
+  },
+  {
+    title: "大学法律诊所",
+    desc: "各大学法学院设立的法律诊所，提供免费法律咨询",
+    icon: "🎓",
+    tags: ["免费", "高校"],
+  },
+];
+
 const officialResources = [
   {
     title: "12333 劳动保障热线",
@@ -145,10 +189,11 @@ export default function ToolsPage() {
         </p>
 
         {/* 计算工具 */}
-        <div className="mt-10 sm:mt-12 space-y-4 sm:space-y-6">
+        <div className="mt-10 sm:mt-12">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
             <span>🔧</span> 计算工具
           </h2>
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {calculatorTools.map((tool) => (
             <Link key={tool.href + tool.title} href={tool.href} className="block">
               <div className="bg-white rounded-2xl p-5 sm:p-6 md:p-8 border border-gray-100 card-hover">
@@ -168,13 +213,15 @@ export default function ToolsPage() {
               </div>
             </Link>
           ))}
+          </div>
         </div>
 
         {/* 更多权益工具 */}
-        <div className="mt-10 sm:mt-12 space-y-4 sm:space-y-6">
+        <div className="mt-10 sm:mt-12">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
             <span>📐</span> 更多权益工具
           </h2>
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {moreTools.map((tool, i) => (
             <Link key={i} href={tool.href} className="block">
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 card-hover">
@@ -194,6 +241,41 @@ export default function ToolsPage() {
               </div>
             </Link>
           ))}
+          </div>
+        </div>
+
+        {/* 免费法律援助 */}
+        <div className="mt-10 sm:mt-12">
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">
+            <span>⚖️</span> 免费法律援助
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {freeLegalAid.map((aid, i) => (
+              <div key={i} className="bg-white rounded-xl p-4 border border-gray-100 hover:border-gray-200 transition-colors">
+                <div className="flex items-start gap-3">
+                  <div className="text-2xl flex-shrink-0">{aid.icon}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
+                      <h3 className="font-semibold text-sm">{aid.title}</h3>
+                      {aid.tags.map((tag, j) => (
+                        <span key={j} className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-50 text-green-700">{tag}</span>
+                      ))}
+                    </div>
+                    <p className="text-gray-500 text-xs leading-relaxed mb-2">{aid.desc}</p>
+                    {aid.href ? (
+                      aid.isInternal ? (
+                        <Link href={aid.href} className="text-accent text-xs font-medium hover:underline">查看详情 →</Link>
+                      ) : (
+                        <a href={aid.href} target="_blank" rel="noopener noreferrer" className="text-accent text-xs font-medium hover:underline">访问网站 ↗</a>
+                      )
+                    ) : aid.contact ? (
+                      <span className="text-accent text-xs font-medium">{aid.contact}</span>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* 官方资源 */}

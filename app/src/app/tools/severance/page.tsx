@@ -31,11 +31,18 @@ export default function SeveranceCalculator() {
   const [useSimple, setUseSimple] = useState(true);
   const [simpleSalary, setSimpleSalary] = useState("");
   const [years, setYears] = useState("");
-  const [months, setMonths] = useState("0");
+  const [months, setMonths] = useState("");
   const [situation, setSituation] = useState<Situation>(null);
   const [unusedLeaveDays, setUnusedLeaveDays] = useState("");
   const [showIllegalInfo, setShowIllegalInfo] = useState(false);
   const [result, setResult] = useState<CalcResult | null>(null);
+  const [shareOptions, setShareOptions] = useState({
+    amount: true,
+    years: true,
+    city: true,
+    salary: false,
+  });
+  const [shareCopied, setShareCopied] = useState(false);
 
   const calculate = () => {
     if (!situation) return;
@@ -449,7 +456,14 @@ export default function SeveranceCalculator() {
                 <div className="text-sm text-gray-300 mb-1">预计到手总额</div>
                 <div className="text-4xl font-bold mt-2">{fmt(result.totalWithExtras)}</div>
                 <div className="mt-3 flex flex-wrap justify-center gap-3 text-xs text-gray-400">
-                  <span>{result.recommended} {fmt(result.recommendedAmount)}</span>
+                  {situation === "no_notice" ? (
+                    <>
+                      <span>N 经济补偿金 {fmt(result.n)}</span>
+                      <span>+1 按实际工资 {fmt(result.avgSalary)}</span>
+                    </>
+                  ) : (
+                    <span>{result.recommended} {fmt(result.recommendedAmount)}</span>
+                  )}
                   {result.annualLeavePay > 0 && <span>+ 年假补偿 {fmt(result.annualLeavePay)}</span>}
                   {result.taxAmount > 0 && <span>- 个税 {fmt(result.taxAmount)}</span>}
                 </div>
@@ -458,7 +472,12 @@ export default function SeveranceCalculator() {
               {/* 饼图展示 */}
               {(() => {
                 const parts: { label: string; value: number; color: string }[] = [];
-                parts.push({ label: result.recommended, value: result.recommendedAmount, color: "#a3d9a5" });
+                if (situation === "no_notice") {
+                  parts.push({ label: "N 经济补偿金", value: result.n, color: "#a3d9a5" });
+                  parts.push({ label: "+1 代通知金", value: result.avgSalary, color: "#86efac" });
+                } else {
+                  parts.push({ label: result.recommended, value: result.recommendedAmount, color: "#a3d9a5" });
+                }
                 if (result.annualLeavePay > 0) parts.push({ label: "年假补偿", value: result.annualLeavePay, color: "#93c5fd" });
                 if (result.taxAmount > 0) parts.push({ label: "个税扣除", value: result.taxAmount, color: "#fca5a5" });
                 const total = parts.reduce((s, p) => s + p.value, 0);
@@ -573,14 +592,74 @@ export default function SeveranceCalculator() {
                 <div className={`p-5 rounded-xl text-center ${situation === "no_notice" ? "ring-2 ring-black" : "bg-surface"}`}>
                   <div className="text-xs text-gray-500 mb-1">代通知金（N+1）</div>
                   <div className="text-xl font-bold">{fmt(result.n1)}</div>
-                  {result.isCapped && (
-                    <div className="text-[10px] text-gray-400 mt-1">+1按实际工资{fmt(result.avgSalary)}</div>
-                  )}
+                  <div className="text-[10px] text-gray-400 mt-1">
+                    N {fmt(result.n)} + 1 {fmt(result.avgSalary)}
+                  </div>
                 </div>
                 <div className={`p-5 rounded-xl text-center ${situation === "illegal" ? "ring-2 ring-danger" : "bg-surface"}`}>
                   <div className="text-xs text-gray-500 mb-1">违法裁员（2N）</div>
                   <div className="text-xl font-bold text-danger">{fmt(result.n2)}</div>
                 </div>
+              </div>
+
+              {/* 分享功能 */}
+              <div className="mt-6 p-5 bg-white rounded-2xl border border-gray-100">
+                <h4 className="text-sm font-semibold mb-3">📤 分享计算结果</h4>
+                <p className="text-xs text-gray-500 mb-3">选择要分享的信息，敏感内容可以选择隐藏</p>
+                <div className="space-y-2 mb-4">
+                  {([
+                    { key: "amount" as const, label: "赔偿金额", sensitivity: "低" },
+                    { key: "years" as const, label: "工龄", sensitivity: "中" },
+                    { key: "city" as const, label: "所在城市", sensitivity: "低" },
+                    { key: "salary" as const, label: "月薪水平", sensitivity: "高" },
+                  ]).map(item => (
+                    <label key={item.key} className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={shareOptions[item.key]}
+                        className="w-4 h-4 rounded border-gray-300 text-black focus:ring-black"
+                        onChange={(e) => {
+                          setShareOptions(prev => ({ ...prev, [item.key]: e.target.checked }));
+                        }}
+                      />
+                      <span className="text-sm text-gray-700">{item.label}</span>
+                      <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
+                        item.sensitivity === "高" ? "bg-red-50 text-red-600" :
+                        item.sensitivity === "中" ? "bg-yellow-50 text-yellow-600" :
+                        "bg-green-50 text-green-600"
+                      }`}>{item.sensitivity}敏感</span>
+                    </label>
+                  ))}
+                </div>
+                <button
+                  onClick={() => {
+                    const lines: string[] = ["【裁了么计算结果】"];
+                    if (shareOptions.amount) {
+                      lines.push(`赔偿方案：${result.recommended}`);
+                      lines.push(`预计到手：${fmt(result.totalWithExtras)}`);
+                    }
+                    if (shareOptions.years) {
+                      const y = parseInt(years) || 0;
+                      const m = parseInt(months) || 0;
+                      lines.push(`工龄：${y}年${m > 0 ? m + "个月" : ""}`);
+                    }
+                    if (shareOptions.city) {
+                      lines.push(`城市：${cityInfo?.name || city}`);
+                    }
+                    if (shareOptions.salary) {
+                      lines.push(`月均工资：${fmt(result.avgSalary)}`);
+                    }
+                    lines.push("——来自 caileme.team");
+                    const text = lines.join("\n");
+                    navigator.clipboard.writeText(text).then(() => {
+                      setShareCopied(true);
+                      setTimeout(() => setShareCopied(false), 2000);
+                    });
+                  }}
+                  className="w-full bg-black text-white py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+                >
+                  {shareCopied ? "✅ 已复制到剪贴板" : "复制分享文本"}
+                </button>
               </div>
             </motion.div>
           )}

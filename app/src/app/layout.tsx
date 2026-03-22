@@ -114,6 +114,9 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Baidu SEO */}
+        <meta name="baiduImageplus" content="1" />
+        <meta name="author" content="裁了么 牛马保护站" />
         {/* Preconnect to CDN */}
         <link rel="preconnect" href="https://static.cloudflareinsights.com" />
         <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
@@ -124,6 +127,20 @@ export default function RootLayout({
           data-cf-beacon='{"token": "YOUR_CF_ANALYTICS_TOKEN"}'
         />
         {/* Zaraz (managed via Cloudflare dashboard, auto-injected if enabled) */}
+        {/* Baidu auto-push for faster indexing */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+              bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            } else {
+              bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+          })();
+        `}} />
       </head>
       <body className="min-h-screen flex flex-col">
         <Header />

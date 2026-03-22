@@ -1,0 +1,24 @@
+<svg width="32" height="32" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Red shield -->
+  <path
+    d="M32 2L6 14v22c0 16 11 26 26 30 15-4 26-14 26-30V14L32 2z"
+    fill="#CC0000"
+    stroke="#8B0000"
+    stroke-width="2"
+    stroke-linejoin="round"
+  />
+  <!-- Gold hammer and sickle -->
+  <g transform="translate(32, 34)">
+    <!-- Sickle blade -->
+    <path
+      d="M-2,-15 C-11,-10 -14,-1 -9,8 C-5,14 2,17 8,15 C4,16 -3,12 -6,6 C-9,0 -7,-7 -2,-12 Z"
+      fill="#FFD700"
+    />
+    <!-- Sickle handle -->
+    <rect x="6" y="13" width="4" height="3" rx="1" fill="#FFD700" transform="rotate(-20 8 14.5)"/>
+    <!-- Hammer handle -->
+    <rect x="-1.8" y="-1" width="3.6" height="22" rx="1.8" fill="#FFD700" transform="rotate(45 0 0)"/>
+    <!-- Hammer head -->
+    <rect x="-7.5" y="-4" width="15" height="5.5" rx="1.2" fill="#FFD700" transform="rotate(45 0 0) translate(0,-1.5)"/>
+  </g>
+</svg>

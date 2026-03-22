@@ -53,12 +53,20 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 sm:mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-gray-400">
-            © {new Date().getFullYear()} 裁了么 共济社区 (caileme.team). All rights reserved.
-          </p>
-          <p className="text-xs text-gray-400 text-center md:text-right">
-            免责声明：本站内容仅供参考，不构成法律建议。具体问题请咨询专业律师。
+        <div className="mt-8 sm:mt-10 pt-6 border-t border-gray-200 space-y-3">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-3">
+            <p className="text-xs text-gray-400">
+              © {new Date().getFullYear()} 裁了么 共济社区 (caileme.team). All rights reserved.
+            </p>
+            <p className="text-xs text-gray-400 text-center md:text-right">
+              免责声明：本站内容仅供参考，不构成法律建议。具体问题请咨询专业律师。
+            </p>
+          </div>
+          <p className="text-xs text-gray-400 text-center border-t border-gray-100 pt-3">
+            本站依据《中华人民共和国网络安全法》《互联网信息服务管理办法》等相关法律法规运营，内容由用户投稿，不代表本站立场。
+            如有内容侵权或违规，请发邮件至&nbsp;
+            <a href="mailto:contact@caileme.team" className="text-accent hover:underline">contact@caileme.team</a>
+            &nbsp;联系处理。
           </p>
         </div>
       </div>

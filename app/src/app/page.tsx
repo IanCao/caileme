@@ -149,7 +149,7 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            赔偿计算 · 权益指南 · 谈判模拟 · 裁员动态
+            赔偿计算 · 权益指南 · 谈判模拟 · 裁员情报
             <br />
             一个平台，全部搞定
           </motion.p>
@@ -298,11 +298,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 裁员动态预览 */}
+      {/* 裁员情报预览 */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <motion.div className="text-center mb-12 md:mb-16" {...fadeUp}>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">裁员动态</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">裁员情报</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
               关注行业最新裁员信息
             </p>
@@ -340,7 +340,7 @@ export default function HomePage() {
               href="/community"
               className="inline-block text-accent font-medium hover:underline"
             >
-              查看全部动态 →
+              查看全部情报 →
             </Link>
           </div>
         </div>

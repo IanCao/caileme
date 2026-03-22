@@ -43,7 +43,7 @@ export default function AboutPage() {
               </div>
               <div className="p-4 bg-surface rounded-xl">
                 <strong className="text-black">行业信息</strong>
-                <p className="mt-1">最新裁员动态和再就业信息。</p>
+                <p className="mt-1">最新裁员情报和再就业信息。</p>
               </div>
             </div>
           </div>

@@ -110,7 +110,7 @@ export default function CommunityPage() {
         <div className="text-center">
           <h1 className="text-3xl md:text-4xl font-bold">社区广场</h1>
           <p className="mt-3 text-gray-500 text-base md:text-lg">
-            裁员动态 · 经历分享 · 互助交流
+            裁员情报 · 经历分享 · 互助交流
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export default function CommunityPage() {
                 activeTab === 'news' ? 'bg-black text-white shadow-sm' : 'text-gray-500 hover:text-black'
               }`}
             >
-              📰 裁员动态
+              📰 裁员情报
             </button>
             <button
               onClick={() => setActiveTab('posts')}
@@ -160,7 +160,7 @@ export default function CommunityPage() {
           </button>
         </div>
 
-        {/* 裁员动态 */}
+        {/* 裁员情报 */}
         {activeTab === 'news' && (
           <motion.div key="news" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <div className="mt-8 flex flex-wrap gap-2">
@@ -180,7 +180,7 @@ export default function CommunityPage() {
             </div>
             <div className="mt-6 space-y-4">
               {filteredNews.length === 0 ? (
-                <div className="text-center py-12 text-gray-400 text-sm">暂无该城市的裁员动态</div>
+                <div className="text-center py-12 text-gray-400 text-sm">暂无该城市的裁员情报</div>
               ) : (
                 filteredNews.map((item) => (
                   <button

@@ -71,3 +71,48 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Hero page-load animations (CSS only, no JS needed) */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.6s ease both;
+}
+
+.animate-fade-up-delay-1 {
+  animation: fadeUp 0.8s ease both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fadeUp 0.8s ease 0.2s both;
+}
+
+.animate-fade-up-delay-3 {
+  animation: fadeUp 0.8s ease 0.4s both;
+}
+
+/* Staggered children animation for grids */
+.animate-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.animate-stagger.visible > *:nth-child(1) { transition-delay: 0s; }
+.animate-stagger.visible > *:nth-child(2) { transition-delay: 0.1s; }
+.animate-stagger.visible > *:nth-child(3) { transition-delay: 0.2s; }
+.animate-stagger.visible > *:nth-child(4) { transition-delay: 0.3s; }
+
+.animate-stagger.visible > * {
+  opacity: 1;
+  transform: translateY(0);
+}

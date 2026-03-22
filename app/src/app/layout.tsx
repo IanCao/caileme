@@ -47,7 +47,7 @@ export const metadata: Metadata = {
   verification: {
     google: "GOOGLE_VERIFICATION_CODE",
     other: {
-      "baidu-site-verification": "BAIDU_VERIFICATION_CODE",
+      "baidu-site-verification": "codeva-HTv7mW5lhT",
       "sogou_site_verification": "SOGOU_VERIFICATION_CODE",
       "360-site-verification": "360_VERIFICATION_CODE",
       "msvalidate.01": "BING_VERIFICATION_CODE",

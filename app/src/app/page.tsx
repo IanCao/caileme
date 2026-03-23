@@ -221,38 +221,95 @@ export default function HomePage() {
             </p>
           </FadeInSection>
 
-          <FadeInSection stagger>
-            {allLayoffNews.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {allLayoffNews.slice(0, 4).map((item) => (
-                  <div
-                    key={item.id}
-                    className="p-4 sm:p-5 rounded-xl bg-surface border border-gray-100"
-                  >
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="font-semibold">{item.company}</span>
-                      <span className="text-xs text-gray-400">{item.date}</span>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            {/* 左栏：裁员情报 */}
+            <div className="lg:col-span-2">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">📢 裁员情报</h3>
+              <FadeInSection stagger>
+                {allLayoffNews.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {allLayoffNews.slice(0, 4).map((item) => (
+                      <div
+                        key={item.id}
+                        className="p-4 sm:p-5 rounded-xl bg-surface border border-gray-100"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-semibold">{item.company}</span>
+                          <span className="text-xs text-gray-400">{item.date}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2 text-xs text-gray-500">
+                          <span className="px-2 py-0.5 bg-gray-100 rounded">{item.city}</span>
+                          <span className="px-2 py-0.5 bg-gray-100 rounded">被裁 {item.ratio}</span>
+                          <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-400 py-8">暂无裁员情报，欢迎投稿！</p>
+                )}
+              </FadeInSection>
+              <div className="text-center mt-6">
+                <Link
+                  href="/community"
+                  className="inline-block text-accent font-medium hover:underline"
+                >
+                  查看全部情报 →
+                </Link>
+              </div>
+            </div>
+
+            {/* 右栏：红黑厂信息 */}
+            <div className="lg:col-span-1">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">🏭 红黑厂信息</h3>
+              <FadeInSection>
+                <div className="rounded-2xl border border-gray-100 bg-surface p-5 space-y-4">
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    哪些公司裁员赔偿到位（红厂）？哪些坑害打工人（黑厂）？大家一起来曝光和点赞！
+                  </p>
+
+                  {/* 红厂 */}
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                      <span className="text-sm font-semibold text-green-700">红厂 · 值得尊敬</span>
                     </div>
-                    <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                      <span className="px-2 py-0.5 bg-gray-100 rounded">{item.city}</span>
-                      <span className="px-2 py-0.5 bg-gray-100 rounded">被裁 {item.ratio}</span>
-                      <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm px-3 py-2 bg-green-50 rounded-lg">
+                        <span>虚位以待</span>
+                        <span className="text-xs text-green-600">等你来提名 👆</span>
+                      </div>
                     </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-center text-gray-400 py-8">暂无裁员情报，欢迎投稿！</p>
-            )}
-          </FadeInSection>
 
-          <div className="text-center mt-8">
-            <Link
-              href="/community"
-              className="inline-block text-accent font-medium hover:underline"
-            >
-              查看全部情报 →
-            </Link>
+                  {/* 黑厂 */}
+                  <div>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                      <span className="text-sm font-semibold text-red-700">黑厂 · 避坑预警</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm px-3 py-2 bg-red-50 rounded-lg">
+                        <span>虚位以待</span>
+                        <span className="text-xs text-red-600">等你来曝光 👆</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-gray-100">
+                    <Link
+                      href="/community/submit"
+                      className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
+                    >
+                      ✍️ 我要投稿
+                    </Link>
+                    <p className="text-[10px] text-gray-400 text-center mt-2">
+                      投稿后经审核展示，支持匿名
+                    </p>
+                  </div>
+                </div>
+              </FadeInSection>
+            </div>
           </div>
         </div>
       </section>

@@ -1,15 +1,35 @@
 import { MetadataRoute } from "next";
 import generatedPosts from "@/data/generatedPosts.json";
+import generatedNews from "@/data/generatedNews.json";
+
+function toIsoDate(dateStr: string, fallback: string): string {
+  // Try parsing Chinese date formats like "2026年3月15日" or "2026-03-15"
+  const cleaned = dateStr
+    .replace("年", "-")
+    .replace("月", "-")
+    .replace("日", "");
+  const d = new Date(cleaned);
+  return isNaN(d.getTime()) ? fallback : d.toISOString().split("T")[0];
+}
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://caileme.team";
   const recentDate = "2026-03-22";
   const launchDate = "2026-03-01";
 
-  const communityPostUrls: MetadataRoute.Sitemap = generatedPosts.map(
-    (post: { id: string }) => ({
+  const communityPostUrls: MetadataRoute.Sitemap = (generatedPosts as { id: string; date: string }[]).map(
+    (post) => ({
       url: `${baseUrl}/community/post/${post.id}`,
-      lastModified: recentDate,
+      lastModified: toIsoDate(post.date, recentDate),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    })
+  );
+
+  const newsUrls: MetadataRoute.Sitemap = (generatedNews as { id: string; date: string }[]).map(
+    (item) => ({
+      url: `${baseUrl}/layoff-news#${item.id}`,
+      lastModified: toIsoDate(item.date, recentDate),
       changeFrequency: "monthly" as const,
       priority: 0.5,
     })
@@ -42,5 +62,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/privacy`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
     { url: `${baseUrl}/terms`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
     ...communityPostUrls,
+    ...newsUrls,
   ];
 }

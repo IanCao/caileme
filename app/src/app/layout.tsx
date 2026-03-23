@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     other: {
       "baidu-site-verification": "codeva-HTv7mW5lhT",
       "sogou_site_verification": "SOGOU_VERIFICATION_CODE",
-      "360-site-verification": "360_VERIFICATION_CODE",
+      "360-site-verification": "58255a9eb03c06abf95c75f3cb14bcb3",
       "msvalidate.01": "BING_VERIFICATION_CODE",
     },
   },

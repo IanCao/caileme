@@ -44,18 +44,21 @@ async function submitCommunityPost(env: Env, request: Request) {
   let body: Record<string, string | undefined>;
   try { body = await request.json(); } catch { return err("Invalid JSON"); }
 
-  const { email, nickname, title, content, category, city, company } = body;
+  const { email, nickname, title, content, category, city, company, companyName } = body;
   if (!email || !title || !content) return err("必填字段：email, title, content");
   if (!isValidEmail(email)) return err("邮箱格式不正确");
   if ((title?.length || 0) > 200) return err("标题最长200字");
   if ((content?.length || 0) > 10000) return err("内容最长10000字");
 
-  const validCategories = ["经验分享", "避坑指南", "仲裁经验", "裁员信息", "再就业", "维权成功", "其他"];
+  const validCategories = ["经验分享", "避坑指南", "仲裁经验", "裁员信息", "红厂推荐", "黑厂曝光", "再就业", "维权成功", "其他"];
   const safeCategory = validCategories.includes(category || "") ? category : "其他";
+
+  // For company-related posts, use companyName if provided
+  const safeCompany = companyName || company || null;
 
   const result = await env.DB.prepare(
     "INSERT INTO community_posts (email, nickname, title, content, category, city, company) VALUES (?, ?, ?, ?, ?, ?, ?)"
-  ).bind(email, nickname || "匿名打工人", title, content, safeCategory, city || null, company || null).run();
+  ).bind(email, nickname || "匿名打工人", title, content, safeCategory, city || null, safeCompany).run();
 
   return json({ success: true, message: "投稿提交成功，审核后将会展示", id: result.meta.last_row_id }, 201);
 }

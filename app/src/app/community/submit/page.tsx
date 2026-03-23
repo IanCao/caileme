@@ -42,6 +42,7 @@ export default function SubmitPage() {
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [category, setCategory] = useState("经验分享");
+  const [companyName, setCompanyName] = useState("");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -50,6 +51,8 @@ export default function SubmitPage() {
   const [submitting, setSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
+
+  const isCompanyCategory = category === "红厂推荐" || category === "黑厂曝光";
 
   const addFiles = useCallback(async (files: FileList | null) => {
     if (!files) return;
@@ -96,6 +99,8 @@ export default function SubmitPage() {
         title,
         content,
         images: imageUrls.length > 0 ? imageUrls : undefined,
+        companyName: isCompanyCategory && companyName ? companyName : undefined,
+        companyType: category === "红厂推荐" ? "red" : category === "黑厂曝光" ? "black" : undefined,
       });
       if (!result.success) {
         console.warn("API unavailable, submission recorded locally");
@@ -113,6 +118,7 @@ export default function SubmitPage() {
     setEmail("");
     setNickname("");
     setCategory("经验分享");
+    setCompanyName("");
     setTitle("");
     setContent("");
     setImageUrls([]);
@@ -233,6 +239,22 @@ export default function SubmitPage() {
                     ))}
                   </div>
                 </div>
+
+                {isCompanyCategory && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                      公司名称 <span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={companyName}
+                      onChange={(e) => setCompanyName(e.target.value)}
+                      placeholder="请输入公司全称"
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 focus:border-gray-400 text-sm"
+                    />
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">

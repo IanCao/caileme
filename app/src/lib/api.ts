@@ -37,6 +37,8 @@ export async function submitPost(data: {
   title: string;
   content: string;
   images?: string[];
+  companyName?: string;
+  companyType?: string;
 }): Promise<ApiResponse> {
   try {
     const res = await fetch(`${API_BASE}/submit`, {

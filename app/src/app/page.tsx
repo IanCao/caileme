@@ -1,6 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { FadeInSection } from "@/components/FadeInSection";
+import { allLayoffNews, allCommunityPosts, newsCities } from "@/data/communityData";
 
 const ScrollingAvatars = dynamic(() => import("@/components/ScrollingAvatars"), {
   loading: () => <div className="h-20" />,
@@ -221,29 +222,28 @@ export default function HomePage() {
           </FadeInSection>
 
           <FadeInSection stagger>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {[
-                { company: "某大厂A", date: "2026年3月", city: "北京", ratio: "约15%", compensation: "N+1" },
-                { company: "某科技公司B", date: "2026年2月", city: "上海", ratio: "约20%", compensation: "N+3" },
-                { company: "某互联网C", date: "2026年2月", city: "深圳", ratio: "整个事业部", compensation: "N+1" },
-                { company: "某游戏公司D", date: "2026年1月", city: "广州", ratio: "约30%", compensation: "N" },
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="p-4 sm:p-5 rounded-xl bg-surface border border-gray-100"
-                >
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-semibold">{item.company}</span>
-                    <span className="text-xs text-gray-400">{item.date}</span>
+            {allLayoffNews.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {allLayoffNews.slice(0, 4).map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 sm:p-5 rounded-xl bg-surface border border-gray-100"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="font-semibold">{item.company}</span>
+                      <span className="text-xs text-gray-400">{item.date}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-2 text-xs text-gray-500">
+                      <span className="px-2 py-0.5 bg-gray-100 rounded">{item.city}</span>
+                      <span className="px-2 py-0.5 bg-gray-100 rounded">被裁 {item.ratio}</span>
+                      <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                    <span className="px-2 py-0.5 bg-gray-100 rounded">{item.city}</span>
-                    <span className="px-2 py-0.5 bg-gray-100 rounded">被裁 {item.ratio}</span>
-                    <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-400 py-8">暂无裁员情报，欢迎投稿！</p>
+            )}
           </FadeInSection>
 
           <div className="text-center mt-8">
@@ -379,9 +379,9 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {[
-              { num: "20+", label: "城市覆盖" },
-              { num: "2026", label: "最新数据" },
-              { num: "免费", label: "全部工具" },
+              { num: newsCities.length > 1 ? `${newsCities.length - 1}+` : "20+", label: "城市覆盖" },
+              { num: allLayoffNews.length > 0 ? `${allLayoffNews.length}+` : "持续更新", label: "裁员情报" },
+              { num: allCommunityPosts.length > 0 ? `${allCommunityPosts.length}+` : "持续增长", label: "社区帖子" },
               { num: "100%", label: "匿名安全" },
             ].map((stat) => (
               <div key={stat.label}>

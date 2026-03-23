@@ -48,9 +48,10 @@ export const metadata: Metadata = {
     google: "GOOGLE_VERIFICATION_CODE",
     other: {
       "baidu-site-verification": "codeva-HTv7mW5lhT",
-      "sogou_site_verification": "SOGOU_VERIFICATION_CODE",
+      "sogou_site_verification": "wf7vxZV1H8",
       "360-site-verification": "58255a9eb03c06abf95c75f3cb14bcb3",
-      "msvalidate.01": "BING_VERIFICATION_CODE",
+      "msvalidate.01": "8CB938A2C545220A9A5E510A38281AE0",
+      "bytedance-verification-code":"Zax5ygxoyhqYhpzfa2We"
     },
   },
   openGraph: {

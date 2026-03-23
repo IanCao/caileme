@@ -8,7 +8,7 @@ ENVIRONMENT = "production"
 [[d1_databases]]
 binding = "DB"
 database_name = "caileme-db"
-database_id = "YOUR_DATABASE_ID_HERE"  # 部署时替换：wrangler d1 create caileme-db
+database_id = "68b6aacb-4ce7-49b2-9ceb-089490879174"  # 部署时替换：wrangler d1 create caileme-db
 
 # 管理密钥（可选，用于后台管理接口）
 # [vars]

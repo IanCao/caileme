@@ -49,6 +49,7 @@ export default function SubmitPage() {
   const [uploading, setUploading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
@@ -89,6 +90,7 @@ export default function SubmitPage() {
     e.preventDefault();
     if (!email || !title || !content) return;
     setSubmitting(true);
+    setSubmitError(null);
 
     try {
       const { submitPost } = await import("@/lib/api");
@@ -103,10 +105,14 @@ export default function SubmitPage() {
         companyType: category === "红厂推荐" ? "red" : category === "黑厂曝光" ? "black" : undefined,
       });
       if (!result.success) {
-        console.warn("API unavailable, submission recorded locally");
+        setSubmitError(result.message || "投稿失败，请稍后重试");
+        setSubmitting(false);
+        return;
       }
     } catch {
-      console.warn("API unavailable, submission recorded locally");
+      setSubmitError("网络异常，请检查网络后重试");
+      setSubmitting(false);
+      return;
     }
 
     setSubmitted(true);
@@ -359,6 +365,12 @@ export default function SubmitPage() {
                     </div>
                   )}
                 </div>
+
+                {submitError && (
+                  <div className="px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-sm text-red-600">
+                    ⚠️ {submitError}
+                  </div>
+                )}
 
                 <button
                   type="submit"

@@ -23,10 +23,11 @@ export async function submitFeedback(data: {
         email: data.email,
       }),
     });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
+    const json = await res.json();
+    if (!res.ok) return { success: false, message: json?.message || "提交失败，请稍后重试" };
+    return json;
   } catch {
-    return { success: false, message: "提交失败，请稍后重试" };
+    return { success: false, message: "网络异常，请检查网络后重试" };
   }
 }
 
@@ -46,10 +47,11 @@ export async function submitPost(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
+    const json = await res.json();
+    if (!res.ok) return { success: false, message: json?.message || "投稿失败，请稍后重试" };
+    return json;
   } catch {
-    return { success: false, message: "投稿失败，请稍后重试" };
+    return { success: false, message: "网络异常，请检查网络后重试" };
   }
 }
 
@@ -65,10 +67,11 @@ export async function submitComment(data: {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error("Network error");
-    return await res.json();
+    const json = await res.json();
+    if (!res.ok) return { success: false, message: json?.message || "评论失败，请稍后重试" };
+    return json;
   } catch {
-    return { success: false, message: "评论失败，请稍后重试" };
+    return { success: false, message: "网络异常，请检查网络后重试" };
   }
 }
 

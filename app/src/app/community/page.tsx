@@ -381,7 +381,7 @@ export default function CommunityPage() {
             >
               <h3 className="text-xl font-bold mb-2">加入打工人互助社群</h3>
               <p className="text-sm text-gray-500 mb-4">扫描下方二维码，加入社群</p>
-              <img src="/commu.jpg" alt="社群二维码" className="w-[340px] h-[340px] mx-auto rounded-xl object-cover" />
+              <img src="/commu.jpg" alt="社群二维码" className="max-w-full max-h-[60vh] mx-auto rounded-xl object-contain" />
               <button
                 onClick={() => setShowGroupModal(false)}
                 className="mt-4 text-sm text-gray-500 hover:text-gray-700"

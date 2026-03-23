@@ -2,6 +2,7 @@
 
 import generatedPosts from './generatedPosts.json';
 import generatedNews from './generatedNews.json';
+import generatedCompanies from './generatedCompanies.json';
 
 export type NewsItem = {
   id: string;
@@ -34,8 +35,21 @@ export type CommunityPost = {
   comments: { nickname: string; avatar: string; content: string; date: string }[];
 };
 
+export type CompanyRating = {
+  name: string;
+  type: 'red' | 'black';
+  city: string;
+  complaints: number;
+  praises: number;
+  note: string;
+};
+
 export const allLayoffNews: NewsItem[] = generatedNews as NewsItem[];
 export const allCommunityPosts: CommunityPost[] = generatedPosts as CommunityPost[];
+export const allCompanies: CompanyRating[] = generatedCompanies as CompanyRating[];
+
+export const redCompanies = allCompanies.filter(c => c.type === 'red');
+export const blackCompanies = allCompanies.filter(c => c.type === 'black');
 
 export const newsCities = ['全部', ...Array.from(new Set(allLayoffNews.map(n => n.city)))];
 

@@ -1,0 +1,15 @@
+---
+companies:
+  - name: "虚位以待"
+    type: "red"
+    city: "全国"
+    complaints: 0
+    praises: 1
+    note: "欢迎推荐赔偿到位、善待员工的良心企业"
+  - name: "虚位以待"
+    type: "black"
+    city: "全国"
+    complaints: 1
+    praises: 0
+    note: "欢迎曝光坑害打工人的无良企业"
+---

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   allLayoffNews, allCommunityPosts, newsCities,
+  redCompanies, blackCompanies,
   type NewsItem, type CommunityPost,
 } from '@/data/communityData';
 
@@ -12,7 +13,7 @@ type FeedItem =
   | { type: 'news'; tag: '被裁情报'; data: NewsItem }
   | { type: 'post'; tag: string; data: CommunityPost };
 
-const allTags = ['全部', '被裁情报', '经验分享', '避坑指南', '仲裁经验', '再就业'];
+const allTags = ['全部', '被裁情报', '红黑厂信息', '经验分享', '避坑指南', '仲裁经验', '再就业'];
 
 function NewsModal({ item, onClose }: { item: NewsItem; onClose: () => void }) {
   useEffect(() => {
@@ -176,9 +177,76 @@ export default function CommunityPage() {
           </button>
         </div>
 
+        {/* 红黑厂信息面板 */}
+        {activeTag === '红黑厂信息' && (
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* 红厂 */}
+            <div className="bg-white rounded-2xl p-5 border border-green-100">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-3 h-3 rounded-full bg-green-500"></span>
+                <h3 className="font-bold text-green-700">🏆 红厂 · 值得尊敬</h3>
+              </div>
+              {redCompanies.length > 0 ? (
+                <div className="space-y-2">
+                  {redCompanies.map((c, i) => (
+                    <div key={i} className="flex items-center justify-between px-4 py-3 bg-green-50 rounded-xl">
+                      <div>
+                        <span className="font-medium text-sm">{c.name}</span>
+                        {c.city && <span className="ml-2 text-xs text-gray-400">{c.city}</span>}
+                        {c.note && <p className="text-xs text-gray-500 mt-0.5">{c.note}</p>}
+                      </div>
+                      <span className="text-xs text-green-600 font-medium whitespace-nowrap">
+                        👍 {c.praises} 次好评
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400 py-4 text-center">暂无数据，等你来推荐！</p>
+              )}
+            </div>
+
+            {/* 黑厂 */}
+            <div className="bg-white rounded-2xl p-5 border border-red-100">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="w-3 h-3 rounded-full bg-red-500"></span>
+                <h3 className="font-bold text-red-700">⚠️ 黑厂 · 避坑预警</h3>
+              </div>
+              {blackCompanies.length > 0 ? (
+                <div className="space-y-2">
+                  {blackCompanies.map((c, i) => (
+                    <div key={i} className="flex items-center justify-between px-4 py-3 bg-red-50 rounded-xl">
+                      <div>
+                        <span className="font-medium text-sm">{c.name}</span>
+                        {c.city && <span className="ml-2 text-xs text-gray-400">{c.city}</span>}
+                        {c.note && <p className="text-xs text-gray-500 mt-0.5">{c.note}</p>}
+                      </div>
+                      <span className="text-xs text-red-600 font-medium whitespace-nowrap">
+                        🚨 {c.complaints} 次投诉
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400 py-4 text-center">暂无数据，等你来曝光！</p>
+              )}
+            </div>
+
+            <div className="md:col-span-2 text-center">
+              <Link
+                href="/community/submit"
+                className="inline-flex items-center gap-2 bg-black text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+              >
+                ✍️ 投稿红黑厂信息
+              </Link>
+              <p className="text-xs text-gray-400 mt-2">投稿后经审核展示，支持匿名</p>
+            </div>
+          </div>
+        )}
+
         {/* Unified Feed */}
         <div className="mt-8 space-y-4">
-          {filteredItems.length === 0 ? (
+          {activeTag !== '红黑厂信息' && (filteredItems.length === 0 ? (
             <div className="text-center py-12 text-gray-400 text-sm">暂无相关内容</div>
           ) : (
             pagedItems.map((item) =>
@@ -231,10 +299,10 @@ export default function CommunityPage() {
                 </Link>
               )
             )
-          )}
+          ))}
         </div>
 
-        {totalPages > 1 && (
+        {activeTag !== '红黑厂信息' && totalPages > 1 && (
           <div className="flex items-center justify-between mt-6">
             <span className="text-xs text-gray-400">
               共 {filteredItems.length} 条，第 {page}/{totalPages} 页

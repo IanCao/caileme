@@ -206,6 +206,39 @@ if (fs.existsSync(contributorsFile)) {
   }
 }
 
+// Process companies (红黑厂)
+const companiesFile = path.join(CONTENT_DIR, 'companies.md');
+let companies = [];
+if (fs.existsSync(companiesFile)) {
+  const raw = fs.readFileSync(companiesFile, 'utf-8');
+  const yamlMatch = raw.match(/^---\n([\s\S]*?)\n---/);
+  if (yamlMatch) {
+    const lines = yamlMatch[1].split('\n');
+    let current = null;
+    for (const line of lines) {
+      const nameMatch = line.match(/^\s+-\s+name:\s*"(.+)"/);
+      if (nameMatch) {
+        if (current) companies.push(current);
+        current = { name: nameMatch[1], type: 'black', city: '', complaints: 0, praises: 0, note: '' };
+        continue;
+      }
+      if (current) {
+        const typeMatch = line.match(/^\s+type:\s*"(.+)"/);
+        if (typeMatch) { current.type = typeMatch[1]; continue; }
+        const cityMatch = line.match(/^\s+city:\s*"(.+)"/);
+        if (cityMatch) { current.city = cityMatch[1]; continue; }
+        const complaintsMatch = line.match(/^\s+complaints:\s*(\d+)/);
+        if (complaintsMatch) { current.complaints = parseInt(complaintsMatch[1]); continue; }
+        const praisesMatch = line.match(/^\s+praises:\s*(\d+)/);
+        if (praisesMatch) { current.praises = parseInt(praisesMatch[1]); continue; }
+        const noteMatch = line.match(/^\s+note:\s*"(.+)"/);
+        if (noteMatch) { current.note = noteMatch[1]; continue; }
+      }
+    }
+    if (current) companies.push(current);
+  }
+}
+
 // Write output
 fs.writeFileSync(
   path.join(DATA_DIR, 'generatedPosts.json'),
@@ -222,5 +255,10 @@ fs.writeFileSync(
   JSON.stringify(contributors, null, 2),
   'utf-8'
 );
+fs.writeFileSync(
+  path.join(DATA_DIR, 'generatedCompanies.json'),
+  JSON.stringify(companies, null, 2),
+  'utf-8'
+);
 
-console.log(`✅ Built ${posts.length} posts, ${news.length} news items, and ${contributors.length} contributors`);
+console.log(`✅ Built ${posts.length} posts, ${news.length} news items, ${contributors.length} contributors, and ${companies.length} companies`);

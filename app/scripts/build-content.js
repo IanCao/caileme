@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * 构建脚本：将 content/ 目录下的 MD 文件编译为 JSON
+ * 构建脚本：将 content/posts/ 目录下的 MD 文件编译为 JSON
+ * 通过 front matter 中的 category 字段区分文章类型
  * 运行方式：node scripts/build-content.js
- * 会在 src/data/ 下生成 generatedPosts.json 和 generatedNews.json
+ * 会在 src/data/ 下生成 generatedPosts.json
  */
 
 const fs = require('fs');
@@ -26,24 +27,19 @@ function parseFrontMatter(content) {
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
-    // Handle YAML multiline scalar (key: |)
     if (inMultilineValue) {
       if (line.match(/^[a-zA-Z]/) || (line.trim() === '' && i + 1 < lines.length && lines[i + 1].match(/^[a-zA-Z]/))) {
-        // End of multiline value - new top-level key or blank line before one
         meta[currentKey] = multilineValue.replace(/\n+$/, '');
         inMultilineValue = false;
         currentKey = null;
         multilineValue = '';
-        // Fall through to process this line normally
       } else {
-        // Strip 2-space indent from multiline block
         const stripped = line.startsWith('  ') ? line.slice(2) : line;
         multilineValue += (multilineValue ? '\n' : '') + stripped;
         continue;
       }
     }
 
-    // Check for array item: "  - key: value"
     const arrayItemMatch = line.match(/^  - (\w+):\s*"?(.*?)"?\s*$/);
     if (arrayItemMatch && currentArray !== null) {
       if (currentArrayItem) {
@@ -55,14 +51,12 @@ function parseFrontMatter(content) {
       continue;
     }
 
-    // Check for nested key in array item: "    key: value"
     const nestedMatch = line.match(/^    (\w+):\s*"?(.*?)"?\s*$/);
     if (nestedMatch && currentArrayItem) {
       currentArrayItem[nestedMatch[1]] = parseScalar(nestedMatch[2]);
       continue;
     }
 
-    // Flush pending array
     if (currentArray !== null && !line.match(/^  /)) {
       if (currentArrayItem) {
         meta[currentArray].push(currentArrayItem);
@@ -71,13 +65,11 @@ function parseFrontMatter(content) {
       currentArray = null;
     }
 
-    // Top-level key
     const colonIdx = line.indexOf(':');
     if (colonIdx > 0) {
       const key = line.slice(0, colonIdx).trim();
       let value = line.slice(colonIdx + 1).trim();
 
-      // Check for multiline scalar indicator
       if (value === '|') {
         currentKey = key;
         inMultilineValue = true;
@@ -85,7 +77,6 @@ function parseFrontMatter(content) {
         continue;
       }
 
-      // Check for array start (empty value, next line starts with "  -")
       if (value === '' && i + 1 < lines.length && lines[i + 1].match(/^  -/)) {
         currentArray = key;
         meta[key] = [];
@@ -93,7 +84,6 @@ function parseFrontMatter(content) {
         continue;
       }
 
-      // Remove quotes
       if ((value.startsWith('"') && value.endsWith('"')) ||
           (value.startsWith("'") && value.endsWith("'"))) {
         value = value.slice(1, -1);
@@ -103,7 +93,6 @@ function parseFrontMatter(content) {
     }
   }
 
-  // Flush remaining state
   if (inMultilineValue && currentKey) {
     meta[currentKey] = multilineValue.replace(/\n+$/, '');
   }
@@ -118,7 +107,6 @@ function parseScalar(value) {
   if (value === 'true') return true;
   if (value === 'false') return false;
   if (!isNaN(Number(value)) && value !== '') return Number(value);
-  // Remove surrounding quotes if present
   if ((value.startsWith('"') && value.endsWith('"')) ||
       (value.startsWith("'") && value.endsWith("'"))) {
     return value.slice(1, -1);
@@ -139,7 +127,7 @@ function processDirectory(dir) {
     .filter(item => item.id);
 }
 
-// Process posts
+// Process posts - 所有文章都通过 category 区分类型
 const posts = processDirectory(path.join(CONTENT_DIR, 'posts')).map(p => ({
   id: String(p.id),
   nickname: p.nickname || '匿名投稿',
@@ -160,84 +148,37 @@ const posts = processDirectory(path.join(CONTENT_DIR, 'posts')).map(p => ({
   })) : [],
 }));
 
-// Process news
-const news = processDirectory(path.join(CONTENT_DIR, 'news')).map(n => ({
-  id: String(n.id),
-  company: n.company || '未知',
-  industry: n.industry || '未知',
-  city: n.city || '未知',
-  date: n.date || '',
-  ratio: n.ratio || '未知',
-  compensation: n.compensation || '未知',
-  departments: n.departments || '未知',
-  source: n.source || 'MD投稿',
-  sourceUrl: n.sourceUrl || '',
-  verified: n.verified || false,
-  detail: n.detail || n.content || '',
-  viewCount: n.viewCount || 0,
-}));
-
-// Process contributors
-const contributorsFile = path.join(CONTENT_DIR, 'contributors.md');
-let contributors = [];
-if (fs.existsSync(contributorsFile)) {
-  const raw = fs.readFileSync(contributorsFile, 'utf-8');
-  const yamlMatch = raw.match(/^---\n([\s\S]*?)\n---/);
-  if (yamlMatch) {
-    const lines = yamlMatch[1].split('\n');
-    let current = null;
-    for (const line of lines) {
-      const itemMatch = line.match(/^\s+-\s+name:\s*"(.+)"/);
-      if (itemMatch) {
-        if (current) contributors.push(current);
-        current = { name: itemMatch[1], avatar: '', contribution: '', link: '' };
-        continue;
-      }
-      if (current) {
-        const avatarMatch = line.match(/^\s+avatar:\s*"(.+)"/);
-        if (avatarMatch) { current.avatar = avatarMatch[1]; continue; }
-        const contribMatch = line.match(/^\s+contribution:\s*"(.+)"/);
-        if (contribMatch) { current.contribution = contribMatch[1]; continue; }
-        const linkMatch = line.match(/^\s+link:\s*"(.*)"/);
-        if (linkMatch) { current.link = linkMatch[1]; continue; }
-      }
-    }
-    if (current) contributors.push(current);
-  }
+// 处理 news 目录 - 也合并到 posts 中，使用 type: 'news' 标记
+const newsDir = path.join(CONTENT_DIR, 'news');
+if (fs.existsSync(newsDir)) {
+  const newsItems = processDirectory(newsDir).map(n => ({
+    id: String(n.id),
+    nickname: '情报员',
+    avatar: '📰',
+    title: `${n.company} 裁员动态`,
+    summary: n.detail || n.content?.slice(0, 100) + '...' || '',
+    content: n.content || n.detail || '',
+    category: '被裁情报',  // news 类型映射为被裁情报
+    type: 'news',  // 标记为新闻类型
+    date: n.date || '',
+    company: n.company || '',
+    industry: n.industry || '',
+    city: n.city || '',
+    ratio: n.ratio || '',
+    compensation: n.compensation || '',
+    departments: n.departments || '',
+    source: n.source || '',
+    sourceUrl: n.sourceUrl || '',
+    verified: n.verified || false,
+    viewCount: n.viewCount || 0,
+    likes: 0,
+    comments: [],
+  }));
+  posts.push(...newsItems);
 }
 
-// Process companies (红黑厂)
-const companiesFile = path.join(CONTENT_DIR, 'companies.md');
-let companies = [];
-if (fs.existsSync(companiesFile)) {
-  const raw = fs.readFileSync(companiesFile, 'utf-8');
-  const yamlMatch = raw.match(/^---\n([\s\S]*?)\n---/);
-  if (yamlMatch) {
-    const lines = yamlMatch[1].split('\n');
-    let current = null;
-    for (const line of lines) {
-      const nameMatch = line.match(/^\s+-\s+name:\s*"(.+)"/);
-      if (nameMatch) {
-        if (current) companies.push(current);
-        current = { name: nameMatch[1], type: 'black', city: '', complaints: 0, praises: 0, note: '' };
-        continue;
-      }
-      if (current) {
-        const typeMatch = line.match(/^\s+type:\s*"(.+)"/);
-        if (typeMatch) { current.type = typeMatch[1]; continue; }
-        const cityMatch = line.match(/^\s+city:\s*"(.+)"/);
-        if (cityMatch) { current.city = cityMatch[1]; continue; }
-        const complaintsMatch = line.match(/^\s+complaints:\s*(\d+)/);
-        if (complaintsMatch) { current.complaints = parseInt(complaintsMatch[1]); continue; }
-        const praisesMatch = line.match(/^\s+praises:\s*(\d+)/);
-        if (praisesMatch) { current.praises = parseInt(praisesMatch[1]); continue; }
-        const noteMatch = line.match(/^\s+note:\s*"(.+)"/);
-        if (noteMatch) { current.note = noteMatch[1]; continue; }
-      }
-    }
-    if (current) companies.push(current);
-  }
-}
+// 按日期排序
+posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
 // Write output
 fs.writeFileSync(
@@ -245,20 +186,5 @@ fs.writeFileSync(
   JSON.stringify(posts, null, 2),
   'utf-8'
 );
-fs.writeFileSync(
-  path.join(DATA_DIR, 'generatedNews.json'),
-  JSON.stringify(news, null, 2),
-  'utf-8'
-);
-fs.writeFileSync(
-  path.join(DATA_DIR, 'generatedContributors.json'),
-  JSON.stringify(contributors, null, 2),
-  'utf-8'
-);
-fs.writeFileSync(
-  path.join(DATA_DIR, 'generatedCompanies.json'),
-  JSON.stringify(companies, null, 2),
-  'utf-8'
-);
 
-console.log(`✅ Built ${posts.length} posts, ${news.length} news items, ${contributors.length} contributors, and ${companies.length} companies`);
+console.log(`✅ Built ${posts.length} posts/articles`);

@@ -180,11 +180,49 @@ if (fs.existsSync(newsDir)) {
 // 按日期排序
 posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// Write output
+// Write generatedPosts.json
 fs.writeFileSync(
   path.join(DATA_DIR, 'generatedPosts.json'),
   JSON.stringify(posts, null, 2),
   'utf-8'
 );
 
-console.log(`✅ Built ${posts.length} posts/articles`);
+// generatedNews.json - news items are now stored as posts with category '被裁情报'
+// Keep this file as an empty array for backward compatibility
+fs.writeFileSync(
+  path.join(DATA_DIR, 'generatedNews.json'),
+  JSON.stringify([], null, 2),
+  'utf-8'
+);
+
+// Process companies.md
+function processCompanies(file) {
+  if (!fs.existsSync(file)) return [];
+  const content = fs.readFileSync(file, 'utf-8');
+  const { meta } = parseFrontMatter(content);
+  return Array.isArray(meta.companies) ? meta.companies : [];
+}
+
+const companies = processCompanies(path.join(CONTENT_DIR, 'companies.md'));
+fs.writeFileSync(
+  path.join(DATA_DIR, 'generatedCompanies.json'),
+  JSON.stringify(companies, null, 2),
+  'utf-8'
+);
+
+// Process contributors.md
+function processContributors(file) {
+  if (!fs.existsSync(file)) return [];
+  const content = fs.readFileSync(file, 'utf-8');
+  const { meta } = parseFrontMatter(content);
+  return Array.isArray(meta.contributors) ? meta.contributors : [];
+}
+
+const contributors = processContributors(path.join(CONTENT_DIR, 'contributors.md'));
+fs.writeFileSync(
+  path.join(DATA_DIR, 'generatedContributors.json'),
+  JSON.stringify(contributors, null, 2),
+  'utf-8'
+);
+
+console.log(`✅ Built ${posts.length} posts, ${companies.length} companies, ${contributors.length} contributors`);

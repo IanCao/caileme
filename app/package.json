@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/build-content.js",
     "dev": "next dev",
     "prebuild": "node scripts/build-content.js",
     "build": "next build",

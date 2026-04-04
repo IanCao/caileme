@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import EditorialTrustBlock from "@/components/EditorialTrustBlock";
 import {
   cityPolicies,
   getCityByCode,
@@ -172,6 +173,37 @@ export default function CityPolicyPage({
           </div>
         </div>
 
+        <section className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <Link
+            href={`/cities/${city.code}/severance`}
+            className="block rounded-2xl border border-gray-100 bg-white p-6 hover:border-gray-300 hover:shadow-sm transition-all"
+          >
+            <div className="text-xs text-gray-400">高意图专题</div>
+            <h2 className="mt-2 text-xl font-semibold">
+              {city.name}裁员赔偿标准 2026
+            </h2>
+            <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+              单独看 {city.name} 的 N、N+1、2N、三倍封顶和 12 年上限，适合承接
+              “{city.name}裁员赔偿标准”“{city.name}N+1 怎么算” 这类长尾词。
+            </p>
+            <div className="mt-4 text-sm font-medium text-accent">查看专题 →</div>
+          </Link>
+          <Link
+            href={`/cities/${city.code}/unemployment`}
+            className="block rounded-2xl border border-gray-100 bg-white p-6 hover:border-gray-300 hover:shadow-sm transition-all"
+          >
+            <div className="text-xs text-gray-400">高意图专题</div>
+            <h2 className="mt-2 text-xl font-semibold">
+              {city.name}失业金领取条件 2026
+            </h2>
+            <p className="mt-2 text-sm text-gray-600 leading-relaxed">
+              单独看 {city.name} 的失业金月标准、领取时长、申领入口和办理步骤，适合吃
+              “{city.name}失业金多少钱”“{city.name}失业金怎么领” 这类词。
+            </p>
+            <div className="mt-4 text-sm font-medium text-accent">查看专题 →</div>
+          </Link>
+        </section>
+
         <section className="mt-10 bg-white rounded-2xl border border-gray-100 p-6">
           <h2 className="text-xl font-semibold mb-4">{city.name}裁员赔偿怎么计算</h2>
           <div className="space-y-3 text-sm text-gray-600 leading-relaxed">
@@ -238,8 +270,26 @@ export default function CityPolicyPage({
         </section>
 
         <section className="mt-8 bg-white rounded-2xl border border-gray-100 p-6">
-          <h2 className="text-xl font-semibold mb-4">相关工具与官方入口</h2>
+          <h2 className="text-xl font-semibold mb-4">相关工具与专题入口</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              href={`/cities/${city.code}/severance`}
+              className="block rounded-xl bg-surface p-4 hover:bg-gray-100 transition-colors"
+            >
+              <div className="font-medium">{city.name}裁员赔偿标准专题</div>
+              <div className="mt-1 text-xs text-gray-500">
+                先看本地封顶基数、12 年上限和 N+1 / 2N 规则
+              </div>
+            </Link>
+            <Link
+              href={`/cities/${city.code}/unemployment`}
+              className="block rounded-xl bg-surface p-4 hover:bg-gray-100 transition-colors"
+            >
+              <div className="font-medium">{city.name}失业金专题</div>
+              <div className="mt-1 text-xs text-gray-500">
+                单独查看本地失业金金额、领取时长和申领入口
+              </div>
+            </Link>
             <Link
               href="/tools/severance"
               className="block rounded-xl bg-surface p-4 hover:bg-gray-100 transition-colors"
@@ -279,10 +329,33 @@ export default function CityPolicyPage({
           </div>
         </section>
 
+        <EditorialTrustBlock
+          updatedAt="2026-04-05"
+          applicableScope={`${city.name} 劳动权益、失业金和社保断缴公开政策摘要`}
+          reviewedBy="裁了么编辑部"
+          reviewMethod="依据当地人社公开信息整理，并由站内规则模板复核"
+          disclaimer={`本页适合快速了解 ${city.name} 的赔偿、失业金和社保断缴规则，但不同区县、不同办理场景可能存在执行差异，提交材料前请再核对官方最新口径。`}
+          sources={[
+            {
+              label: `${city.name} 人社 / 政策入口`,
+              href: city.policyUrl,
+            },
+            ...(city.unemploymentUrl
+              ? [
+                  {
+                    label: `${city.name} 失业金申领入口`,
+                    href: city.unemploymentUrl,
+                  },
+                ]
+              : []),
+          ]}
+        />
+
         <section className="mt-8 rounded-2xl border border-yellow-100 bg-yellow-50 p-5">
           <p className="text-xs text-yellow-700 leading-relaxed">
-            说明：这些城市页是面向搜索长尾词的政策摘要页，适合先快速建立收录。
-            真正做深以后，可以继续扩展成 “城市 + 工具”、“城市 + 场景问题”、“城市 + 仲裁流程” 三类模板。
+            说明：这个城市页现在已经作为专题枢纽页使用，下面继续拆出了
+            “城市 + 裁员赔偿” 和 “城市 + 失业金” 两类长尾落地页。
+            后面还可以继续扩到 “城市 + 仲裁流程” 和 “城市 + 证据清单”。
           </p>
         </section>
       </div>

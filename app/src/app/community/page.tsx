@@ -274,7 +274,6 @@ export default function CommunityPage() {
                   </div>
                   <div className="text-xs text-gray-400">
                     涉及：{item.data.departments} · 来源：{item.data.source}
-                    <span className="ml-2">👀 {item.data.viewCount || 0} 次查看</span>
                   </div>
                 </button>
               ) : (
@@ -291,11 +290,7 @@ export default function CommunityPage() {
                   </div>
                   <h3 className="font-semibold text-base mb-1.5">{item.data.title}</h3>
                   <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">{item.data.summary}</p>
-                  <div className="mt-3 flex items-center gap-4 text-xs text-gray-400">
-                    <span>💬 {item.data.comments.length} 条评论</span>
-                    <span>👍 {item.data.likes}</span>
-                    <span>👀 {item.data.viewCount || 0} 次查看</span>
-                  </div>
+                  <div className="mt-3 text-xs text-gray-400">查看详情 →</div>
                 </Link>
               )
             )

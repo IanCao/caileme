@@ -3,13 +3,15 @@ import { allCommunityPosts } from "@/data/communityData";
 import PostDetailClient from "./PostDetailClient";
 
 export function generateStaticParams() {
-  const params = allCommunityPosts.map((p) => ({ id: p.id }));
-  // Next.js output:export requires at least one prerendered route for dynamic segments.
-  // When there are no posts yet, return a placeholder that renders the "not found" state.
-  return params.length > 0 ? params : [{ id: '_' }];
+  const params = allCommunityPosts.map((post) => ({ id: post.id }));
+  return params.length > 0 ? params : [{ id: "_" }];
 }
 
-export function generateMetadata({ params }: { params: { id: string } }): Metadata {
+export function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Metadata {
   const post = allCommunityPosts.find((item) => item.id === params.id);
 
   if (!post) {
@@ -25,13 +27,26 @@ export function generateMetadata({ params }: { params: { id: string } }): Metada
   const description =
     post.excerpt?.trim() ||
     post.summary?.trim() ||
-    post.content.replace(/\s+/g, " ").trim().slice(0, 120);
+    post.content.replace(/\s+/g, " ").trim().slice(0, 140);
   const canonicalPath = `/community/post/${post.id}`;
-  const image = post.cover || "/logo.png";
+  const imagePath = post.cover || "/logo.png";
+  const imageUrl = imagePath.startsWith("http")
+    ? imagePath
+    : `https://caileme.team${imagePath}`;
 
   return {
-    title: `${post.title} - ${post.category}`,
+    title: `${post.title} - 保护站信息`,
     description,
+    keywords: [
+      post.title,
+      post.category,
+      post.city,
+      "保护站信息",
+      "裁了么社区",
+      "互联网裁员",
+      "劳动权益",
+    ].filter(Boolean),
+    authors: [{ name: post.nickname || "匿名投稿" }],
     alternates: {
       canonical: canonicalPath,
     },
@@ -40,12 +55,22 @@ export function generateMetadata({ params }: { params: { id: string } }): Metada
       description,
       url: `https://caileme.team${canonicalPath}`,
       type: "article",
-      images: [image],
+      publishedTime: post.date,
+      modifiedTime: post.date,
+      authors: [post.nickname || "匿名投稿"],
+      section: post.category,
+      images: [
+        {
+          url: imageUrl,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
+      card: "summary_large_image",
       title: post.title,
       description,
-      images: [image],
+      images: [imageUrl],
     },
   };
 }
@@ -61,8 +86,12 @@ export default function PostPage({ params }: { params: { id: string } }) {
   const description =
     post.excerpt?.trim() ||
     post.summary?.trim() ||
-    post.content.replace(/\s+/g, " ").trim().slice(0, 120);
-  const image = post.cover || "https://caileme.team/logo.png";
+    post.content.replace(/\s+/g, " ").trim().slice(0, 140);
+  const imagePath = post.cover || "/logo.png";
+  const imageUrl = imagePath.startsWith("http")
+    ? imagePath
+    : `https://caileme.team${imagePath}`;
+
   const articleJsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -74,7 +103,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
     inLanguage: "zh-CN",
     mainEntityOfPage: canonicalUrl,
     url: canonicalUrl,
-    image: image.startsWith("http") ? image : `https://caileme.team${image}`,
+    image: imageUrl,
     author: {
       "@type": "Person",
       name: post.nickname || "匿名投稿",
@@ -88,12 +117,19 @@ export default function PostPage({ params }: { params: { id: string } }) {
       },
     },
     isAccessibleForFree: true,
+    keywords: [post.category, post.city].filter(Boolean).join(", "),
+    ...(post.source
+      ? {
+          isBasedOn: post.source,
+        }
+      : {}),
     ...(post.sourceUrl
       ? {
           citation: post.sourceUrl,
         }
       : {}),
   };
+
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

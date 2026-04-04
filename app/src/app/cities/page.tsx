@@ -71,6 +71,42 @@ export default function CitiesPage() {
         </section>
 
         <section className="mt-12">
+          <div className="flex items-center justify-between gap-4 flex-wrap mb-5">
+            <h2 className="text-xl font-semibold">热门长尾专题</h2>
+            <Link href="/guides/arbitration" className="text-sm text-accent hover:underline">
+              看仲裁指南 →
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {hotCities.slice(0, 6).map((city) => (
+              <div
+                key={`${city.code}-topics`}
+                className="bg-white rounded-2xl border border-gray-100 p-5"
+              >
+                <h3 className="font-semibold">{city.name}</h3>
+                <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+                  直接进入高意图专题页，适合查看 {city.name} 的赔偿标准和失业金规则。
+                </p>
+                <div className="mt-4 space-y-2">
+                  <Link
+                    href={`/cities/${city.code}/severance`}
+                    className="block rounded-xl bg-surface px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                  >
+                    {city.name}裁员赔偿标准 →
+                  </Link>
+                  <Link
+                    href={`/cities/${city.code}/unemployment`}
+                    className="block rounded-xl bg-surface px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                  >
+                    {city.name}失业金领取条件 →
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="mt-12">
           <h2 className="text-xl font-semibold mb-5">全部城市</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {cityPolicies.map((city) => (

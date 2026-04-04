@@ -33,6 +33,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
+  const cityTopicUrls: MetadataRoute.Sitemap = cityPolicies.flatMap((city) => [
+    {
+      url: `${baseUrl}/cities/${city.code}/severance`,
+      lastModified: recentDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/cities/${city.code}/unemployment`,
+      lastModified: recentDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+    },
+  ]);
+
   return [
     { url: baseUrl, lastModified: recentDate, changeFrequency: "daily", priority: 1 },
     { url: `${baseUrl}/cities`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.8 },
@@ -59,6 +74,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/privacy`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
     { url: `${baseUrl}/terms`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
     ...cityUrls,
+    ...cityTopicUrls,
     ...communityPostUrls,
   ];
 }

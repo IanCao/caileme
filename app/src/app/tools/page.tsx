@@ -259,6 +259,39 @@ export default function ToolsPage() {
           </div>
         </div>
 
+        <div className="mt-8">
+          <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+            <span>🎯</span> 高频搜索专题
+          </h2>
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {featuredCities.slice(0, 4).map((city) => (
+              <div
+                key={`${city.code}-search`}
+                className="bg-white rounded-2xl p-5 border border-gray-100"
+              >
+                <div className="font-semibold">{city.name}</div>
+                <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+                  直接查看 {city.name} 的赔偿标准页和失业金页，比只看总览更接近用户真实搜索词。
+                </p>
+                <div className="mt-4 grid grid-cols-1 gap-2">
+                  <Link
+                    href={`/cities/${city.code}/severance`}
+                    className="rounded-xl bg-surface px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                  >
+                    {city.name}裁员赔偿标准 →
+                  </Link>
+                  <Link
+                    href={`/cities/${city.code}/unemployment`}
+                    className="rounded-xl bg-surface px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                  >
+                    {city.name}失业金领取条件 →
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* 免费法律援助 & 官方资源 */}
         <div className="mt-10 sm:mt-12">
           <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2 mb-4">

@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import EditorialTrustBlock from "@/components/EditorialTrustBlock";
 
 export const metadata: Metadata = {
   title: "劳动仲裁流程指南 - 从申请到开庭胜诉全流程",
@@ -87,6 +88,24 @@ export default function ArbitrationGuide() {
                 <p>• 公司强迫你写"主动辞职"</p>
               </div>
             </div>
+
+            <EditorialTrustBlock
+              updatedAt="2026-04-05"
+              applicableScope="中国大陆劳动争议仲裁的一般流程、证据和材料准备"
+              reviewedBy="裁了么编辑部"
+              reviewMethod="依据劳动争议处理通用流程与官方公开办事信息整理"
+              disclaimer="不同城市的仲裁委提交口径、材料清单和排期可能不同。这页适合先建立流程认知，正式申请前请以当地仲裁委窗口或官网要求为准。"
+              sources={[
+                {
+                  label: "全国人大法律法规数据库",
+                  href: "https://flk.npc.gov.cn",
+                },
+                {
+                  label: "人力资源和社会保障部",
+                  href: "http://www.mohrss.gov.cn",
+                },
+              ]}
+            />
 
             {/* 仲裁流程 */}
             <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100">

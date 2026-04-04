@@ -123,6 +123,15 @@ export default function PostDetailClient({ params }: { params: { id: string } })
             </div>
           </div>
 
+          <header className="mb-6">
+            <h1 className="text-3xl md:text-4xl font-bold leading-tight">
+              {post.title}
+            </h1>
+            <p className="mt-3 text-gray-500 text-base md:text-lg">
+              {post.summary}
+            </p>
+          </header>
+
           {/* 文章内容 */}
           <div className="bg-white rounded-2xl p-6 sm:p-8 border border-gray-100">
             {renderContent(post.content)}

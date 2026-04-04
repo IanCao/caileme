@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "被裁员当天怎么办 - 完整行动清单与注意事项 | 裁了么",
+  title: "被裁员当天怎么办 - 完整行动清单与注意事项",
   description:
     "被裁员当天第一步做什么？完整行动清单：不要签字、录音取证、保存工牌、记录HR谈话内容。了解裁员赔偿标准N+1和2N的区别，避免被HR话术套路。2026年最新裁员应对指南。",
   keywords: [
@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     "裁员行动清单",
     "被裁员第一步",
   ],
+  alternates: {
+    canonical: "/guides/layoff-day",
+  },
+  openGraph: {
+    title: "被裁员当天怎么办 - 完整行动清单与注意事项",
+    description:
+      "被裁员当天第一步做什么？完整行动清单：不要签字、录音取证、保存工牌、记录HR谈话内容。",
+    url: "https://caileme.team/guides/layoff-day",
+  },
 };
 
 export default function LayoffDayGuide() {

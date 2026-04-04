@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 import generatedPosts from "@/data/generatedPosts.json";
-import generatedNews from "@/data/generatedNews.json";
+import { cityPolicies } from "@/data/cityPolicies";
 
 function toIsoDate(dateStr: string, fallback: string): string {
   // Try parsing Chinese date formats like "2026年3月15日" or "2026-03-15"
@@ -26,17 +26,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
     })
   );
 
-  const newsUrls: MetadataRoute.Sitemap = (generatedNews as { id: string; date: string }[]).map(
-    (item) => ({
-      url: `${baseUrl}/layoff-news#${item.id}`,
-      lastModified: toIsoDate(item.date, recentDate),
-      changeFrequency: "monthly" as const,
-      priority: 0.5,
-    })
-  );
+  const cityUrls: MetadataRoute.Sitemap = cityPolicies.map((city) => ({
+    url: `${baseUrl}/cities/${city.code}`,
+    lastModified: recentDate,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
   return [
     { url: baseUrl, lastModified: recentDate, changeFrequency: "daily", priority: 1 },
+    { url: `${baseUrl}/cities`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.8 },
     { url: `${baseUrl}/tools`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/tools/severance`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/tools/unemployment`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.9 },
@@ -51,9 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/guides/non-compete`, lastModified: recentDate, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/guides/career-restart`, lastModified: recentDate, changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/layoff-tracker`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.8 },
-    { url: `${baseUrl}/layoff-news`, lastModified: recentDate, changeFrequency: "daily", priority: 0.8 },
     { url: `${baseUrl}/legal-aid`, lastModified: recentDate, changeFrequency: "monthly", priority: 0.7 },
-    { url: `${baseUrl}/share`, lastModified: recentDate, changeFrequency: "monthly", priority: 0.5 },
     { url: `${baseUrl}/ai-simulation`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/community`, lastModified: recentDate, changeFrequency: "daily", priority: 0.8 },
     { url: `${baseUrl}/community/submit`, lastModified: launchDate, changeFrequency: "monthly", priority: 0.3 },
@@ -61,7 +58,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/about`, lastModified: launchDate, changeFrequency: "monthly", priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
     { url: `${baseUrl}/terms`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
+    ...cityUrls,
     ...communityPostUrls,
-    ...newsUrls,
   ];
 }

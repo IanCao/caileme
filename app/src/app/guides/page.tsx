@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "裁员维权百科 - 被裁员怎么办完整攻略 | 裁了么",
+  title: "裁员维权百科 - 被裁员怎么办完整攻略",
   description:
     "最全裁员维权指南：被裁当天怎么办、裁员谈判技巧、劳动仲裁流程、证据收集方法、社保公积金处理、竞业限制解读、职业重启攻略。7篇深度指南帮你从容应对裁员。",
   keywords: [
@@ -12,6 +12,15 @@ export const metadata: Metadata = {
     "劳动法裁员",
     "裁员赔偿标准",
   ],
+  alternates: {
+    canonical: "/guides",
+  },
+  openGraph: {
+    title: "裁员维权百科 - 被裁员怎么办完整攻略",
+    description:
+      "最全裁员维权指南：被裁当天怎么办、裁员谈判技巧、劳动仲裁流程、证据收集方法、社保公积金处理、竞业限制解读、职业重启攻略。",
+    url: "https://caileme.team/guides",
+  },
 };
 
 const guides = [

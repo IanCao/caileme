@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "竞业限制完全指南 - 竞业协议、补偿标准、违约金 | 裁了么",
+  title: "竞业限制完全指南 - 竞业协议、补偿标准、违约金",
   description:
     "竞业限制全面解析：竞业协议是否有效？补偿标准是多少？违约金怎么算？哪些情况可以不遵守竞业限制？2026年最新竞业限制法律解读。",
   keywords: [
@@ -13,6 +13,15 @@ export const metadata: Metadata = {
     "竞业限制怎么解除",
     "竞业限制补偿金多少",
   ],
+  alternates: {
+    canonical: "/guides/non-compete",
+  },
+  openGraph: {
+    title: "竞业限制完全指南 - 竞业协议、补偿标准、违约金",
+    description:
+      "竞业限制全面解析：竞业协议是否有效？补偿标准是多少？违约金怎么算？哪些情况可以不遵守竞业限制？",
+    url: "https://caileme.team/guides/non-compete",
+  },
 };
 
 export default function NonCompeteGuide() {

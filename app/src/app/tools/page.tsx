@@ -1,10 +1,20 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { cityPolicies } from "@/data/cityPolicies";
 
 export const metadata: Metadata = {
   title: "权益保障工具箱 - 赔偿计算、失业金、社保、法律援助",
   description:
     "免费被裁维权工具箱：赔偿计算器、失业金计算器、社保断缴影响查询、法律援助、仲裁指引。覆盖全国20+城市2026年最新数据。",
+  alternates: {
+    canonical: "/tools",
+  },
+  openGraph: {
+    title: "权益保障工具箱 - 赔偿计算、失业金、社保、法律援助",
+    description:
+      "免费被裁维权工具箱：赔偿计算器、失业金计算器、社保断缴影响查询、法律援助、仲裁指引。覆盖全国20+城市2026年最新数据。",
+    url: "https://caileme.team/tools",
+  },
 };
 
 const calculatorTools = [
@@ -60,6 +70,19 @@ const moreTools = [
     tagColor: "bg-green-100 text-green-700",
   },
 ];
+
+const featuredCityCodes = new Set([
+  "beijing",
+  "shanghai",
+  "guangzhou",
+  "shenzhen",
+  "hangzhou",
+  "chengdu",
+  "wuhan",
+  "nanjing",
+]);
+
+const featuredCities = cityPolicies.filter((city) => featuredCityCodes.has(city.code));
 
 const legalResources = [
   {
@@ -205,6 +228,34 @@ export default function ToolsPage() {
               </div>
             </Link>
           ))}
+          </div>
+        </div>
+
+        <div className="mt-10 sm:mt-12">
+          <div className="flex items-center justify-between gap-4 flex-wrap mb-4">
+            <h2 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+              <span>🏙️</span> 热门城市政策专题
+            </h2>
+            <Link href="/cities" className="text-sm text-accent hover:underline">
+              查看全部城市 →
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {featuredCities.map((city) => (
+              <Link
+                key={city.code}
+                href={`/cities/${city.code}`}
+                className="block bg-white rounded-xl border border-gray-100 p-4 hover:border-gray-300 hover:shadow-sm transition-all"
+              >
+                <div className="font-semibold text-sm">{city.name}</div>
+                <div className="mt-2 text-xs text-gray-500">
+                  失业金约 {city.unemploymentBase} 元/月
+                </div>
+                <div className="mt-1 text-xs text-gray-500">
+                  赔偿封顶基数 {city.avgSalary3x} 元
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
 

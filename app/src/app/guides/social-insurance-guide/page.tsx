@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "离职后社保公积金怎么办 - 断缴影响与处理指南 | 裁了么",
+  title: "离职后社保公积金怎么办 - 断缴影响与处理指南",
   description:
     "离职后社保怎么交？公积金怎么提取？完整指南：医保断缴缓冲期、灵活就业参保、失业金申领条件、公积金提取流程。附全国各城市社保政策和办理时间节点。",
   keywords: [
@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     "社保转移",
     "离职后医保",
   ],
+  alternates: {
+    canonical: "/guides/social-insurance-guide",
+  },
+  openGraph: {
+    title: "离职后社保公积金怎么办 - 断缴影响与处理指南",
+    description:
+      "离职后社保怎么交？公积金怎么提取？完整指南：医保断缴缓冲期、灵活就业参保、失业金申领条件、公积金提取流程。",
+    url: "https://caileme.team/guides/social-insurance-guide",
+  },
 };
 
 export default function SocialInsuranceGuide() {

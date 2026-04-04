@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "被裁后职业重启指南 - 从低谷到重新出发 | 裁了么",
+  title: "被裁后职业重启指南 - 从低谷到重新出发",
   description:
     "被裁员后如何重新找工作？职业重启完整指南：心态调整、简历优化、面试技巧、如何解释被裁经历、副业方向、转型建议。已帮助数千名打工人成功再就业。",
   keywords: [
@@ -13,6 +13,15 @@ export const metadata: Metadata = {
     "职业重启",
     "再就业指南",
   ],
+  alternates: {
+    canonical: "/guides/career-restart",
+  },
+  openGraph: {
+    title: "被裁后职业重启指南 - 从低谷到重新出发",
+    description:
+      "被裁员后如何重新找工作？职业重启完整指南：心态调整、简历优化、面试技巧、如何解释被裁经历、副业方向、转型建议。",
+    url: "https://caileme.team/guides/career-restart",
+  },
 };
 
 export default function CareerRestartGuide() {

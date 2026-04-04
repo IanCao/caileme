@@ -17,8 +17,9 @@ import { CommunityPost, NewsItem } from '@/data/communityData';
 
 // Front matter 解析（简单实现，不依赖外部库）
 function parseFrontMatter(content: string): { meta: Record<string, any>; body: string } {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  if (!match) return { meta: {}, body: content };
+  const normalized = content.replace(/\r\n/g, "\n");
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+  if (!match) return { meta: {}, body: normalized };
   
   const meta: Record<string, any> = {};
   match[1].split('\n').forEach(line => {

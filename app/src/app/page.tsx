@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { FadeInSection } from "@/components/FadeInSection";
 import { allLayoffNews, allCommunityPosts, newsCities } from "@/data/communityData";
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: "/",
+  },
+};
 
 const ScrollingAvatars = dynamic(() => import("@/components/ScrollingAvatars"), {
   loading: () => <div className="h-20" />,

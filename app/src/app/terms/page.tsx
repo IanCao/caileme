@@ -3,6 +3,9 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "服务条款",
   description: "裁了么 牛马保护站 服务条款",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 export default function TermsPage() {

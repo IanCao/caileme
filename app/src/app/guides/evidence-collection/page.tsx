@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "裁员证据收集手册 - 录音取证、劳动合同、工资流水 | 裁了么",
+  title: "裁员证据收集手册 - 录音取证、劳动合同、工资流水",
   description:
     "裁员维权证据收集完全手册：录音是否合法？需要哪些证据？劳动合同、工资流水、考勤记录、裁员通知等关键证据的保存方法和注意事项。",
   keywords: [
@@ -13,6 +13,15 @@ export const metadata: Metadata = {
     "劳动合同保存",
     "工资流水证据",
   ],
+  alternates: {
+    canonical: "/guides/evidence-collection",
+  },
+  openGraph: {
+    title: "裁员证据收集手册 - 录音取证、劳动合同、工资流水",
+    description:
+      "裁员维权证据收集完全手册：录音是否合法？需要哪些证据？劳动合同、工资流水、考勤记录、裁员通知等关键证据的保存方法和注意事项。",
+    url: "https://caileme.team/guides/evidence-collection",
+  },
 };
 
 export default function EvidenceCollectionGuide() {

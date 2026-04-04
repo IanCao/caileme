@@ -29,7 +29,11 @@ export type CommunityPost = {
   date: string;
   city: string;
   summary: string;
+  excerpt?: string;
   content: string;
+  source?: string;
+  sourceUrl?: string;
+  cover?: string;
   likes: number;
   viewCount?: number;
   comments: { nickname: string; avatar: string; content: string; date: string }[];

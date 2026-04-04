@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "裁员谈判技巧 - 如何争取N+1以上赔偿方案 | 裁了么",
+  title: "裁员谈判技巧 - 如何争取N+1以上赔偿方案",
   description:
     "裁员谈判实战技巧：如何从N争取到N+1甚至2N赔偿？谈判话术模板、常见HR压价套路应对、赔偿方案对比分析。帮你在裁员谈判中争取最大利益。",
   keywords: [
@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     "裁员补偿谈判话术",
     "被裁怎么谈赔偿",
   ],
+  alternates: {
+    canonical: "/guides/negotiation",
+  },
+  openGraph: {
+    title: "裁员谈判技巧 - 如何争取N+1以上赔偿方案",
+    description:
+      "裁员谈判实战技巧：如何从N争取到N+1甚至2N赔偿？谈判话术模板、常见HR压价套路应对、赔偿方案对比分析。",
+    url: "https://caileme.team/guides/negotiation",
+  },
 };
 
 export default function NegotiationGuide() {

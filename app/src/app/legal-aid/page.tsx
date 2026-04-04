@@ -209,12 +209,12 @@ export default function LegalAidPage() {
               <li>• 精准获客，匹配有真实需求的客户</li>
               <li>• 灵活的合作模式和收益分配</li>
             </ul>
-            <Link
-              href="/contact"
+            <a
+              href="mailto:contact@caileme.team?subject=%E5%BE%8B%E5%B8%88%E5%90%88%E4%BD%9C%E5%92%A8%E8%AF%A2"
               className="inline-block text-sm px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
             >
               申请成为合作律师
-            </Link>
+            </a>
           </motion.div>
         )}
       </div>

@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "劳动仲裁流程指南 - 从申请到开庭胜诉全流程 | 裁了么",
+  title: "劳动仲裁流程指南 - 从申请到开庭胜诉全流程",
   description:
     "劳动仲裁详细流程：申请条件、所需材料、开庭流程、时间周期、费用说明。附仲裁申请书模板和常见问题解答。2026年最新劳动仲裁指南，帮你成功维权。",
   keywords: [
@@ -14,6 +14,15 @@ export const metadata: Metadata = {
     "仲裁申请书模板",
     "裁员仲裁",
   ],
+  alternates: {
+    canonical: "/guides/arbitration",
+  },
+  openGraph: {
+    title: "劳动仲裁流程指南 - 从申请到开庭胜诉全流程",
+    description:
+      "劳动仲裁详细流程：申请条件、所需材料、开庭流程、时间周期、费用说明。附仲裁申请书模板和常见问题解答。",
+    url: "https://caileme.team/guides/arbitration",
+  },
 };
 
 export default function ArbitrationGuide() {

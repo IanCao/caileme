@@ -41,11 +41,7 @@ export const metadata: Metadata = {
     "互联网裁员",
   ],
   authors: [{ name: "裁了么" }],
-  alternates: {
-    canonical: "/",
-  },
   verification: {
-    google: "GOOGLE_VERIFICATION_CODE",
     other: {
       "baidu-site-verification": "codeva-HTv7mW5lhT",
       "sogou_site_verification": "wf7vxZV1H8",

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "AI裁员模拟 - 免费模拟HR裁员谈判场景 | 裁了么",
+  title: "AI裁员模拟 - 免费模拟HR裁员谈判场景",
   description:
     "免费AI模拟被裁谈话：正常裁员N+1谈判、低赔偿压价应对、违法裁员2N维权、互动模拟对话。提前练习裁员应对策略，掌握谈判技巧，保护打工人合法权益。覆盖赔偿谈判、竞业限制、社保维权等场景。",
   keywords: [
@@ -16,6 +16,9 @@ export const metadata: Metadata = {
     "劳动仲裁",
     "裁了么",
   ],
+  alternates: {
+    canonical: "/ai-simulation",
+  },
   openGraph: {
     title: "AI裁员模拟 - 免费模拟HR裁员谈判",
     description:

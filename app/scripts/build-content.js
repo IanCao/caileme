@@ -13,8 +13,9 @@ const CONTENT_DIR = path.join(__dirname, '..', 'content');
 const DATA_DIR = path.join(__dirname, '..', 'src', 'data');
 
 function parseFrontMatter(content) {
-  const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!match) return { meta: {}, body: content };
+  const normalized = content.replace(/\r\n/g, '\n');
+  const match = normalized.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  if (!match) return { meta: {}, body: normalized };
 
   const meta = {};
   const lines = match[1].split('\n');
@@ -133,11 +134,15 @@ const posts = processDirectory(path.join(CONTENT_DIR, 'posts')).map(p => ({
   nickname: p.nickname || '匿名投稿',
   avatar: p.avatar || '📝',
   title: p.title || '无标题',
-  summary: p.summary || p.content.slice(0, 100) + '...',
+  summary: p.summary || p.excerpt || p.content.slice(0, 100) + '...',
+  excerpt: p.excerpt || '',
   content: p.content,
   category: p.category || '经验分享',
   date: p.date || new Date().toISOString().split('T')[0],
   city: p.city || '',
+  source: p.source || '',
+  sourceUrl: p.sourceUrl || '',
+  cover: p.cover || '',
   likes: p.likes || 0,
   viewCount: p.viewCount || 0,
   comments: Array.isArray(p.comments) ? p.comments.map(c => ({
@@ -156,7 +161,8 @@ if (fs.existsSync(newsDir)) {
     nickname: '情报员',
     avatar: '📰',
     title: `${n.company} 裁员动态`,
-    summary: n.detail || n.content?.slice(0, 100) + '...' || '',
+    summary: n.summary || n.excerpt || n.detail || n.content?.slice(0, 100) + '...' || '',
+    excerpt: n.excerpt || '',
     content: n.content || n.detail || '',
     category: '被裁情报',  // news 类型映射为被裁情报
     type: 'news',  // 标记为新闻类型
@@ -164,11 +170,12 @@ if (fs.existsSync(newsDir)) {
     company: n.company || '',
     industry: n.industry || '',
     city: n.city || '',
+    source: n.source || '',
+    sourceUrl: n.sourceUrl || '',
+    cover: n.cover || '',
     ratio: n.ratio || '',
     compensation: n.compensation || '',
     departments: n.departments || '',
-    source: n.source || '',
-    sourceUrl: n.sourceUrl || '',
     verified: n.verified || false,
     viewCount: n.viewCount || 0,
     likes: 0,

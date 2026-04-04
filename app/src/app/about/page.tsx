@@ -1,8 +1,11 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "关于我们 - 裁了么 牛马保护站",
+  title: "关于我们",
   description: "裁了么牛马保护站是一个帮助打工人应对裁员的工具平台。",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {

@@ -53,6 +53,9 @@ const guides = [
   },
 ];
 
+const latestPosts = allCommunityPosts.slice(0, 4);
+const latestLayoffNews = allLayoffNews.slice(0, 3);
+
 export default function HomePage() {
   return (
     <div>
@@ -218,59 +221,114 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 被裁情报预览 */}
+      {/* 保护站信息预览 */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <FadeInSection className="text-center mb-12 md:mb-16">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">保护站信息</h2>
             <p className="mt-4 text-gray-500 text-base sm:text-lg">
-              裁了么社区最新动态
+              最新文章、裁员情报和互助入口
             </p>
           </FadeInSection>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-            {/* 左栏：裁员情报 */}
             <div className="lg:col-span-2">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">📢 裁员情报</h3>
+              <div className="flex items-center justify-between gap-4 mb-4">
+                <h3 className="text-lg font-bold flex items-center gap-2">📰 最新文章</h3>
+                <Link
+                  href="/community"
+                  className="text-sm text-accent font-medium hover:underline"
+                >
+                  查看全部文章 →
+                </Link>
+              </div>
+
               <FadeInSection stagger>
-                {allLayoffNews.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {allLayoffNews.slice(0, 4).map((item) => (
-                      <div
-                        key={item.id}
-                        className="p-4 sm:p-5 rounded-xl bg-surface border border-gray-100"
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold">{item.company}</span>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {latestPosts.map((item) => (
+                    <Link
+                      key={item.id}
+                      href={`/community/post/${item.id}`}
+                      className="block rounded-2xl border border-gray-100 bg-surface p-5 hover:border-gray-300 hover:shadow-sm transition-all"
+                    >
+                      <div className="flex items-center gap-2 text-xs text-gray-400 flex-wrap">
+                        <span className="rounded-full bg-accent/10 px-2 py-0.5 text-accent">
+                          {item.category}
+                        </span>
+                        <span>{item.date}</span>
+                        {item.city ? <span>{item.city}</span> : null}
+                      </div>
+                      <h3 className="mt-3 text-lg font-semibold leading-snug line-clamp-2">
+                        {item.title}
+                      </h3>
+                      <p className="mt-2 text-sm text-gray-500 leading-relaxed line-clamp-3">
+                        {item.summary}
+                      </p>
+                      <div className="mt-4 text-sm font-medium text-accent">
+                        阅读全文 →
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </FadeInSection>
+
+              <div className="mt-8 rounded-2xl border border-gray-100 bg-surface p-5">
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <h3 className="text-lg font-bold flex items-center gap-2">📢 裁员情报</h3>
+                  <Link
+                    href="/community"
+                    className="text-sm text-accent font-medium hover:underline"
+                  >
+                    进入保护站 →
+                  </Link>
+                </div>
+                {latestLayoffNews.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    {latestLayoffNews.map((item) => (
+                      <div key={item.id} className="rounded-xl border border-gray-100 bg-white p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <span className="font-medium">{item.company}</span>
                           <span className="text-xs text-gray-400">{item.date}</span>
                         </div>
-                        <div className="flex flex-wrap gap-2 text-xs text-gray-500">
-                          <span className="px-2 py-0.5 bg-gray-100 rounded">{item.city}</span>
-                          <span className="px-2 py-0.5 bg-gray-100 rounded">被裁 {item.ratio}</span>
-                          <span className="px-2 py-0.5 bg-blue-50 text-accent rounded">赔偿 {item.compensation}</span>
+                        <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-500">
+                          <span className="rounded bg-gray-100 px-2 py-0.5">{item.city}</span>
+                          <span className="rounded bg-gray-100 px-2 py-0.5">被裁 {item.ratio}</span>
+                          <span className="rounded bg-blue-50 px-2 py-0.5 text-accent">
+                            赔偿 {item.compensation}
+                          </span>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-gray-400 py-8">暂无裁员情报，欢迎投稿！</p>
+                  <div className="rounded-xl border border-dashed border-gray-200 bg-white p-5">
+                    <p className="text-sm text-gray-500 leading-relaxed">
+                      当前站内以文章和经验整理为主，裁员情报还在持续补充中。你可以先看最新文章，
+                      或匿名投稿你掌握的一手信息。
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-3">
+                      <Link
+                        href="/community"
+                        className="text-sm font-medium text-accent hover:underline"
+                      >
+                        去看保护站信息 →
+                      </Link>
+                      <Link
+                        href="/community/submit"
+                        className="text-sm font-medium text-accent hover:underline"
+                      >
+                        我要投稿 →
+                      </Link>
+                    </div>
+                  </div>
                 )}
-              </FadeInSection>
-              <div className="text-center mt-6">
-                <Link
-                  href="/community"
-                  className="inline-block text-accent font-medium hover:underline"
-                >
-                  查看全部情报 →
-                </Link>
               </div>
             </div>
 
-            {/* 右栏：红黑厂信息 */}
             <div className="lg:col-span-1">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">🏭 红黑厂信息</h3>
               <FadeInSection>
                 <div className="rounded-2xl border border-gray-100 bg-surface p-5 space-y-4">
+                  <h3 className="text-lg font-bold flex items-center gap-2">🏭 红黑厂信息</h3>
                   <p className="text-sm text-gray-500 leading-relaxed">
                     哪些公司裁员赔偿到位（红厂）？哪些坑害打工人（黑厂）？大家一起来曝光和点赞！
                   </p>
@@ -313,6 +371,27 @@ export default function HomePage() {
                     <p className="text-[10px] text-gray-400 text-center mt-2">
                       投稿后经审核展示，支持匿名
                     </p>
+                  </div>
+                </div>
+              </FadeInSection>
+
+              <FadeInSection>
+                <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-5">
+                  <h3 className="text-lg font-bold">🔥 高频主题</h3>
+                  <div className="mt-4 space-y-2">
+                    {[
+                      { label: "AI 裁员与岗位迁移", id: "7" },
+                      { label: "数字经济岗位变化", id: "8" },
+                      { label: "灵活就业保障", id: "9" },
+                    ].map((topic) => (
+                      <Link
+                        key={topic.id}
+                        href={`/community/post/${topic.id}`}
+                        className="block rounded-xl bg-surface px-4 py-3 text-sm hover:bg-gray-100 transition-colors"
+                      >
+                        {topic.label} →
+                      </Link>
+                    ))}
                   </div>
                 </div>
               </FadeInSection>

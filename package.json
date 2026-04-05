@@ -1,5 +1,14 @@
 {
-  "dependencies": {
-    "codex": "^0.2.3"
+  "name": "caileme-root",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "node scripts/build-root.mjs",
+    "dev": "npm --prefix app run dev",
+    "lint": "npm --prefix app run lint",
+    "start": "npm --prefix app run start"
   }
 }

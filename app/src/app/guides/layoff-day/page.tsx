@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { AdSlot } from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "被裁员当天怎么办 - 完整行动清单与注意事项",
@@ -164,6 +165,8 @@ export default function LayoffDayGuide() {
               </div>
             </div>
 
+            <AdSlot variant="inArticle" className="mb-6" />
+
             {/* Section 4 */}
             <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 mb-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -261,6 +264,8 @@ export default function LayoffDayGuide() {
             </Link>
           </div>
         </div>
+
+        <AdSlot variant="multiplex" className="mt-10" />
       </div>
     </div>
   );

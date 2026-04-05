@@ -3,7 +3,9 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cityPolicies, getCityByCode } from "@/data/cityPolicies";
+import { AdSlot } from "@/components/AdSlot";
 import CitySelector from "@/components/CitySelector";
+import RelatedPages from "@/components/RelatedPages";
 
 type Situation = "negotiation" | "no_notice" | "illegal" | null;
 
@@ -836,6 +838,15 @@ export default function SeveranceCalculator() {
             ⚠️ 免责声明：本计算器仅供参考，计算结果不构成法律建议。各地政策可能有差异，实际赔偿金额请以当地劳动部门规定为准。如有争议，建议咨询专业劳动法律师。
           </p>
         </div>
+        <section className="mt-8 rounded-2xl border border-gray-100 bg-white p-6">
+          <h3 className="text-lg font-semibold text-gray-900">算完赔偿后，通常还要继续看</h3>
+          <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+            赔偿计算只是入口。继续看谈判、仲裁、失业金和维权路径，通常能更快解决问题，也能抬高停留时间和后续浏览深度。
+          </p>
+          <RelatedPages current="/tools/severance" count={4} />
+        </section>
+        <AdSlot variant="display" className="mt-8" />
+        <AdSlot variant="multiplex" className="mt-8" />
       </div>
     </div>
   );

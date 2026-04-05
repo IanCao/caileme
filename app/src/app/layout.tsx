@@ -100,11 +100,6 @@ const jsonLd = {
       description:
         "裁了么牛马保护站是一个帮助打工人应对裁员的工具平台。提供裁员赔偿计算器、失业金计算器、社保断缴影响、维权百科、AI裁员模拟等功能。",
       inLanguage: "zh-CN",
-      potentialAction: {
-        "@type": "SearchAction",
-        target: "https://caileme.team/search?q={search_term_string}",
-        "query-input": "required name=search_term_string",
-      },
     },
     {
       "@type": "Organization",
@@ -135,6 +130,10 @@ export default function RootLayout({
         />
         {/* Baidu SEO */}
         <meta name="baiduImageplus" content="1" />
+        <meta
+          name="google-adsense-account"
+          content="ca-pub-1331537179356559"
+        />
         <meta name="author" content="裁了么 牛马保护站" />
         {/* Preconnect to CDN */}
         <link rel="preconnect" href="https://static.cloudflareinsights.com" />

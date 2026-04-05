@@ -3,7 +3,9 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cityPolicies, getCityByCode, getUnemploymentMonths } from "@/data/cityPolicies";
+import { AdSlot } from "@/components/AdSlot";
 import CitySelector from "@/components/CitySelector";
+import RelatedPages from "@/components/RelatedPages";
 
 export default function UnemploymentCalculator() {
   const [city, setCity] = useState("beijing");
@@ -374,6 +376,15 @@ export default function UnemploymentCalculator() {
             </motion.div>
           )}
         </AnimatePresence>
+        <section className="mt-8 rounded-2xl border border-gray-100 bg-white p-6">
+          <h3 className="text-lg font-semibold text-gray-900">领失业金前，建议顺手看这几个页面</h3>
+          <p className="mt-2 text-sm text-gray-500 leading-relaxed">
+            这一类用户通常还会继续关心赔偿金额、社保断缴和城市政策差异。把这些页面串起来，比单页停留更适合后续广告收益。
+          </p>
+          <RelatedPages current="/tools/unemployment" count={4} />
+        </section>
+        <AdSlot variant="display" className="mt-8" />
+        <AdSlot variant="multiplex" className="mt-8" />
       </div>
     </div>
   );

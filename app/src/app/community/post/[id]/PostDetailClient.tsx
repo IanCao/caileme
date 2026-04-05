@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { allCommunityPosts } from "@/data/communityData";
 import { likePost, trackView } from "@/lib/api";
+import { AdSlot } from "@/components/AdSlot";
 
 function renderContent(markdown: string) {
   return markdown.split("\n").map((line, index, lines) => {
@@ -231,6 +232,8 @@ export default function PostDetailClient({
             {renderContent(post.content)}
           </div>
 
+          <AdSlot variant="inArticle" className="mt-6" />
+
           <section className="mt-6 rounded-2xl border border-gray-100 bg-white p-5">
             <h2 className="text-sm font-semibold text-gray-900">信息说明</h2>
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-600">
@@ -370,6 +373,8 @@ export default function PostDetailClient({
               </div>
             </section>
           )}
+
+          <AdSlot variant="multiplex" className="mt-8" />
         </motion.article>
       </div>
     </div>

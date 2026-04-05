@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { AdSlot } from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "裁员维权百科 - 被裁员怎么办完整攻略",
@@ -119,6 +120,8 @@ export default function GuidesPage() {
           ))}
         </div>
 
+        <AdSlot variant="display" className="mt-10" />
+
         {/* 投稿征集 */}
         <div className="mt-10 p-5 sm:p-6 bg-white rounded-2xl border border-gray-100 text-center">
           <h3 className="font-semibold mb-2">✍️ 成为指南作者</h3>
@@ -132,6 +135,8 @@ export default function GuidesPage() {
             投稿指南文章
           </Link>
         </div>
+
+        <AdSlot variant="multiplex" className="mt-10" />
       </div>
     </div>
   );

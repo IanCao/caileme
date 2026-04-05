@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
+import { AdSlot } from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "被裁后职业重启指南 - 从低谷到重新出发",
@@ -211,6 +212,8 @@ export default function CareerRestartGuide() {
               </div>
             </div>
 
+            <AdSlot variant="inArticle" className="mb-6" />
+
             {/* Section 4 */}
             <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100 mb-6">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
@@ -382,6 +385,8 @@ export default function CareerRestartGuide() {
             </Link>
           </div>
         </div>
+
+        <AdSlot variant="multiplex" className="mt-10" />
       </div>
     </div>
   );

@@ -2,6 +2,38 @@ import type { Metadata } from "next";
 import { allCommunityPosts } from "@/data/communityData";
 import PostDetailClient from "./PostDetailClient";
 
+function getPostById(id: string) {
+  return allCommunityPosts.find((item) => item.id === id) ?? null;
+}
+
+function getRelatedPosts(id: string) {
+  const post = getPostById(id);
+  if (!post) return [];
+
+  return allCommunityPosts
+    .filter((item) => item.id !== post.id)
+    .sort((a, b) => {
+      const aScore =
+        (a.category === post.category ? 2 : 0) + (a.city && a.city === post.city ? 1 : 0);
+      const bScore =
+        (b.category === post.category ? 2 : 0) + (b.city && b.city === post.city ? 1 : 0);
+
+      if (bScore !== aScore) {
+        return bScore - aScore;
+      }
+
+      return b.date.localeCompare(a.date);
+    })
+    .slice(0, 3)
+    .map(({ id: relatedId, title, summary, category, date }) => ({
+      id: relatedId,
+      title,
+      summary,
+      category,
+      date,
+    }));
+}
+
 export function generateStaticParams() {
   const params = allCommunityPosts.map((post) => ({ id: post.id }));
   return params.length > 0 ? params : [{ id: "_" }];
@@ -12,7 +44,7 @@ export function generateMetadata({
 }: {
   params: { id: string };
 }): Metadata {
-  const post = allCommunityPosts.find((item) => item.id === params.id);
+  const post = getPostById(params.id);
 
   if (!post) {
     return {
@@ -76,10 +108,11 @@ export function generateMetadata({
 }
 
 export default function PostPage({ params }: { params: { id: string } }) {
-  const post = allCommunityPosts.find((item) => item.id === params.id);
+  const post = getPostById(params.id);
+  const relatedPosts = getRelatedPosts(params.id);
 
   if (!post) {
-    return <PostDetailClient params={params} />;
+    return <PostDetailClient params={params} post={null} relatedPosts={[]} />;
   }
 
   const canonicalUrl = `https://caileme.team/community/post/${post.id}`;
@@ -118,16 +151,8 @@ export default function PostPage({ params }: { params: { id: string } }) {
     },
     isAccessibleForFree: true,
     keywords: [post.category, post.city].filter(Boolean).join(", "),
-    ...(post.source
-      ? {
-          isBasedOn: post.source,
-        }
-      : {}),
-    ...(post.sourceUrl
-      ? {
-          citation: post.sourceUrl,
-        }
-      : {}),
+    ...(post.source ? { isBasedOn: post.source } : {}),
+    ...(post.sourceUrl ? { citation: post.sourceUrl } : {}),
   };
 
   const breadcrumbJsonLd = {
@@ -165,7 +190,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <PostDetailClient params={params} />
+      <PostDetailClient params={params} post={post} relatedPosts={relatedPosts} />
     </>
   );
 }

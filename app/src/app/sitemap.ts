@@ -14,7 +14,7 @@ function toIsoDate(dateStr: string, fallback: string): string {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://caileme.team";
-  const recentDate = "2026-03-22";
+  const recentDate = new Date().toISOString();
   const launchDate = "2026-03-01";
 
   const communityPostUrls: MetadataRoute.Sitemap = (generatedPosts as { id: string; date: string }[]).map(

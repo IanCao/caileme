@@ -32,7 +32,7 @@ export function AdSlot({
   slot,
   className = "",
 }: AdSlotProps) {
-  const insRef = useRef<HTMLElement | null>(null);
+  const insRef = useRef<HTMLModElement | null>(null);
   const resolvedSlot = slot || slotByVariant[variant];
 
   useEffect(() => {

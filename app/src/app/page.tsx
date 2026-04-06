@@ -29,7 +29,7 @@ const tools = [
   },
   {
     title: "失业金计算器",
-    desc: "覆盖全国20+城市2026年最新标准，预估每月领取金额和时长。",
+    desc: "覆盖全国30+城市2026年最新标准，预估每月领取金额和时长。",
     href: "/tools/unemployment",
     icon: "💰",
   },
@@ -522,7 +522,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             {[
-              { num: newsCities.length > 1 ? `${newsCities.length - 1}+` : "20+", label: "城市覆盖" },
+              { num: newsCities.length > 1 ? `${newsCities.length - 1}+` : "30+", label: "城市覆盖" },
               { num: allLayoffNews.length > 0 ? `${allLayoffNews.length}+` : "持续更新", label: "裁员情报" },
               { num: allCommunityPosts.length > 0 ? `${allCommunityPosts.length}+` : "持续增长", label: "社区帖子" },
               { num: "100%", label: "匿名安全" },

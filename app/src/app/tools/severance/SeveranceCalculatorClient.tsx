@@ -22,6 +22,11 @@ interface CalcResult {
   recommended: string;
   recommendedAmount: number;
   annualLeavePay: number;
+  // 新增：调休补偿
+  workDayOTPay: number;  // 工作日加班调休补偿
+  weekendOTPay: number;  // 周末加班调休补偿
+  holidayOTPay: number;  // 法定节假日调休补偿
+  totalOTPay: number;     // 调休补偿合计
   taxAmount: number;
   taxExempt: number;
   totalWithExtras: number;
@@ -36,6 +41,12 @@ export default function SeveranceCalculator() {
   const [months, setMonths] = useState("");
   const [situation, setSituation] = useState<Situation>(null);
   const [unusedLeaveDays, setUnusedLeaveDays] = useState("");
+  // 新增：调休相关 state
+  const [useSimpleOT, setUseSimpleOT] = useState(true); // 简化/详细调休切换
+  const [simpleOTDays, setSimpleOTDays] = useState(""); // 简化版：总调休天数
+  const [workDayOTDays, setWorkDayOTDays] = useState(""); // 详细版：工作日加班调休
+  const [weekendOTDays, setWeekendOTDays] = useState(""); // 详细版：周末加班调休
+  const [holidayOTDays, setHolidayOTDays] = useState(""); // 详细版：法定节假日调休
   const [showIllegalInfo, setShowIllegalInfo] = useState(false);
   const [result, setResult] = useState<CalcResult | null>(null);
   const [shareOptions, setShareOptions] = useState({
@@ -112,6 +123,31 @@ export default function SeveranceCalculator() {
     const dailyWage = avgSalary / 21.75;
     const annualLeavePay = leaveDays > 0 ? leaveDays * dailyWage * 2 : 0;
 
+    // 调休补偿计算
+    let workDayOTPay = 0;
+    let weekendOTPay = 0;
+    let holidayOTPay = 0;
+    
+    if (useSimpleOT) {
+      // 简化版：统一按周末加班标准200%折算
+      const totalOT = parseFloat(simpleOTDays) || 0;
+      weekendOTPay = totalOT > 0 ? totalOT * dailyWage * 2 : 0;
+    } else {
+      // 详细版：分别计算三种类型
+      // 工作日加班调休：按日工资150%补偿
+      const workOT = parseFloat(workDayOTDays) || 0;
+      workDayOTPay = workOT > 0 ? workOT * dailyWage * 1.5 : 0;
+      
+      // 周末加班调休：按日工资200%补偿
+      const weekendOT = parseFloat(weekendOTDays) || 0;
+      weekendOTPay = weekendOT > 0 ? weekendOT * dailyWage * 2 : 0;
+      
+      // 法定节假日加班调休：必须按日工资300%补偿（不能补休）
+      const holidayOT = parseFloat(holidayOTDays) || 0;
+      holidayOTPay = holidayOT > 0 ? holidayOT * dailyWage * 3 : 0;
+    }
+    const totalOTPay = workDayOTPay + weekendOTPay + holidayOTPay;
+
     // 经济补偿金个税计算
     // 免税额 = 当地上年职工平均工资3倍（注意这里是年平均工资3倍 = 月社平*12*3）
     const taxExempt = cityInfo.avgSalary * 3 * 12;
@@ -139,7 +175,7 @@ export default function SeveranceCalculator() {
       taxAmount = Math.max(0, Math.round(taxAmount * 100) / 100);
     }
 
-    const totalWithExtras = recommendedAmount + annualLeavePay - taxAmount;
+    const totalWithExtras = recommendedAmount + annualLeavePay + totalOTPay - taxAmount;
 
     setResult({
       avgSalary,
@@ -152,6 +188,10 @@ export default function SeveranceCalculator() {
       recommended,
       recommendedAmount,
       annualLeavePay,
+      workDayOTPay,
+      weekendOTPay,
+      holidayOTPay,
+      totalOTPay,
       taxAmount,
       taxExempt,
       totalWithExtras,
@@ -179,7 +219,7 @@ export default function SeveranceCalculator() {
             裁员赔偿计算器
           </h1>
           <p className="mt-4 text-gray-500 text-center text-lg">
-            精准计算赔偿金 + 年假补偿 + 个税
+            精准计算赔偿金 + 年假补偿 + 调休补偿 + 个税
           </p>
         </motion.div>
 
@@ -342,10 +382,110 @@ export default function SeveranceCalculator() {
               </div>
             </div>
 
-            {/* Step 5: 裁员情况 */}
+            {/* Step 5: 调休（新增） */}
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <span className="w-6 h-6 bg-black text-white text-xs rounded-full flex items-center justify-center font-bold">5</span>
+                <label className="text-sm font-semibold">未修调休天数（选填）</label>
+              </div>
+              
+              {/* 简化/详细切换 */}
+              <div className="flex gap-2 mb-3">
+                <button
+                  onClick={() => setUseSimpleOT(true)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    useSimpleOT ? "bg-black text-white" : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  简化模式
+                </button>
+                <button
+                  onClick={() => setUseSimpleOT(false)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                    !useSimpleOT ? "bg-black text-white" : "bg-gray-100 text-gray-600"
+                  }`}
+                >
+                  详细模式（按类型区分）
+                </button>
+              </div>
+
+              {useSimpleOT ? (
+                // 简化版：统一输入
+                <div>
+                  <input
+                    type="number"
+                    value={simpleOTDays}
+                    onChange={(e) => setSimpleOTDays(e.target.value)}
+                    placeholder="例如：3"
+                    min="0"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 text-base"
+                  />
+                  <div className="mt-2 p-3 bg-orange-50 rounded-lg">
+                    <p className="text-xs text-orange-700 leading-relaxed">
+                      💡 简化模式按<strong>日工资的200%</strong>统一折算。如需区分调休类型，请切换到详细模式。
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                // 详细版：三种类型
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1.5">
+                        工作日加班调休
+                      </label>
+                      <input
+                        type="number"
+                        value={workDayOTDays}
+                        onChange={(e) => setWorkDayOTDays(e.target.value)}
+                        placeholder="例如：2"
+                        min="0"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 text-base"
+                      />
+                      <p className="mt-1 text-xs text-gray-400">折算：日工资 × 150%</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1.5">
+                        周末加班调休
+                      </label>
+                      <input
+                        type="number"
+                        value={weekendOTDays}
+                        onChange={(e) => setWeekendOTDays(e.target.value)}
+                        placeholder="例如：5"
+                        min="0"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 text-base"
+                      />
+                      <p className="mt-1 text-xs text-gray-400">折算：日工资 × 200%</p>
+                    </div>
+                    <div>
+                      <label className="block text-xs text-gray-500 mb-1.5">
+                        法定节假日调休
+                      </label>
+                      <input
+                        type="number"
+                        value={holidayOTDays}
+                        onChange={(e) => setHolidayOTDays(e.target.value)}
+                        placeholder="例如：1"
+                        min="0"
+                        className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-black/5 text-base"
+                      />
+                      <p className="mt-1 text-xs text-gray-400">折算：日工资 × 300%</p>
+                    </div>
+                  </div>
+                  <div className="p-3 bg-orange-50 rounded-lg">
+                    <p className="text-xs text-orange-700 leading-relaxed">
+                      💡 <strong>调休折算标准：</strong>工作日加班调休按<strong>150%</strong>日工资折算；周末加班调休按<strong>200%</strong>日工资折算；法定节假日加班调休必须按<strong>300%</strong>支付加班工资（不能补休）。
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Step 6: 裁员情况 */}
+            <div>
+              <div className="flex items-center gap-2 mb-3">
+                <span className="w-6 h-6 bg-black text-white text-xs rounded-full flex items-center justify-center font-bold">6</span>
                 <label className="text-sm font-semibold">你的裁员情况</label>
               </div>
               <div className="space-y-3">
@@ -469,6 +609,7 @@ export default function SeveranceCalculator() {
                     <span>{result.recommended} {fmt(result.recommendedAmount)}</span>
                   )}
                   {result.annualLeavePay > 0 && <span>+ 年假补偿 {fmt(result.annualLeavePay)}</span>}
+                  {result.totalOTPay > 0 && <span>+ 调休补偿 {fmt(result.totalOTPay)}</span>}
                   {result.taxAmount > 0 && <span>- 个税 {fmt(result.taxAmount)}</span>}
                 </div>
               </div>
@@ -483,6 +624,7 @@ export default function SeveranceCalculator() {
                   parts.push({ label: result.recommended, value: result.recommendedAmount, color: "#a3d9a5" });
                 }
                 if (result.annualLeavePay > 0) parts.push({ label: "年假补偿", value: result.annualLeavePay, color: "#93c5fd" });
+                if (result.totalOTPay > 0) parts.push({ label: "调休补偿", value: result.totalOTPay, color: "#fbbf24" });
                 if (result.taxAmount > 0) parts.push({ label: "个税扣除", value: result.taxAmount, color: "#fca5a5" });
                 const total = parts.reduce((s, p) => s + p.value, 0);
                 if (total <= 0) return null;
@@ -568,6 +710,40 @@ export default function SeveranceCalculator() {
                   <div className="flex justify-between text-sm p-3 bg-blue-50 rounded-lg">
                     <span className="text-blue-700">🏖️ 未休年假补偿（{unusedLeaveDays}天 × 日工资200%）</span>
                     <span className="font-medium text-blue-700">+{fmt(result.annualLeavePay)}</span>
+                  </div>
+                )}
+                {/* 调休补偿详情 */}
+                {result.totalOTPay > 0 && (
+                  <div className="space-y-2">
+                    {useSimpleOT ? (
+                      // 简化模式：显示汇总
+                      <div className="flex justify-between text-sm p-3 bg-orange-50 rounded-lg">
+                        <span className="text-orange-700">⏰ 未修调休补偿（{simpleOTDays}天 × 日工资200%）</span>
+                        <span className="font-medium text-orange-700">+{fmt(result.totalOTPay)}</span>
+                      </div>
+                    ) : (
+                      // 详细模式：分别显示三种类型
+                      <>
+                        {result.workDayOTPay > 0 && (
+                          <div className="flex justify-between text-sm p-3 bg-orange-50 rounded-lg">
+                            <span className="text-orange-700">⏰ 工作日加班调休（{workDayOTDays}天 × 日工资150%）</span>
+                            <span className="font-medium text-orange-700">+{fmt(result.workDayOTPay)}</span>
+                          </div>
+                        )}
+                        {result.weekendOTPay > 0 && (
+                          <div className="flex justify-between text-sm p-3 bg-orange-50 rounded-lg">
+                            <span className="text-orange-700">⏰ 周末加班调休（{weekendOTDays}天 × 日工资200%）</span>
+                            <span className="font-medium text-orange-700">+{fmt(result.weekendOTPay)}</span>
+                          </div>
+                        )}
+                        {result.holidayOTPay > 0 && (
+                          <div className="flex justify-between text-sm p-3 bg-orange-50 rounded-lg">
+                            <span className="text-orange-700">🎉 法定节假日调休（{holidayOTDays}天 × 日工资300%）</span>
+                            <span className="font-medium text-orange-700">+{fmt(result.holidayOTPay)}</span>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 )}
                 <div className="flex justify-between text-sm p-3 bg-surface rounded-lg">
@@ -829,6 +1005,7 @@ export default function SeveranceCalculator() {
             <li>• <strong>N+1</strong>：未提前30天书面通知的，额外支付一个月工资（代通知金）。</li>
             <li>• <strong>2N（违法裁员）</strong>：违法解除劳动合同的，支付双倍经济补偿金。</li>
             <li>• <strong>年假补偿</strong>：未休年假按日工资的200%额外补偿（《职工带薪年休假条例》第5条）。日工资 = 月工资 ÷ 21.75。</li>
+            <li>• <strong>调休补偿</strong>：未修调休按加班工资标准折算。日工资 = 月工资 ÷ 21.75。工作日加班调休按日工资×150%折算；周末加班调休按日工资×200%折算；法定节假日加班调休必须按日工资×300%支付加班工资（《劳动法》第44条）。</li>
             <li>• <strong>个税计算</strong>：经济补偿金在当地上年职工平均工资3倍数额以内的部分免征个人所得税，超过部分单独适用综合所得税率表（财税〔2018〕164号）。</li>
           </ul>
         </div>

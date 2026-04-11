@@ -1,19 +1,37 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Cloudflare Pages 支持 SSR 模式，不需要 output: 'export'
+  // Cloudflare Pages 支持
   images: {
     unoptimized: true,
   },
   // 支持 Cloudflare Pages 边缘部署
   experimental: {
-    // 启用 serverActions 用于表单处理
     serverActions: {
       allowedOrigins: ['caileme.pages.dev', 'caileme.com'],
     },
+    // 优化打包大小
+    optimizePackageImports: ['framer-motion', 'lucide-react'],
   },
-  // Cloudflare Pages 部署配置
-  env: {
-    // 这些会在构建时注入
+  // 减小 webpack chunk 大小
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.optimization.splitChunks = {
+        ...config.optimization.splitChunks,
+        maxInitialSize: 500000, // 500KB
+        maxAsyncSize: 500000,   // 500KB
+        cacheGroups: {
+          ...config.optimization.splitChunks?.cacheGroups,
+          // 把大库单独打包
+          vendor: {
+            test: /[\\/]node_modules[\\/](framer-motion|lucide-react|react-dom)[\\/]/,
+            name: 'vendor',
+            chunks: 'all',
+            priority: 20,
+          },
+        },
+      };
+    }
+    return config;
   },
 };
 

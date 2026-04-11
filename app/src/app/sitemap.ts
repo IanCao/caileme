@@ -68,8 +68,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/legal-aid`, lastModified: recentDate, changeFrequency: "monthly", priority: 0.7 },
     { url: `${baseUrl}/ai-simulation`, lastModified: recentDate, changeFrequency: "weekly", priority: 0.7 },
     { url: `${baseUrl}/community`, lastModified: recentDate, changeFrequency: "daily", priority: 0.8 },
-    { url: `${baseUrl}/community/submit`, lastModified: launchDate, changeFrequency: "monthly", priority: 0.3 },
-    { url: `${baseUrl}/feedback`, lastModified: launchDate, changeFrequency: "monthly", priority: 0.3 },
     { url: `${baseUrl}/about`, lastModified: launchDate, changeFrequency: "monthly", priority: 0.3 },
     { url: `${baseUrl}/privacy`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },
     { url: `${baseUrl}/terms`, lastModified: launchDate, changeFrequency: "yearly", priority: 0.1 },

@@ -1,11 +1,9 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, type ReactNode } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { CommunityPost } from "@/data/communityData";
-import { likePost, trackView } from "@/lib/api";
-import { AdSlot } from "@/components/AdSlot";
 
 type RelatedPost = Pick<CommunityPost, "id" | "title" | "summary" | "category" | "date">;
 
@@ -162,7 +160,6 @@ function renderContent(markdown: string) {
 }
 
 export default function PostDetailClient({
-  params,
   post,
   relatedPosts,
 }: {
@@ -170,32 +167,6 @@ export default function PostDetailClient({
   post: CommunityPost | null;
   relatedPosts: RelatedPost[];
 }) {
-  const postId = params.id;
-  const [likes, setLikes] = useState(post?.likes ?? 0);
-  const [liked, setLiked] = useState(false);
-  const [likeAnimating, setLikeAnimating] = useState(false);
-  const [commentText, setCommentText] = useState("");
-  const [commentNickname, setCommentNickname] = useState("");
-  const [commentSubmitting, setCommentSubmitting] = useState(false);
-  const [commentSubmitted, setCommentSubmitted] = useState(false);
-  const viewTracked = useRef(false);
-
-  useEffect(() => {
-    if (!post || viewTracked.current) return;
-
-    viewTracked.current = true;
-    trackView(post.id);
-  }, [post]);
-
-  useEffect(() => {
-    if (!post) return;
-
-    const stored = localStorage.getItem(`liked_${post.id}`);
-    if (stored === "1") {
-      setLiked(true);
-    }
-  }, [post]);
-
   if (!post) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-surface">
@@ -264,8 +235,6 @@ export default function PostDetailClient({
             {renderContent(post.content)}
           </div>
 
-          <AdSlot variant="inArticle" className="mt-6" />
-
           <section className="mt-6 rounded-2xl border border-gray-100 bg-white p-5">
             <h2 className="text-sm font-semibold text-gray-900">信息说明</h2>
             <div className="mt-3 grid grid-cols-1 gap-3 text-sm text-gray-600 sm:grid-cols-2">
@@ -281,100 +250,6 @@ export default function PostDetailClient({
             <p className="mt-4 rounded-xl border border-yellow-100 bg-yellow-50 p-4 text-xs leading-relaxed text-yellow-700">
               说明：保护站信息中的文章用于帮助你快速理解互联网裁员、再就业和劳动权益相关信息。其中带来源链接的内容优先依据公开信息整理；涉及个人情况时，请再结合本地政策和你的材料判断。
             </p>
-          </section>
-
-          <div className="mt-6 flex items-center gap-4">
-            <motion.button
-              onClick={async () => {
-                if (liked) return;
-
-                setLiked(true);
-                setLikes((value) => value + 1);
-                setLikeAnimating(true);
-                localStorage.setItem(`liked_${post.id}`, "1");
-                setTimeout(() => setLikeAnimating(false), 300);
-                await likePost(post.id);
-              }}
-              animate={likeAnimating ? { scale: [1, 1.2, 1] } : {}}
-              transition={{ duration: 0.3 }}
-              className={`inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm transition-colors ${
-                liked
-                  ? "cursor-default bg-blue-100 text-blue-600"
-                  : "cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-              disabled={liked}
-            >
-              👍 {likes} 人觉得有用
-            </motion.button>
-          </div>
-
-          <section className="mt-8">
-            <h2 className="mb-4 text-lg font-bold">评论 ({post.comments.length})</h2>
-            <div className="space-y-4">
-              {post.comments.map((comment, index) => (
-                <div
-                  key={`${comment.nickname}-${comment.date}-${index}`}
-                  className="rounded-xl border border-gray-100 bg-white p-4"
-                >
-                  <div className="mb-2 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">{comment.avatar}</span>
-                      <span className="text-sm font-medium">{comment.nickname}</span>
-                    </div>
-                    <span className="text-xs text-gray-400">{comment.date}</span>
-                  </div>
-                  <p className="text-sm leading-relaxed text-gray-700">{comment.content}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 rounded-xl border border-gray-100 bg-white p-4">
-              {commentSubmitted ? (
-                <div className="py-4 text-center">
-                  <p className="text-sm font-medium text-success">评论提交成功</p>
-                  <p className="mt-1 text-xs text-amber-600">审核通过后会展示在评论区。</p>
-                </div>
-              ) : (
-                <>
-                  <input
-                    type="text"
-                    value={commentNickname}
-                    onChange={(event) => setCommentNickname(event.target.value)}
-                    placeholder="昵称，可选，默认匿名"
-                    className="mb-2 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                  />
-                  <textarea
-                    value={commentText}
-                    onChange={(event) => setCommentText(event.target.value)}
-                    placeholder="写下你的评论..."
-                    rows={3}
-                    className="w-full resize-none rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-accent focus:outline-none"
-                  />
-                  <button
-                    onClick={async () => {
-                      if (!commentText.trim()) return;
-
-                      setCommentSubmitting(true);
-                      try {
-                        const { submitComment } = await import("@/lib/api");
-                        await submitComment({
-                          postId,
-                          nickname: commentNickname || "匿名打工人",
-                          content: commentText,
-                        });
-                      } catch {}
-
-                      setCommentSubmitting(false);
-                      setCommentSubmitted(true);
-                    }}
-                    disabled={!commentText.trim() || commentSubmitting}
-                    className="mt-2 w-full rounded-lg bg-black py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:opacity-50"
-                  >
-                    {commentSubmitting ? "提交中..." : "发表评论"}
-                  </button>
-                </>
-              )}
-            </div>
           </section>
 
           {relatedPosts.length > 0 ? (
@@ -405,8 +280,6 @@ export default function PostDetailClient({
               </div>
             </section>
           ) : null}
-
-          <AdSlot variant="multiplex" className="mt-8" />
         </motion.article>
       </div>
     </div>

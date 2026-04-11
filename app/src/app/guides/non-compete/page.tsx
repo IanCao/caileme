@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { AdSlot } from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "竞业限制完全指南 - 竞业协议、补偿标准、违约金",
@@ -262,7 +261,6 @@ export default function NonCompeteGuide() {
               </div>
             </div>
           </div>
-          <AdSlot variant="inArticle" className="mt-10" />
         </article>
 
         <div className="mt-10 p-6 bg-white rounded-2xl border border-gray-100">
@@ -295,8 +293,6 @@ export default function NonCompeteGuide() {
             </Link>
           </div>
         </div>
-
-        <AdSlot variant="multiplex" className="mt-10" />
       </div>
     </div>
   );

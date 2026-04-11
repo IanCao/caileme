@@ -109,6 +109,27 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* AI Simulation Section */}
+      <section className="py-16 md:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+          <FadeInSection>
+            <div className="text-4xl sm:text-5xl mb-6">🤖</div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 被裁模拟</h2>
+            <p className="mt-4 text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
+              模拟被裁谈话场景，提前练习应对策略。
+              <br />
+              知己知彼，谈判不慌。
+            </p>
+            <Link
+              href="/ai-simulation"
+              className="inline-block mt-8 bg-white text-black px-8 py-3.5 rounded-full font-medium hover:bg-gray-100 transition-colors"
+            >
+              开始模拟
+            </Link>
+          </FadeInSection>
+        </div>
+      </section>
+
       {/* 投稿人/贡献者滚动展示 — lazy loaded */}
       <section className="py-10 md:py-14 bg-white border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -156,27 +177,6 @@ export default function HomePage() {
               查看全部工具 →
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* AI Simulation Section */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
-          <FadeInSection>
-            <div className="text-4xl sm:text-5xl mb-6">🤖</div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">AI 被裁模拟</h2>
-            <p className="mt-4 text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
-              模拟被裁谈话场景，提前练习应对策略。
-              <br />
-              知己知彼，谈判不慌。
-            </p>
-            <Link
-              href="/ai-simulation"
-              className="inline-block mt-8 bg-white text-black px-8 py-3.5 rounded-full font-medium hover:bg-gray-100 transition-colors"
-            >
-              开始模拟
-            </Link>
-          </FadeInSection>
         </div>
       </section>
 
@@ -304,7 +304,7 @@ export default function HomePage() {
                   <div className="rounded-xl border border-dashed border-gray-200 bg-white p-5">
                     <p className="text-sm text-gray-500 leading-relaxed">
                       当前站内以文章和经验整理为主，裁员情报还在持续补充中。你可以先看最新文章，
-                      或匿名投稿你掌握的一手信息。
+                      或在 GitHub 提交 Issue 投稿你掌握的一手信息。
                     </p>
                     <div className="mt-4 flex flex-wrap gap-3">
                       <Link
@@ -313,12 +313,14 @@ export default function HomePage() {
                       >
                         去看保护站信息 →
                       </Link>
-                      <Link
-                        href="/community/submit"
+                      <a
+                        href="https://github.com/IanCao/caileme/issues/new"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="text-sm font-medium text-accent hover:underline"
                       >
                         我要投稿 →
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 )}
@@ -362,14 +364,8 @@ export default function HomePage() {
                   </div>
 
                   <div className="pt-2 border-t border-gray-100">
-                    <Link
-                      href="/community/submit"
-                      className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-black text-white text-sm font-medium hover:bg-gray-800 transition-colors"
-                    >
-                      ✍️ 我要投稿
-                    </Link>
-                    <p className="text-[10px] text-gray-400 text-center mt-2">
-                      投稿后经审核展示，支持匿名
+                    <p className="text-xs text-gray-500 text-center">
+                      保护站持续更新中
                     </p>
                   </div>
                 </div>

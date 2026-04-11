@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { AdSlot } from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "裁员维权百科 - 被裁员怎么办完整攻略",
@@ -119,24 +118,6 @@ export default function GuidesPage() {
             </Link>
           ))}
         </div>
-
-        <AdSlot variant="display" className="mt-10" />
-
-        {/* 投稿征集 */}
-        <div className="mt-10 p-5 sm:p-6 bg-white rounded-2xl border border-gray-100 text-center">
-          <h3 className="font-semibold mb-2">✍️ 成为指南作者</h3>
-          <p className="text-sm text-gray-500 mb-4">
-            有裁员相关经验或专业知识想分享？欢迎投稿成为指南作者，帮助更多人
-          </p>
-          <Link
-            href="/community/submit"
-            className="inline-block bg-black text-white px-6 py-2.5 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
-          >
-            投稿指南文章
-          </Link>
-        </div>
-
-        <AdSlot variant="multiplex" className="mt-10" />
       </div>
     </div>
   );

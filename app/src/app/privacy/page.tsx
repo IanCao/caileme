@@ -45,24 +45,14 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-black mb-3">五、广告与第三方 Cookie</h2>
+            <h2 className="text-lg font-semibold text-black mb-3">五、Cookie 的使用</h2>
             <p>
-              本站已接入 Google AdSense。Google 及其合作伙伴可能使用 Cookie 或类似技术，根据你访问本站及其他网站的情况展示广告、限制重复曝光、衡量广告效果，并进行防作弊和安全分析。
-            </p>
-            <p>
-              如果 Google 提供个性化广告，广告内容可能基于你的兴趣推断；如果未提供个性化广告，仍可能基于大致地理位置、设备类型、当前页面主题等信号展示广告。
+              Cookie 可能被用于保存基础偏好、统计访问等。你可以在浏览器设置中清除或阻止 Cookie，但这可能影响站点部分功能。
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-black mb-3">六、Cookie 的使用</h2>
-            <p>
-              Cookie 可能被用于保存基础偏好、统计访问、广告投放与测量。你可以在浏览器设置中清除或阻止 Cookie，但这可能影响站点部分功能、广告相关体验或个性化内容展示。
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-lg font-semibold text-black mb-3">七、第三方链接</h2>
+            <h2 className="text-lg font-semibold text-black mb-3">六、第三方链接</h2>
             <p>
               本站部分页面会链接到政府、法院、公共服务平台或其他第三方网站。跳转后你访问的页面不受本站控制，其数据处理规则以对方公开政策为准。
             </p>
@@ -76,14 +66,14 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-black mb-3">九、你的选择</h2>
+            <h2 className="text-lg font-semibold text-black mb-3">七、你的选择</h2>
             <p>
               你可以选择不提交可识别你的信息，也可以通过浏览器设置管理 Cookie。若你希望更正、删除主动提交的信息，或对隐私处理有疑问，可通过下方邮箱联系我们。
             </p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-black mb-3">十、联系方式</h2>
+            <h2 className="text-lg font-semibold text-black mb-3">八、联系方式</h2>
             <p>
               如对本政策或数据处理方式有疑问，可联系：
               <a
@@ -96,9 +86,9 @@ export default function PrivacyPage() {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold text-black mb-3">十一、政策更新</h2>
+            <h2 className="text-lg font-semibold text-black mb-3">九、政策更新</h2>
             <p>
-              本政策可能根据功能调整、广告接入方式、统计方案或法律要求进行更新。更新版本会发布在本页。
+              本政策可能根据功能调整、统计方案或法律要求进行更新。更新版本会发布在本页。
             </p>
           </section>
 

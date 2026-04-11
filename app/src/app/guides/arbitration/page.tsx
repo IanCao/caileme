@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { AdSlot } from "@/components/AdSlot";
 import EditorialTrustBlock from "@/components/EditorialTrustBlock";
 
 export const metadata: Metadata = {
@@ -108,8 +107,6 @@ export default function ArbitrationGuide() {
               ]}
             />
 
-            <AdSlot variant="inArticle" className="mb-6" />
-
             {/* 仲裁流程 */}
             <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100">
               <h2 className="text-xl font-bold mb-6">📋 仲裁流程（时间线）</h2>
@@ -209,8 +206,6 @@ export default function ArbitrationGuide() {
             </Link>
           </div>
         </div>
-
-        <AdSlot variant="multiplex" className="mt-10" />
       </div>
     </div>
   );

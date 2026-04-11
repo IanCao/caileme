@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { AdSlot } from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "裁员谈判技巧 - 如何争取N+1以上赔偿方案",
@@ -163,7 +162,6 @@ export default function NegotiationGuide() {
               </div>
             </div>
           </div>
-          <AdSlot variant="inArticle" className="mt-10" />
         </article>
 
         <div className="mt-10 p-6 bg-white rounded-2xl border border-gray-100">
@@ -195,8 +193,7 @@ export default function NegotiationGuide() {
             </Link>
           </div>
         </div>
-
-        <AdSlot variant="multiplex" className="mt-10" />
+        </div>
       </div>
     </div>
   );

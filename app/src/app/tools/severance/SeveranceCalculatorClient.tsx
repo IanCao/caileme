@@ -3,7 +3,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cityPolicies, getCityByCode } from "@/data/cityPolicies";
-import { AdSlot } from "@/components/AdSlot";
 import CitySelector from "@/components/CitySelector";
 import RelatedPages from "@/components/RelatedPages";
 
@@ -845,8 +844,6 @@ export default function SeveranceCalculator() {
           </p>
           <RelatedPages current="/tools/severance" count={4} />
         </section>
-        <AdSlot variant="display" className="mt-8" />
-        <AdSlot variant="multiplex" className="mt-8" />
       </div>
     </div>
   );

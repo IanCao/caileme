@@ -1,0 +1,392 @@
+import { NextRequest, NextResponse } from "next/server";
+import { getScenarioSystemPrompt, SCENARIOS, type Scenario } from "@/data/scenarios";
+
+// 使用 Node.js runtime 以获得更好的外部 API 兼容性
+export const runtime = "nodejs";
+
+// 场景开场白
+const SCENARIO_INTROS: Record<string, string> = {
+  standard: `你好，我是今天的谈话负责人。
+
+公司经过慎重考虑，想和你聊一下岗位调整的事情。
+
+在正式开始之前，我想先了解一下，你最近的工作状态怎么样？
+
+（提示：这是 HR 常见的开场白，目的是让你放松警惕或主动暴露信息。请谨慎回应。）`,
+  aggressive: `（HR 推门进来，表情严肃，把文件夹往桌上一摔）
+
+你还坐着呢？来来来，我们今天必须把这事定了。
+
+我跟你说，这个位置，现在外面排着队等着的人多了去了。你不走，后面的人怎么进来？
+
+快点快点，我没那么多时间跟你耗。你是自己谈，还是等我叫保安？
+
+（提示：这是典型的强硬施压战术。保持冷静，不要被激怒，你有权利要求合理的时间考虑。）`,
+  sweet_talk: `（HR 微笑着走进来，倒了杯咖啡递给你）
+
+哎呀，最近怎么样？看你气色不错嘛！
+
+说实话，我一直想找你聊聊。你在公司的这两年，大家都是有目共睹的，你的贡献我都记在心里。
+
+其实...怎么说呢...这次调整也是不得已。公司有公司的难处，我也是夹在中间很难做。
+
+我今天来呢，是想跟你商量一下后续的安排。说真的，你的条件我会尽力争取的...你看这样...
+
+（提示：温柔不代表条件好！所有承诺必须白纸黑字。）`,
+  legal_scare: `（HR 翻开一叠文件，表情严肃）
+
+关于这次调整，我想先跟你说一下法律层面的一些事情。
+
+你应该知道，劳动合同法第47条是这么规定的...（叹气）算了，这些我也不想说太多。
+
+说实话，我接触过很多仲裁的案例，最终员工拿到的往往还没有我们现在给的多。周期长，成本高，最后得不偿失。
+
+你今天签了，大家好聚好散。非要走仲裁的话...那个结果，我也不敢保证。
+
+（提示：不要被吓住！劳动法保护员工权益，仲裁是免费的。）`,
+  package_upgrade: `（HR 笑容满面地走进来）
+
+哎，我专门来找你的。来来来，坐坐坐。
+
+是这样的，我看了你的档案，你在公司的表现其实是很不错的。这次的调整呢，公司也考虑到你的贡献，想给你一些特殊的安排。
+
+你看啊，基础方案你知道的，大家都有。但如果你今天能签字配合的话，我可以再去帮你争取一下这个...（指了指一张纸上的数字）...额外资源包。
+
+不过这个名额确实有限，我也只能帮你到这了。你看...
+
+（提示：警惕"配合"的条件！确认额外福利是否写进协议。）`,
+  remote_worker: `（HR 坐下，翻开电脑）
+
+说起来，正好趁今天这个机会，我们也想聊聊你这个居家办公的事情。
+
+不是我针对你啊，但是...上面确实有反馈，说远程办公这块的效率不太好量化。
+
+你看上次那个项目，客户那边也有一些意见...而且说实话，大家都在公司加班的时候，你那边的情况我们也不太清楚。
+
+（叹气）其实这次调整，远程的员工确实是优先考虑的。你看...
+
+（提示：远程办公是经过批准的。要求查看具体的绩效考核记录。）`,
+};
+
+export async function POST(request: NextRequest) {
+  try {
+    const { messages, scenarioId = "standard", generateReport = false } = await request.json();
+
+    // Validate messages
+    if (!messages || !Array.isArray(messages) || messages.length === 0) {
+      return NextResponse.json(
+        { error: "Invalid messages format" },
+        { status: 400 }
+      );
+    }
+
+    // 验证场景 ID
+    const validScenario = SCENARIOS.find((s: Scenario) => s.id === scenarioId);
+    if (!validScenario) {
+      return NextResponse.json(
+        { error: "Invalid scenario ID" },
+        { status: 400 }
+      );
+    }
+
+    // 如果是生成报告，使用报告专用提示词
+    let systemPrompt: string;
+    if (generateReport) {
+      systemPrompt = `你是一个专业的劳动法顾问。请根据之前的对话内容，生成一份详细的模拟报告。
+
+报告需要包含以下部分：
+
+## 📊 对话总结
+简要总结这次裁员模拟谈话的主要内容和HR采取的策略。
+
+## 🎯 你的表现评估
+从以下几个维度评估：
+- 信息保护意识（是否透露了过多个人信息或弱点）
+- 谈判立场（是否坚持要求明确赔偿方案）
+- 心理素质（是否被HR的话术影响）
+- 法律意识（是否善用了劳动法知识）
+
+## 💡 改进建议
+给出3-5条具体的改进建议，帮助用户在真实谈判中表现得更好。
+
+## 🛡️ 实战贴士
+给出3-5条在真实裁员谈判中的实用技巧。
+
+请用中文回复，语言要专业但易懂，有鼓励性但不失客观性。`;
+    } else {
+      systemPrompt = getScenarioSystemPrompt(scenarioId);
+    }
+
+    // Check for environment variables
+    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+    const model = process.env.CLOUDFLARE_AI_MODEL || "@cf/qwen/qwen3-30b-a3b-fp8";
+
+    console.log("[AI Chat] Config check:", {
+      hasAccountId: !!accountId,
+      hasApiToken: !!apiToken,
+      model,
+      accountIdLength: accountId?.length,
+      apiTokenLength: apiToken?.length,
+    });
+
+    if (!accountId || !apiToken) {
+      console.log("[AI Chat] Using fallback - no Cloudflare credentials");
+      // Fallback response for demo/testing when Cloudflare is not configured
+      const lastUserMessage = messages.filter((m: any) => m.role === "user").pop();
+      const userInput = lastUserMessage?.content || "";
+
+      // 如果是生成报告，返回预设报告
+      if (generateReport) {
+        return NextResponse.json({
+          role: "assistant",
+          content: generateFallbackReport(),
+        });
+      }
+
+      // 如果是第一条消息（用户还没回复），返回开场白
+      const userMessages = messages.filter((m: any) => m.role === "user");
+      if (userMessages.length === 0) {
+        return NextResponse.json({
+          role: "assistant",
+          content: SCENARIO_INTROS[scenarioId] || SCENARIO_INTROS.standard,
+        });
+      }
+
+      // 否则返回根据输入的 fallback 回复
+      return NextResponse.json({
+        role: "assistant",
+        content: getFallbackResponse(userInput, scenarioId),
+      });
+    }
+
+    // Build the conversation for Cloudflare AI
+    const conversation = [
+      { role: "system", content: systemPrompt },
+      ...messages.map((m: any) => ({
+        role: m.role,
+        content: m.content,
+      })),
+    ];
+
+    console.log("[AI Chat] Conversation length:", conversation.length);
+    console.log("[AI Chat] First message:", JSON.stringify(conversation[0])?.slice(0, 200));
+    console.log("[AI Chat] Last message:", JSON.stringify(conversation[conversation.length - 1])?.slice(0, 200));
+
+    // Call Cloudflare Workers AI
+    // 直接使用模型名称，不需要编码
+    const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`;
+    console.log("[AI Chat] API URL:", apiUrl);
+
+    const requestBody = {
+      messages: conversation,
+      max_tokens: 512,
+      temperature: 0.7,
+    };
+
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("Cloudflare AI API error:", {
+        status: response.status,
+        statusText: response.statusText,
+        error: errorText,
+      });
+      
+      // 返回更有用的错误信息
+      let errorMessage = "AI 服务暂时不可用，请稍后重试";
+      if (response.status === 403) {
+        errorMessage = "AI 权限不足，请检查 API Token 权限配置";
+      } else if (response.status === 404) {
+        errorMessage = "AI 模型不存在或账户 ID 错误";
+      } else if (response.status === 429) {
+        errorMessage = "AI 请求次数超限，请稍后再试";
+      }
+      
+      return NextResponse.json(
+        { error: errorMessage },
+        { status: 503 }
+      );
+    }
+
+    const result = await response.json();
+    
+    // 支持两种响应格式：
+    // 1. Cloudflare 原生格式: result.result.response
+    // 2. OpenAI 兼容格式 (qwen3): result.result.choices[0].message.content
+    let aiResponse = "";
+    
+    if (result.result?.response) {
+      // Cloudflare 原生格式 (llama 系列)
+      aiResponse = result.result.response;
+    } else if (result.result?.choices && result.result.choices.length > 0) {
+      // OpenAI 兼容格式 (qwen3 系列)
+      aiResponse = result.result.choices[0]?.message?.content || "";
+    }
+    
+    if (!aiResponse) {
+      console.error("[AI Chat] Unexpected response format:", JSON.stringify(result).slice(0, 500));
+      aiResponse = "抱歉，我现在无法回答。";
+    }
+
+    return NextResponse.json({
+      role: "assistant",
+      content: aiResponse,
+    });
+  } catch (error) {
+    console.error("AI Chat error:", error);
+    return NextResponse.json(
+      { error: "服务器内部错误" },
+      { status: 500 }
+    );
+  }
+}
+
+// Fallback responses by scenario
+function getFallbackResponse(userInput: string, scenarioId: string): string {
+  const lowerInput = userInput.toLowerCase();
+
+  switch (scenarioId) {
+    case "aggressive":
+      return `哎，你怎么还在纠结？今天必须定下来！
+
+我们谈完这个，后面还有一堆人等着。你不走，后面的人也没法安排。
+
+我跟你说实话，现在名额就这么几个，你要是不签，后面那帮人可都盯着呢。到时候条件什么样，我可不敢保证。
+
+大家都签了，就剩你了。你说你还在想什么？
+
+（提示：不要被"今天"吓住。你有权要求合理的时间考虑，这是法律赋予的权利。）`;
+
+    case "sweet_talk":
+      return `哎呀，其实说实话，我是真的很舍不得你走。
+
+你这两年在公司的贡献，大家都是有目共睹的。项目做得好，人也靠谱，真的挺欣赏你的。
+
+但是没办法，上面决定要调整，我也改变不了。我也很为难啊。
+
+其实说实话，你这个情况，我是跟上面争取过的。他们本来不是这个方案，但我跟他们说了你好多优点...
+
+你看这样行不行，你要是今天签字的话，我再去帮你争取一下，能不能再多补一点点。
+
+（提示：不要被感情牌打动！所有承诺的福利必须白纸黑字写进协议。）`;
+
+    case "legal_scare":
+      return `我理解你可能有顾虑。不过我想说的是，我们的方案是经过法务部门严格审核的，完全合法合规。
+
+你要是了解劳动法的话，你应该知道，第47条的规定是...（叹气）其实我也不说那么多了，你咨询的那些人，不一定专业。
+
+而且我跟你说实话，仲裁周期很长，短的三个月，长的半年一年。你耗得起吗？等你仲裁完黄花菜都凉了。
+
+我们现在是协商，协商不成的话，后续走程序的话，时间会很长，而且结果也不一定比你现在拿到的多。
+
+（提示：不要被吓住！劳动法保护员工权益，仲裁是免费的，且公司需要承担举证责任。）`;
+
+    case "package_upgrade":
+      return `说实话，看你平时的表现，我是真心想帮你的。
+
+我们现在的方案呢，其实还有优化空间的。但我得跟你说清楚，这个资源包有限，不是每个人都有的。
+
+你看这样行不行：如果你今天签字，这个资源包我给你争取一下。另外呢，你可以考虑签了这个竞业协议，离职后三个月不出现在竞争对手那里，这个条件其实也很宽松了...
+
+（提示：警惕"竞业限制"条款！竞业期间公司需要支付补偿金，否则条款无效。不要轻易放弃自己的权益。）`;
+
+    case "remote_worker":
+      return `说起来，我一直想跟你聊聊这个远程办公的事。
+
+你看啊，大家都在公司加班到很晚，你在家办公，我们也没法天天盯着。效率这个东西，确实不太好量化。
+
+上次那个项目，客户的反馈也不是特别好。我不是说全是你的问题，但是...
+
+说实话，上面让我优化人员的时候，远程办公的确实是优先考虑的。毕竟团队协作还是面对面方便一些。
+
+你看，你要是主动配合的话，我们这边可以给你...
+
+（提示：远程办公是经过批准的，不代表效率低下。要求查看绩效考核记录，用数据说话。）`;
+
+    default:
+      return getStandardFallback(lowerInput);
+  }
+}
+
+function getStandardFallback(lowerInput: string): string {
+  if (lowerInput.includes("赔偿") || lowerInput.includes("补偿") || lowerInput.includes("n+1") || lowerInput.includes("2n")) {
+    return `关于赔偿，公司有统一的补偿方案，会按照劳动法的相关规定执行的。
+
+不过我想先了解一下，你对我们公司的文化和发展前景有什么看法？你觉得自己这两年的工作表现如何？
+
+（提示：遇到这类问题时，可以先要求了解公司具体的补偿方案内容，不要急于表态。）`;
+  }
+
+  if (lowerInput.includes("劳动法") || lowerInput.includes("违法") || lowerInput.includes("仲裁")) {
+    return `我理解你的顾虑。关于劳动法的问题，公司有专门的法务团队会确保所有流程合法合规。
+
+说实话，今天找你谈，是因为管理层觉得你在这个岗位上的发展遇到了瓶颈。公司希望能够帮助你找到更适合自己的平台。
+
+你有没有考虑过，如果离开这里，接下来想往哪个方向发展？
+
+（提示：HR 试图转移话题时，坚持要求明确赔偿细节。）`;
+  }
+
+  return `我理解你的想法。让我来解释一下公司的考虑：
+
+这次裁员是公司经过深思熟虑的决定，主要是为了优化组织结构，提升整体效率。公司也会按照相关规定处理每一位员工的情况。
+
+你有没有什么具体的问题想了解？
+
+（提示：这是典型的 HR 开场白，不要急于回应，先了解清楚自己的权益。）`;
+}
+
+function generateFallbackReport(): string {
+  return `## 📊 对话总结
+
+这是一次典型的 HR 裁员谈话模拟。HR 主要采取了以下策略：通过施压、情感操控或法律术语来促使员工尽快签署离职协议。
+
+---
+
+## 🎯 你的表现评估
+
+### 信息保护意识
+做得不错，没有透露过多个人弱点。继续坚持"先看方案再表态"的原则。
+
+### 谈判立场
+保持了理性，没有被 HR 的话术完全带偏。记住：要求书面方案是合理诉求。
+
+### 心理素质
+整体表现稳定。面对不同类型的 HR（强硬型/温和型），都保持了相对冷静。
+
+### 法律意识
+有基本的劳动法意识，但可以更深入了解 N+1、2N 的计算方式。
+
+---
+
+## 💡 改进建议
+
+1. **坚持要求书面方案**：口头承诺不可信，所有条件必须写进协议
+2. **了解自己的筹码**：清楚自己的薪资构成、年限，可以计算应得赔偿
+3. **不要当场签字**：这是你最重要的权利，不需要当场决定
+4. **保留所有沟通记录**：邮件、聊天记录、录音都可以作为证据
+5. **准备好 Plan B**：了解失业金申请流程，做好最坏打算
+
+---
+
+## 🛡️ 实战贴士
+
+1. 录音是合法证据（部分地区需告知对方）
+2. 竞业限制期间公司必须支付补偿金，否则无效
+3. 社保断缴影响很大，离职前了解清楚
+4. 仲裁免费，不要被"周期长"吓到
+5. 群体裁员有特殊规定，可以争取更多权益
+
+---
+
+*这是一份基于预设逻辑的报告。配置 AI 后可以获得更个性化的分析。*`;
+}

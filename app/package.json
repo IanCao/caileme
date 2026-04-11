@@ -7,6 +7,9 @@
     "dev": "next dev",
     "prebuild": "node scripts/build-content.js",
     "build": "next build",
+    "pages:build": "npm run build",
+    "preview": "npm run build && npx wrangler pages dev .next",
+    "deploy": "npm run build && npx wrangler pages deploy .next",
     "start": "next start",
     "lint": "next lint"
   },

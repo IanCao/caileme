@@ -1,86 +1,81 @@
-"use client";
+import { Metadata } from "next";
+import { AIChatInterface } from "@/components/AIChatInterface";
+import Link from "next/link";
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { InteractiveSimulation } from "@/components/InteractiveSimulation";
+export const metadata: Metadata = {
+  title: "AI 裁员模拟 - 模拟 HR 谈话练习应对策略",
+  description:
+    "使用 AI 模拟真实的 HR 裁员谈话场景，提前练习应对策略。知己知彼，谈判不慌。",
+  keywords: ["AI裁员模拟", "裁员谈话练习", "HR谈判", "裁员谈判技巧"],
+  alternates: {
+    canonical: "/ai-simulation",
+  },
+};
 
-export default function AISimulation() {
-  const [showDevToast, setShowDevToast] = useState(false);
-
-  useEffect(() => {
-    if (showDevToast) {
-      const timer = setTimeout(() => setShowDevToast(false), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [showDevToast]);
-
+export default function AISimulationPage() {
   return (
     <div className="min-h-screen bg-surface">
-      <div className="max-w-3xl mx-auto px-6 py-16 md:py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <h1 className="text-3xl md:text-4xl font-bold text-center">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-gray-800 to-gray-900 text-white text-3xl mb-4">
+            🤖
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
             AI 裁员模拟
           </h1>
-          <p className="mt-4 text-gray-500 text-center text-lg">
-            模拟HR裁员对话，提前了解应对策略
+          <p className="mt-2 text-gray-500 max-w-xl mx-auto">
+            模拟真实的 HR 裁员谈话场景，提前练习应对策略。
+            <br />
+            <span className="text-amber-600">知己知彼，谈判不慌</span>
           </p>
-        </motion.div>
-
-        {/* 互动模拟 */}
-        <div className="mt-12">
-          <InteractiveSimulation />
         </div>
 
-        {/* AI 模拟场景（开发中） */}
-        <motion.div
-          className="mt-8"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <button
-            onClick={() => setShowDevToast(true)}
-            className="w-full text-left bg-gradient-to-r from-accent/5 to-purple-50 rounded-2xl p-6 border-2 border-accent/20 hover:border-accent/50 hover:shadow-md transition-all duration-200"
+        {/* Tips */}
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <h3 className="font-semibold text-amber-800 mb-2">💡 使用提示</h3>
+          <ul className="text-sm text-amber-700 space-y-1">
+            <li>• 这是一个 AI 模拟器，扮演 HR 的角色与你对话</li>
+            <li>• 括号内的提示（💡开头）是给你的参考建议</li>
+            <li>• 尝试不同的回复方式，观察 AI 的反应</li>
+            <li>• 练习保持冷静，不被带节奏</li>
+          </ul>
+        </div>
+
+        {/* Chat Interface */}
+        <div className="h-[600px] sm:h-[700px]">
+          <AIChatInterface />
+        </div>
+
+        {/* Related Links */}
+        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <Link
+            href="/tools/severance"
+            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className="font-semibold text-lg">🤖 自由对话场景</h3>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-medium">
-                    即将上线
-                  </span>
-                </div>
-                <p className="text-sm text-gray-500 mt-1">
-                  AI 驱动的自由对话模拟，与虚拟HR进行开放式裁员谈判
-                </p>
-              </div>
-              <span className="text-accent text-xl">→</span>
+            <span className="text-2xl">🧮</span>
+            <div>
+              <div className="font-medium text-gray-900">赔偿计算器</div>
+              <div className="text-xs text-gray-500">计算 N+1、2N 赔偿金额</div>
             </div>
-          </button>
-        </motion.div>
-
-        {/* 免责 */}
-        <div className="mt-8 p-4 rounded-xl bg-yellow-50 border border-yellow-100">
-          <p className="text-xs text-yellow-700 leading-relaxed">
-            ⚠️ 免责声明：以上对话仅为模拟场景，供参考学习。不构成法律建议。每个人的情况不同，具体问题请咨询专业劳动法律师。
-          </p>
+          </Link>
+          <Link
+            href="/guides/negotiation"
+            className="flex items-center gap-3 p-4 bg-white rounded-xl border border-gray-200 hover:border-gray-300 hover:shadow-sm transition-all"
+          >
+            <span className="text-2xl">📖</span>
+            <div>
+              <div className="font-medium text-gray-900">谈判技巧指南</div>
+              <div className="text-xs text-gray-500">学习更多谈判策略</div>
+            </div>
+          </Link>
         </div>
-      </div>
 
-      {/* Toast 通知 */}
-      {showDevToast && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-black text-white px-6 py-3 rounded-full shadow-lg text-sm"
-        >
-          该功能正在开发中，敬请期待
-        </motion.div>
-      )}
+        {/* Disclaimer */}
+        <p className="mt-8 text-xs text-gray-400 text-center">
+          免责声明：本模拟仅供练习使用，AI 回复仅供参考。实际裁员谈判中，请咨询专业律师。
+        </p>
+      </div>
     </div>
   );
 }

@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { FeedbackButton } from "@/components/FeedbackButton";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://caileme.team"),
@@ -130,21 +128,7 @@ export default function RootLayout({
         />
         {/* Baidu SEO */}
         <meta name="baiduImageplus" content="1" />
-        <meta
-          name="google-adsense-account"
-          content="ca-pub-1331537179356559"
-        />
         <meta name="author" content="裁了么 牛马保护站" />
-        {/* Preconnect to CDN */}
-        <link rel="preconnect" href="https://static.cloudflareinsights.com" />
-        <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
-        {/* Cloudflare Web Analytics */}
-        <script
-          defer
-          src="https://static.cloudflareinsights.com/beacon.min.js"
-          data-cf-beacon='{"token": "YOUR_CF_ANALYTICS_TOKEN"}'
-        />
-        {/* Zaraz (managed via Cloudflare dashboard, auto-injected if enabled) */}
         {/* Baidu auto-push for faster indexing */}
         <script dangerouslySetInnerHTML={{ __html: `
           (function(){
@@ -161,16 +145,9 @@ export default function RootLayout({
         `}} />
       </head>
       <body className="min-h-screen flex flex-col">
-        <Script
-          id="adsense-init"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1331537179356559"
-          strategy="afterInteractive"
-          crossOrigin="anonymous"
-        />
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />
-        <FeedbackButton />
       </body>
     </html>
   );

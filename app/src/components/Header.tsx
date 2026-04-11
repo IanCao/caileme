@@ -9,9 +9,8 @@ const navItems = [
   { label: "首页", href: "/" },
   { label: "权益工具", href: "/tools" },
   { label: "维权百科", href: "/guides" },
-  { label: "AI裁员模拟", href: "/ai-simulation" },
+  { label: "AI模拟", href: "/ai-simulation" },
   { label: "保护站信息", href: "/community" },
-
 ];
 
 export function Header() {

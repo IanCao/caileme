@@ -17,3 +17,4 @@ app/src/data/generatedNews.json
 app/src/data/generatedContributors.json
 app/src/data/generatedCompanies.json
 /.npm-cache
+/.workbuddy

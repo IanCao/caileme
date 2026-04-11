@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const rootDir = process.cwd();
 const appDir = resolve(rootDir, "app");
-const appBuildDir = resolve(appDir, ".next");
+const appOutDir = resolve(appDir, "out");
 const rootDistDir = resolve(rootDir, "dist");
 const npmCacheDir = resolve(rootDir, ".npm-cache");
 const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
@@ -34,8 +34,8 @@ run(
 );
 run(npmCmd, ["run", "build"], appDir);
 
-if (!existsSync(appBuildDir)) {
-  console.error("Expected build output was not found:", appBuildDir);
+if (!existsSync(appOutDir)) {
+  console.error("Expected build output was not found:", appOutDir);
   process.exit(1);
 }
 
@@ -43,14 +43,6 @@ if (existsSync(rootDistDir)) {
   rmSync(rootDistDir, { recursive: true, force: true });
 }
 
-// 只复制需要的文件，排除 cache 目录
-cpSync(appBuildDir, rootDistDir, {
-  recursive: true,
-  filter: (src) => {
-    // 排除 cache 目录
-    if (src.includes(".next/cache")) return false;
-    return true;
-  }
-});
+cpSync(appOutDir, rootDistDir, { recursive: true });
 
-console.log("Build completed. Static output copied to dist/ (excluding cache).");
+console.log("Build completed. Static output copied to dist/.");

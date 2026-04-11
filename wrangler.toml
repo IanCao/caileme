@@ -1,11 +1,8 @@
 name = "caileme"
 compatibility_date = "2024-04-19"
-pages_build_output_dir = "dist"
+pages_build_output_dir = "app/out"
 
 [vars]
 CLOUDFLARE_AI_MODEL = "@cf/qwen/qwen3-30b-a3b-fp8"
 
 compatibility_flags = ["nodejs_compat"]
-
-# 排除 .next/cache 目录（这是构建缓存，不需要部署）
-exclude = [".next/cache/**"]

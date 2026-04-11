@@ -4,7 +4,7 @@ import { resolve } from "node:path";
 
 const rootDir = process.cwd();
 const appDir = resolve(rootDir, "app");
-const appDistDir = resolve(appDir, "dist");
+const appBuildDir = resolve(appDir, ".next");
 const rootDistDir = resolve(rootDir, "dist");
 const npmCacheDir = resolve(rootDir, ".npm-cache");
 const npmCmd = process.platform === "win32" ? "npm.cmd" : "npm";
@@ -34,8 +34,8 @@ run(
 );
 run(npmCmd, ["run", "build"], appDir);
 
-if (!existsSync(appDistDir)) {
-  console.error("Expected build output was not found:", appDistDir);
+if (!existsSync(appBuildDir)) {
+  console.error("Expected build output was not found:", appBuildDir);
   process.exit(1);
 }
 
@@ -43,6 +43,6 @@ if (existsSync(rootDistDir)) {
   rmSync(rootDistDir, { recursive: true, force: true });
 }
 
-cpSync(appDistDir, rootDistDir, { recursive: true });
+cpSync(appBuildDir, rootDistDir, { recursive: true });
 
 console.log("Build completed. Static output copied to dist/.");

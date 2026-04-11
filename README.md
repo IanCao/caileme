@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Logo](public/logo.png)
+![Logo](app/public/logo.png)
 
 **帮助打工人应对裁员的免费工具平台**
 

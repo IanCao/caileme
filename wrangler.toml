@@ -5,5 +5,4 @@ pages_build_output_dir = "dist"
 [vars]
 CLOUDFLARE_AI_MODEL = "@cf/qwen/qwen3-30b-a3b-fp8"
 
-[compatibility_flags]
-nodejs_compat = true
+compatibility_flags = ["nodejs_compat"]

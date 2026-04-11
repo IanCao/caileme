@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 
 const CONTENT_DIR = path.join(__dirname, '..', 'content');
-const DATA_DIR = path.join(__dirname, '..', 'src', 'data');
+const DATA_DIR = path.join(__dirname, '..', 'data');
 
 function parseFrontMatter(content) {
   const normalized = content.replace(/\r\n/g, '\n');

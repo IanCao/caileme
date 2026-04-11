@@ -173,19 +173,21 @@ CLOUDFLARE_AI_MODEL=@cf/qwen/qwen2.5-7b-instruct
 ## 📁 项目结构
 
 ```
-caileme/
-├── app/                      # Next.js App Router
-│   ├── src/
-│   │   ├── app/             # 页面文件
-│   │   │   ├── page.tsx     # 首页
-│   │   │   ├── tools/       # 工具页面
-│   │   │   ├── guides/      # 指南页面
-│   │   │   ├── community/   # 社区页面
-│   │   │   └── ...
-│   │   ├── components/      # React 组件
-│   │   ├── data/            # 静态数据
-│   │   └── hooks/           # 自定义 Hooks
-│   └── public/              # 静态资源
+caileme/                      # 项目根目录
+├── app/                      # Next.js 应用
+│   ├── app/                 # App Router 页面
+│   │   ├── page.tsx         # 首页
+│   │   ├── tools/           # 工具页面
+│   │   ├── guides/          # 指南页面
+│   │   ├── community/       # 社区页面
+│   │   └── ...
+│   ├── components/          # React 组件
+│   ├── data/                # 静态数据
+│   ├── hooks/               # 自定义 Hooks
+│   ├── lib/                 # 工具函数
+│   ├── public/              # 静态资源
+│   ├── scripts/             # 构建脚本
+│   └── content/             # 内容文件
 ├── package.json
 └── README.md
 ```

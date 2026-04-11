@@ -9,7 +9,7 @@
     "build": "next build",
     "pages:build": "npm run build",
     "preview": "npm run build && npx wrangler pages dev .next",
-    "deploy": "npm run build && npx wrangler pages deploy .next --config wrangler.toml",
+    "deploy": "npm run build && npx wrangler pages deploy .next --project-name=caileme",
     "start": "next start",
     "lint": "next lint"
   },

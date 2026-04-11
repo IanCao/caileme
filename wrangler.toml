@@ -6,3 +6,6 @@ pages_build_output_dir = "dist"
 CLOUDFLARE_AI_MODEL = "@cf/qwen/qwen3-30b-a3b-fp8"
 
 compatibility_flags = ["nodejs_compat"]
+
+# 排除 .next/cache 目录（这是构建缓存，不需要部署）
+exclude = [".next/cache/**"]

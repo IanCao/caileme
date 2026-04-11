@@ -43,6 +43,14 @@ if (existsSync(rootDistDir)) {
   rmSync(rootDistDir, { recursive: true, force: true });
 }
 
-cpSync(appBuildDir, rootDistDir, { recursive: true });
+// 只复制需要的文件，排除 cache 目录
+cpSync(appBuildDir, rootDistDir, {
+  recursive: true,
+  filter: (src) => {
+    // 排除 cache 目录
+    if (src.includes(".next/cache")) return false;
+    return true;
+  }
+});
 
-console.log("Build completed. Static output copied to dist/.");
+console.log("Build completed. Static output copied to dist/ (excluding cache).");

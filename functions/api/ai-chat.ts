@@ -35,8 +35,13 @@ function json(data: unknown, init?: ResponseInit): Response {
   });
 }
 
-function retryTomorrowResponse(status = 429): Response {
-  return json({ error: RETRY_TOMORROW_MESSAGE }, { status });
+function retryTomorrowResponse(status = 429, retryAfterSeconds?: number): Response {
+  const headers = new Headers();
+  if (retryAfterSeconds) {
+    headers.set("Retry-After", String(retryAfterSeconds));
+  }
+
+  return json({ error: RETRY_TOMORROW_MESSAGE }, { status, headers });
 }
 
 export async function onRequestGet(context: PagesContext): Promise<Response> {

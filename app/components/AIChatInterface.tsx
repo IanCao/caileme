@@ -2,6 +2,11 @@
 
 import { useState, useRef, useEffect } from "react";
 import { SCENARIOS, DEFAULT_SCENARIO, type Scenario } from "@/data/scenarios";
+import {
+  generateFallbackReport,
+  getFallbackResponse,
+  SCENARIO_INTROS,
+} from "@/lib/aiChatFallback";
 
 interface Message {
   role: "user" | "assistant";
@@ -14,68 +19,7 @@ interface AIChatInterfaceProps {
   defaultScenarioId?: string;
 }
 
-const SCENARIO_INTROS: Record<string, string> = {
-  standard: `你好，我是今天的谈话负责人。
-
-公司经过慎重考虑，想和你聊一下岗位调整的事情。
-
-在正式开始之前，我想先了解一下，你最近的工作状态怎么样？
-
-（提示：这是 HR 常见的开场白，目的是让你放松警惕或主动暴露信息。请谨慎回应。）`,
-  aggressive: `（HR 推门进来，表情严肃，把文件夹往桌上一摔）
-
-你还坐着呢？来来来，我们今天必须把这事定了。
-
-我跟你说，这个位置，现在外面排着队等着的人多了去了。你不走，后面的人怎么进来？
-
-快点快点，我没那么多时间跟你耗。你是自己谈，还是等我叫保安？
-
-（提示：这是典型的强硬施压战术。保持冷静，不要被激怒，你有权利要求合理的时间考虑。）`,
-  sweet_talk: `（HR 微笑着走进来，倒了杯咖啡递给你）
-
-哎呀，最近怎么样？看你气色不错嘛！
-
-说实话，我一直想找你聊聊。你在公司的这两年，大家都是有目共睹的，你的贡献我都记在心里。
-
-其实...怎么说呢...这次调整也是不得已。公司有公司的难处，我也是夹在中间很难做。
-
-我今天来呢，是想跟你商量一下后续的安排。说真的，你的条件我会尽力争取的...你看这样...
-
-（提示：温柔不代表条件好！所有承诺必须白纸黑字。）`,
-  legal_scare: `（HR 翻开一叠文件，表情严肃）
-
-关于这次调整，我想先跟你说一下法律层面的一些事情。
-
-你应该知道，劳动合同法第47条是这么规定的...（叹气）算了，这些我也不想说太多。
-
-说实话，我接触过很多仲裁的案例，最终员工拿到的往往还没有我们现在给的多。周期长，成本高，最后得不偿失。
-
-你今天签了，大家好聚好散。非要走仲裁的话...那个结果，我也不敢保证。
-
-（提示：不要被吓住！劳动法保护员工权益，仲裁是免费的。）`,
-  package_upgrade: `（HR 笑容满面地走进来）
-
-哎，我专门来找你的。来来来，坐坐坐。
-
-是这样的，我看了你的档案，你在公司的表现其实是很不错的。这次的调整呢，公司也考虑到你的贡献，想给你一些特殊的安排。
-
-你看啊，基础方案你知道的，大家都有。但如果你今天能签字配合的话，我可以再去帮你争取一下这个...（指了指一张纸上的数字）...额外资源包。
-
-不过这个名额确实有限，我也只能帮你到这了。你看...
-
-（提示：警惕"配合"的条件！确认额外福利是否写进协议。）`,
-  remote_worker: `（HR 坐下，翻开电脑）
-
-说起来，正好趁今天这个机会，我们也想聊聊你这个居家办公的事情。
-
-不是我针对你啊，但是...上面确实有反馈，说远程办公这块的效率不太好量化。
-
-你看上次那个项目，客户那边也有一些意见...而且说实话，大家都在公司加班的时候，你那边的情况我们也不太清楚。
-
-（叹气）其实这次调整，远程的员工确实是优先考虑的。你看...
-
-（提示：远程办公是经过批准的。要求查看具体的绩效考核记录。）`,
-};
+const AI_ENDPOINT_MISSING = "AI_ENDPOINT_MISSING";
 
 const SCENARIO_TIPS: Record<string, string> = {
   standard: "先了解方案内容，不要急于表态。注意保留所有沟通记录。",
@@ -191,27 +135,21 @@ export function AIChatInterface({
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/ai-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [
-            ...allMessages.map((m) => ({ role: m.role, content: m.content })),
-            {
-              role: "user",
-              content: `我们已经完成了10轮对话。请根据之前的对话内容，生成一份模拟报告，包括：1. 对话总结；2. 你的表现评估；3. 改进建议；4. 实战贴士。`,
-            },
-          ],
-          scenarioId: selectedScenario.id,
-          generateReport: true,
-        }),
+      const data = await requestAIChat({
+        messages: [
+          ...allMessages.map((message) => ({
+            role: message.role,
+            content: message.content,
+          })),
+          {
+            role: "user",
+            content:
+              "我们已经完成了10轮对话。请根据之前的对话内容，生成一份模拟报告，包括：1. 对话总结；2. 你的表现评估；3. 改进建议；4. 实战贴士。",
+          },
+        ],
+        scenarioId: selectedScenario.id,
+        generateReport: true,
       });
-
-      if (!response.ok) {
-        throw new Error("生成报告失败");
-      }
-
-      const data = await response.json();
       setReport(data.content);
       setIsSimulationEnded(true);
     } catch (err) {
@@ -236,21 +174,11 @@ export function AIChatInterface({
     setError(null);
 
     try {
-      const response = await fetch("/api/ai-chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: allMessages,
-          scenarioId: selectedScenario?.id || DEFAULT_SCENARIO,
-        }),
+      const scenarioId = selectedScenario?.id || DEFAULT_SCENARIO;
+      const data = await requestAIChat({
+        messages: allMessages,
+        scenarioId,
       });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || "AI 服务暂时不可用");
-      }
-
-      const data = await response.json();
       
       // 检测是否应该结束对话（HR 表示对话结束）
       if (isDialogueEnded(data.content)) {
@@ -276,6 +204,73 @@ export function AIChatInterface({
       setIsLoading(false);
     }
   };
+
+  const buildLocalFallback = (payload: {
+    messages: Message[];
+    scenarioId: string;
+    generateReport?: boolean;
+  }): { role: "assistant"; content: string } => ({
+    role: "assistant",
+    content: payload.generateReport
+      ? generateFallbackReport()
+      : getFallbackResponse(
+          payload.messages[payload.messages.length - 1]?.content || "",
+          payload.scenarioId
+        ),
+  });
+
+  const isMissingAIEndpoint = (error: unknown): boolean =>
+    error instanceof Error && error.message === AI_ENDPOINT_MISSING;
+
+  async function requestAIChat(payload: {
+    messages: Message[];
+    scenarioId: string;
+    generateReport?: boolean;
+  }): Promise<{ role: "assistant"; content: string }> {
+    try {
+      const response = await fetch("/api/ai-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (response.status === 404) {
+        throw new Error(AI_ENDPOINT_MISSING);
+      }
+
+      const responseText = await response.text();
+      let data: { role?: "assistant"; content?: string; error?: string };
+
+      try {
+        data = JSON.parse(responseText) as {
+          role?: "assistant";
+          content?: string;
+          error?: string;
+        };
+      } catch {
+        throw new Error(AI_ENDPOINT_MISSING);
+      }
+
+      if (!response.ok) {
+        throw new Error(data.error || "AI 服务暂时不可用");
+      }
+
+      if (!data.content) {
+        throw new Error("AI 服务返回了空响应");
+      }
+
+      return {
+        role: "assistant",
+        content: data.content,
+      };
+    } catch (error) {
+      if (isMissingAIEndpoint(error) || error instanceof TypeError) {
+        return buildLocalFallback(payload);
+      }
+
+      throw error;
+    }
+  }
 
   return (
     <div className="flex flex-col h-full bg-white rounded-2xl border border-gray-200 overflow-hidden">

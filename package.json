@@ -9,6 +9,8 @@
     "build": "node scripts/build-root.mjs",
     "dev": "npm --prefix app run dev",
     "lint": "npm --prefix app run lint",
-    "start": "npm --prefix app run start"
+    "preview": "npm run build && npx wrangler pages dev dist",
+    "deploy": "npm run build && npx wrangler pages deploy dist --project-name=caileme",
+    "start": "npx wrangler pages dev dist"
   }
 }

@@ -153,12 +153,25 @@ npm run build
 npm run start
 ```
 
+根目录的 `npm run build` 会构建 `app/` 并把静态产物复制到 `dist/`，这是 Cloudflare Pages 使用的唯一部署产物。
+
+### Cloudflare Pages 部署
+
+```bash
+npm run preview
+npm run deploy
+```
+
+- `npm run preview`：本地用 Cloudflare Pages 方式预览静态站点和 `functions/`
+- `npm run deploy`：从仓库根目录部署 `dist/` 和 `functions/`
+- Cloudflare Pages 项目中的构建输出目录应保持为 `dist`
+
 ### AI 功能配置（可选）
 
 AI 裁员模拟功能需要配置 AI 服务：
 
-1. 获取 AI 服务商的 API Token
-2. 复制 `.env.example` 为 `.env.local` 并填入配置：
+1. 本地开发时，复制 `app/.env.example` 为 `app/.env.local` 并填入配置
+2. Cloudflare Pages 部署时，在项目环境变量中设置相同的三个变量：
 
 ```bash
 CLOUDFLARE_ACCOUNT_ID=your_account_id
@@ -176,18 +189,16 @@ CLOUDFLARE_AI_MODEL=@cf/qwen/qwen2.5-7b-instruct
 caileme/                      # 项目根目录
 ├── app/                      # Next.js 应用
 │   ├── app/                 # App Router 页面
-│   │   ├── page.tsx         # 首页
-│   │   ├── tools/           # 工具页面
-│   │   ├── guides/          # 指南页面
-│   │   ├── community/       # 社区页面
-│   │   └── ...
 │   ├── components/          # React 组件
-│   ├── data/                # 静态数据
+│   ├── data/                # 静态数据与 AI 场景
 │   ├── hooks/               # 自定义 Hooks
-│   ├── lib/                 # 工具函数
+│   ├── lib/                 # 前端与构建辅助逻辑
 │   ├── public/              # 静态资源
 │   ├── scripts/             # 构建脚本
 │   └── content/             # 内容文件
+├── functions/               # Cloudflare Pages Functions
+├── dist/                    # Cloudflare Pages 静态输出（构建生成）
+├── wrangler.toml            # Cloudflare Pages 根配置
 ├── package.json
 └── README.md
 ```
@@ -203,9 +214,12 @@ caileme/                      # 项目根目录
 1. Fork 本仓库
 2. 克隆你的 Fork：`git clone https://github.com/IanCao/caileme.git`
 3. 安装依赖：`npm install`
-4. 创建分支：`git checkout -b feature/your-feature-name`
-5. 进行修改
-6. 提交 Pull Request
+4. 启动本地开发：`npm run dev`
+5. 创建分支：`git checkout -b feature/your-feature-name`
+6. 进行修改
+7. 提交 Pull Request
+
+更详细的协作说明见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ### 贡献范围
 

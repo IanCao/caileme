@@ -1,11 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getScenarioSystemPrompt, SCENARIOS, type Scenario } from "@/data/scenarios";
-
-// 使用 Node.js runtime 以获得更好的外部 API 兼容性
-export const runtime = "nodejs";
-
-// 场景开场白
-const SCENARIO_INTROS: Record<string, string> = {
+export const SCENARIO_INTROS: Record<string, string> = {
   standard: `你好，我是今天的谈话负责人。
 
 公司经过慎重考虑，想和你聊一下岗位调整的事情。
@@ -68,190 +61,7 @@ const SCENARIO_INTROS: Record<string, string> = {
 （提示：远程办公是经过批准的。要求查看具体的绩效考核记录。）`,
 };
 
-export async function POST(request: NextRequest) {
-  try {
-    const { messages, scenarioId = "standard", generateReport = false } = await request.json();
-
-    // Validate messages
-    if (!messages || !Array.isArray(messages) || messages.length === 0) {
-      return NextResponse.json(
-        { error: "Invalid messages format" },
-        { status: 400 }
-      );
-    }
-
-    // 验证场景 ID
-    const validScenario = SCENARIOS.find((s: Scenario) => s.id === scenarioId);
-    if (!validScenario) {
-      return NextResponse.json(
-        { error: "Invalid scenario ID" },
-        { status: 400 }
-      );
-    }
-
-    // 如果是生成报告，使用报告专用提示词
-    let systemPrompt: string;
-    if (generateReport) {
-      systemPrompt = `你是一个专业的劳动法顾问。请根据之前的对话内容，生成一份详细的模拟报告。
-
-报告需要包含以下部分：
-
-## 📊 对话总结
-简要总结这次裁员模拟谈话的主要内容和HR采取的策略。
-
-## 🎯 你的表现评估
-从以下几个维度评估：
-- 信息保护意识（是否透露了过多个人信息或弱点）
-- 谈判立场（是否坚持要求明确赔偿方案）
-- 心理素质（是否被HR的话术影响）
-- 法律意识（是否善用了劳动法知识）
-
-## 💡 改进建议
-给出3-5条具体的改进建议，帮助用户在真实谈判中表现得更好。
-
-## 🛡️ 实战贴士
-给出3-5条在真实裁员谈判中的实用技巧。
-
-请用中文回复，语言要专业但易懂，有鼓励性但不失客观性。`;
-    } else {
-      systemPrompt = getScenarioSystemPrompt(scenarioId);
-    }
-
-    // Check for environment variables
-    const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-    const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-    const model = process.env.CLOUDFLARE_AI_MODEL || "@cf/qwen/qwen3-30b-a3b-fp8";
-
-    console.log("[AI Chat] Config check:", {
-      hasAccountId: !!accountId,
-      hasApiToken: !!apiToken,
-      model,
-      accountIdLength: accountId?.length,
-      apiTokenLength: apiToken?.length,
-    });
-
-    if (!accountId || !apiToken) {
-      console.log("[AI Chat] Using fallback - no Cloudflare credentials");
-      // Fallback response for demo/testing when Cloudflare is not configured
-      const lastUserMessage = messages.filter((m: any) => m.role === "user").pop();
-      const userInput = lastUserMessage?.content || "";
-
-      // 如果是生成报告，返回预设报告
-      if (generateReport) {
-        return NextResponse.json({
-          role: "assistant",
-          content: generateFallbackReport(),
-        });
-      }
-
-      // 如果是第一条消息（用户还没回复），返回开场白
-      const userMessages = messages.filter((m: any) => m.role === "user");
-      if (userMessages.length === 0) {
-        return NextResponse.json({
-          role: "assistant",
-          content: SCENARIO_INTROS[scenarioId] || SCENARIO_INTROS.standard,
-        });
-      }
-
-      // 否则返回根据输入的 fallback 回复
-      return NextResponse.json({
-        role: "assistant",
-        content: getFallbackResponse(userInput, scenarioId),
-      });
-    }
-
-    // Build the conversation for Cloudflare AI
-    const conversation = [
-      { role: "system", content: systemPrompt },
-      ...messages.map((m: any) => ({
-        role: m.role,
-        content: m.content,
-      })),
-    ];
-
-    console.log("[AI Chat] Conversation length:", conversation.length);
-    console.log("[AI Chat] First message:", JSON.stringify(conversation[0])?.slice(0, 200));
-    console.log("[AI Chat] Last message:", JSON.stringify(conversation[conversation.length - 1])?.slice(0, 200));
-
-    // Call Cloudflare Workers AI
-    // 直接使用模型名称，不需要编码
-    const apiUrl = `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`;
-    console.log("[AI Chat] API URL:", apiUrl);
-
-    const requestBody = {
-      messages: conversation,
-      max_tokens: 512,
-      temperature: 0.7,
-    };
-
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Cloudflare AI API error:", {
-        status: response.status,
-        statusText: response.statusText,
-        error: errorText,
-      });
-      
-      // 返回更有用的错误信息
-      let errorMessage = "AI 服务暂时不可用，请稍后重试";
-      if (response.status === 403) {
-        errorMessage = "AI 权限不足，请检查 API Token 权限配置";
-      } else if (response.status === 404) {
-        errorMessage = "AI 模型不存在或账户 ID 错误";
-      } else if (response.status === 429) {
-        errorMessage = "AI 请求次数超限，请稍后再试";
-      }
-      
-      return NextResponse.json(
-        { error: errorMessage },
-        { status: 503 }
-      );
-    }
-
-    const result = await response.json();
-    
-    // 支持两种响应格式：
-    // 1. Cloudflare 原生格式: result.result.response
-    // 2. OpenAI 兼容格式 (qwen3): result.result.choices[0].message.content
-    let aiResponse = "";
-    
-    if (result.result?.response) {
-      // Cloudflare 原生格式 (llama 系列)
-      aiResponse = result.result.response;
-    } else if (result.result?.choices && result.result.choices.length > 0) {
-      // OpenAI 兼容格式 (qwen3 系列)
-      aiResponse = result.result.choices[0]?.message?.content || "";
-    }
-    
-    if (!aiResponse) {
-      console.error("[AI Chat] Unexpected response format:", JSON.stringify(result).slice(0, 500));
-      aiResponse = "抱歉，我现在无法回答。";
-    }
-
-    return NextResponse.json({
-      role: "assistant",
-      content: aiResponse,
-    });
-  } catch (error) {
-    console.error("AI Chat error:", error);
-    return NextResponse.json(
-      { error: "服务器内部错误" },
-      { status: 500 }
-    );
-  }
-}
-
-// Fallback responses by scenario
-function getFallbackResponse(userInput: string, scenarioId: string): string {
+export function getFallbackResponse(userInput: string, scenarioId: string): string {
   const lowerInput = userInput.toLowerCase();
 
   switch (scenarioId) {
@@ -318,7 +128,12 @@ function getFallbackResponse(userInput: string, scenarioId: string): string {
 }
 
 function getStandardFallback(lowerInput: string): string {
-  if (lowerInput.includes("赔偿") || lowerInput.includes("补偿") || lowerInput.includes("n+1") || lowerInput.includes("2n")) {
+  if (
+    lowerInput.includes("赔偿") ||
+    lowerInput.includes("补偿") ||
+    lowerInput.includes("n+1") ||
+    lowerInput.includes("2n")
+  ) {
     return `关于赔偿，公司有统一的补偿方案，会按照劳动法的相关规定执行的。
 
 不过我想先了解一下，你对我们公司的文化和发展前景有什么看法？你觉得自己这两年的工作表现如何？
@@ -326,7 +141,11 @@ function getStandardFallback(lowerInput: string): string {
 （提示：遇到这类问题时，可以先要求了解公司具体的补偿方案内容，不要急于表态。）`;
   }
 
-  if (lowerInput.includes("劳动法") || lowerInput.includes("违法") || lowerInput.includes("仲裁")) {
+  if (
+    lowerInput.includes("劳动法") ||
+    lowerInput.includes("违法") ||
+    lowerInput.includes("仲裁")
+  ) {
     return `我理解你的顾虑。关于劳动法的问题，公司有专门的法务团队会确保所有流程合法合规。
 
 说实话，今天找你谈，是因为管理层觉得你在这个岗位上的发展遇到了瓶颈。公司希望能够帮助你找到更适合自己的平台。
@@ -345,7 +164,7 @@ function getStandardFallback(lowerInput: string): string {
 （提示：这是典型的 HR 开场白，不要急于回应，先了解清楚自己的权益。）`;
 }
 
-function generateFallbackReport(): string {
+export function generateFallbackReport(): string {
   return `## 📊 对话总结
 
 这是一次典型的 HR 裁员谈话模拟。HR 主要采取了以下策略：通过施压、情感操控或法律术语来促使员工尽快签署离职协议。

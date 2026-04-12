@@ -1,9 +1,0 @@
-name = "caileme"
-compatibility_date = "2024-04-19"
-pages_build_output_dir = ".next"
-
-[vars]
-CLOUDFLARE_AI_MODEL = "@cf/qwen/qwen3-30b-a3b-fp8"
-
-[compatibility_flags]
-nodejs_compat = true

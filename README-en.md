@@ -153,12 +153,25 @@ npm run build
 npm run start
 ```
 
+The root `npm run build` command builds `app/` and copies the static export to `dist/`, which is the only Cloudflare Pages build output used by this repository.
+
+### Deploy to Cloudflare Pages
+
+```bash
+npm run preview
+npm run deploy
+```
+
+- `npm run preview`: preview the static site and `functions/` locally with Cloudflare Pages
+- `npm run deploy`: deploy `dist/` and `functions/` from the repository root
+- Keep the Cloudflare Pages build output directory set to `dist`
+
 ### AI Feature Configuration (Optional)
 
 The AI layoff simulation requires AI service configuration:
 
-1. Get an API Token from your AI service provider
-2. Copy `.env.example` to `.env.local` and fill in:
+1. For local development, copy `app/.env.example` to `app/.env.local` and fill in the values
+2. For Cloudflare Pages deployment, set the same three variables in the Pages project environment:
 
 ```bash
 CLOUDFLARE_ACCOUNT_ID=your_account_id
@@ -174,18 +187,18 @@ CLOUDFLARE_AI_MODEL=@cf/qwen/qwen2.5-7b-instruct
 
 ```
 caileme/
-├── app/                      # Next.js App Router
-│   ├── src/
-│   │   ├── app/             # Page files
-│   │   │   ├── page.tsx     # Home page
-│   │   │   ├── tools/       # Tool pages
-│   │   │   ├── guides/      # Guide pages
-│   │   │   ├── community/   # Community pages
-│   │   │   └── ...
-│   │   ├── components/      # React components
-│   │   ├── data/            # Static data
-│   │   └── hooks/           # Custom hooks
-│   └── public/              # Static assets
+├── app/                      # Next.js app source
+│   ├── app/                 # App Router pages
+│   ├── components/          # React components
+│   ├── data/                # Static data and AI scenarios
+│   ├── hooks/               # Custom hooks
+│   ├── lib/                 # Frontend and build helpers
+│   ├── public/              # Static assets
+│   ├── scripts/             # Build scripts
+│   └── content/             # Markdown content
+├── functions/               # Cloudflare Pages Functions
+├── dist/                    # Generated static output for Pages
+├── wrangler.toml            # Root Cloudflare Pages config
 ├── package.json
 └── README.md
 ```
@@ -201,9 +214,12 @@ We welcome all workers to join! Whether you contribute code, improve documentati
 1. Fork the repository
 2. Clone your fork: `git clone https://github.com/IanCao/caileme.git`
 3. Install dependencies: `npm install`
-4. Create a branch: `git checkout -b feature/your-feature-name`
-5. Make your changes
-6. Submit a pull request
+4. Start local development: `npm run dev`
+5. Create a branch: `git checkout -b feature/your-feature-name`
+6. Make your changes
+7. Submit a pull request
+
+For more contributor guidance, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Contribution Areas
 

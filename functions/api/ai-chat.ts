@@ -1,9 +1,4 @@
 import { getScenarioSystemPrompt, SCENARIOS, type Scenario } from "../../app/data/scenarios";
-import {
-  generateFallbackReport,
-  getFallbackResponse,
-  SCENARIO_INTROS,
-} from "../../app/lib/aiChatFallback";
 
 interface ChatMessage {
   role: string;
@@ -27,13 +22,31 @@ interface PagesContext {
   env: EnvBindings;
 }
 
+const RETRY_TOMORROW_MESSAGE = "今日 AI 使用次数过多，请明天再试。";
+
 function json(data: unknown, init?: ResponseInit): Response {
   const headers = new Headers(init?.headers);
   headers.set("Content-Type", "application/json; charset=utf-8");
+  headers.set("X-Caileme-Function", "ai-chat");
 
   return new Response(JSON.stringify(data), {
     ...init,
     headers,
+  });
+}
+
+function retryTomorrowResponse(status = 429): Response {
+  return json({ error: RETRY_TOMORROW_MESSAGE }, { status });
+}
+
+export async function onRequestGet(context: PagesContext): Promise<Response> {
+  return json({
+    ok: true,
+    function: "ai-chat",
+    runtime: "pages-function",
+    aiConfigured: Boolean(
+      context.env.CLOUDFLARE_ACCOUNT_ID && context.env.CLOUDFLARE_API_TOKEN
+    ),
   });
 }
 
@@ -63,7 +76,8 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
     context.env.CLOUDFLARE_AI_MODEL || "@cf/qwen/qwen2.5-7b-instruct";
 
   if (!accountId || !apiToken) {
-    return json(buildFallbackPayload(messages, scenarioId, generateReport));
+    console.error("[AI Chat] Missing Cloudflare AI credentials");
+    return retryTomorrowResponse();
   }
 
   const systemPrompt = generateReport
@@ -98,21 +112,28 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
     })),
   ];
 
-  const response = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages: conversation,
-        max_tokens: 512,
-        temperature: 0.7,
-      }),
-    }
-  );
+  let response: Response;
+
+  try {
+    response = await fetch(
+      `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${model}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${apiToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          messages: conversation,
+          max_tokens: 512,
+          temperature: 0.7,
+        }),
+      }
+    );
+  } catch (error) {
+    console.error("[AI Chat] Upstream request failed:", error);
+    return retryTomorrowResponse();
+  }
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -122,16 +143,7 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
       error: errorText,
     });
 
-    let errorMessage = "AI 服务暂时不可用，请稍后重试";
-    if (response.status === 403) {
-      errorMessage = "AI 权限不足，请检查 API Token 权限配置";
-    } else if (response.status === 404) {
-      errorMessage = "AI 模型不存在或账户 ID 错误";
-    } else if (response.status === 429) {
-      errorMessage = "AI 请求次数超限，请稍后再试";
-    }
-
-    return json({ error: errorMessage }, { status: 503 });
+    return retryTomorrowResponse();
   }
 
   const result = await response.json();
@@ -143,35 +155,8 @@ export async function onRequestPost(context: PagesContext): Promise<Response> {
       "[AI Chat] Unexpected response format:",
       JSON.stringify(result).slice(0, 500)
     );
-    return json({ role: "assistant", content: "抱歉，我现在无法回答。" });
+    return retryTomorrowResponse();
   }
 
   return json({ role: "assistant", content: aiResponse });
-}
-
-function buildFallbackPayload(
-  messages: ChatMessage[],
-  scenarioId: string,
-  generateReport: boolean
-) {
-  if (generateReport) {
-    return {
-      role: "assistant",
-      content: generateFallbackReport(),
-    };
-  }
-
-  const userMessages = messages.filter((message) => message.role === "user");
-  if (userMessages.length === 0) {
-    return {
-      role: "assistant",
-      content: SCENARIO_INTROS[scenarioId] || SCENARIO_INTROS.standard,
-    };
-  }
-
-  const lastUserMessage = userMessages[userMessages.length - 1];
-  return {
-    role: "assistant",
-    content: getFallbackResponse(lastUserMessage.content || "", scenarioId),
-  };
 }

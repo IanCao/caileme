@@ -2,11 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { SCENARIOS, DEFAULT_SCENARIO, type Scenario } from "@/data/scenarios";
-import {
-  generateFallbackReport,
-  getFallbackResponse,
-  SCENARIO_INTROS,
-} from "@/lib/aiChatFallback";
+import { SCENARIO_INTROS } from "@/lib/aiChatFallback";
 
 interface Message {
   role: "user" | "assistant";
@@ -19,7 +15,7 @@ interface AIChatInterfaceProps {
   defaultScenarioId?: string;
 }
 
-const AI_ENDPOINT_MISSING = "AI_ENDPOINT_MISSING";
+const AI_RETRY_TOMORROW_MESSAGE = "今日 AI 使用次数过多，请明天再试。";
 
 const SCENARIO_TIPS: Record<string, string> = {
   standard: "先了解方案内容，不要急于表态。注意保留所有沟通记录。",
@@ -153,7 +149,9 @@ export function AIChatInterface({
       setReport(data.content);
       setIsSimulationEnded(true);
     } catch (err) {
-      setError("生成报告失败，请重试");
+      setError(
+        err instanceof Error ? err.message : AI_RETRY_TOMORROW_MESSAGE
+      );
     } finally {
       setIsLoading(false);
     }
@@ -205,23 +203,6 @@ export function AIChatInterface({
     }
   };
 
-  const buildLocalFallback = (payload: {
-    messages: Message[];
-    scenarioId: string;
-    generateReport?: boolean;
-  }): { role: "assistant"; content: string } => ({
-    role: "assistant",
-    content: payload.generateReport
-      ? generateFallbackReport()
-      : getFallbackResponse(
-          payload.messages[payload.messages.length - 1]?.content || "",
-          payload.scenarioId
-        ),
-  });
-
-  const isMissingAIEndpoint = (error: unknown): boolean =>
-    error instanceof Error && error.message === AI_ENDPOINT_MISSING;
-
   async function requestAIChat(payload: {
     messages: Message[];
     scenarioId: string;
@@ -235,7 +216,7 @@ export function AIChatInterface({
       });
 
       if (response.status === 404) {
-        throw new Error(AI_ENDPOINT_MISSING);
+        throw new Error(AI_RETRY_TOMORROW_MESSAGE);
       }
 
       const responseText = await response.text();
@@ -248,15 +229,15 @@ export function AIChatInterface({
           error?: string;
         };
       } catch {
-        throw new Error(AI_ENDPOINT_MISSING);
+        throw new Error(AI_RETRY_TOMORROW_MESSAGE);
       }
 
       if (!response.ok) {
-        throw new Error(data.error || "AI 服务暂时不可用");
+        throw new Error(data.error || AI_RETRY_TOMORROW_MESSAGE);
       }
 
       if (!data.content) {
-        throw new Error("AI 服务返回了空响应");
+        throw new Error(AI_RETRY_TOMORROW_MESSAGE);
       }
 
       return {
@@ -264,8 +245,8 @@ export function AIChatInterface({
         content: data.content,
       };
     } catch (error) {
-      if (isMissingAIEndpoint(error) || error instanceof TypeError) {
-        return buildLocalFallback(payload);
+      if (error instanceof TypeError) {
+        throw new Error(AI_RETRY_TOMORROW_MESSAGE);
       }
 
       throw error;

@@ -46,7 +46,17 @@ export default function TermsPage() {
           <section>
             <h2 className="text-lg font-semibold text-black mb-3">六、侵权投诉</h2>
             <p>如您认为本站内容侵犯了您的合法权益（包括但不限于版权、名誉权、隐私权等），请通过以下方式联系我们，我们将在核实后及时处理：</p>
-            <p className="mt-2 font-medium text-black">📮 侵权投诉邮箱：<a href="mailto:contact@caileme.team" className="text-blue-600 hover:underline">contact@caileme.team</a></p>
+            <p className="mt-2 font-medium text-black">
+              📮 侵权投诉入口：
+              <a
+                href="https://github.com/IanCao/caileme/issues/new"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline"
+              >
+                GitHub Issue
+              </a>
+            </p>
             <p className="mt-2 text-gray-500">请在邮件中说明：侵权内容的URL、您的权益证明材料、联系方式。我们将在3个工作日内回复。</p>
           </section>
           <section>

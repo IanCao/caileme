@@ -54,9 +54,16 @@ export default function AboutPage() {
           <div className="bg-white rounded-2xl p-6 md:p-8 border border-gray-100">
             <h2 className="text-xl font-bold mb-4">📧 联系我们</h2>
             <p className="text-sm text-gray-600 leading-relaxed">
-              如果你有建议、问题或合作意向，欢迎联系我们：
+              如果你有建议、问题或合作意向，欢迎通过 GitHub 联系我们：
             </p>
-            <p className="mt-2 text-sm text-accent">contact@caileme.team</p>
+            <a
+              href="https://github.com/IanCao/caileme/issues/new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-block text-sm text-accent hover:underline"
+            >
+              提交 GitHub Issue
+            </a>
           </div>
         </div>
       </div>

@@ -75,12 +75,14 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-lg font-semibold text-black mb-3">八、联系方式</h2>
             <p>
-              如对本政策或数据处理方式有疑问，可联系：
+              如对本政策或数据处理方式有疑问，可通过 GitHub 联系：
               <a
-                href="mailto:contact@caileme.team"
+                href="https://github.com/IanCao/caileme/issues/new"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-accent hover:underline ml-1"
               >
-                contact@caileme.team
+                GitHub Issue
               </a>
             </p>
           </section>

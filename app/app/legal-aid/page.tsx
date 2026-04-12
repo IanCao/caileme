@@ -210,10 +210,12 @@ export default function LegalAidPage() {
               <li>• 灵活的合作模式和收益分配</li>
             </ul>
             <a
-              href="mailto:contact@caileme.team?subject=%E5%BE%8B%E5%B8%88%E5%90%88%E4%BD%9C%E5%92%A8%E8%AF%A2"
+              href="https://github.com/IanCao/caileme/issues/new"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-block text-sm px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors"
             >
-              申请成为合作律师
+              通过 GitHub 联系合作
             </a>
           </motion.div>
         )}

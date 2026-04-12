@@ -78,8 +78,15 @@ export function Footer() {
           </div>
           <p className="text-xs text-gray-400 text-center border-t border-gray-100 pt-3">
             本站依据《中华人民共和国网络安全法》《互联网信息服务管理办法》等相关法律法规运营，内容由用户投稿，不代表本站立场。
-            如有内容侵权或违规，请发邮件至&nbsp;
-            <a href="mailto:contact@caileme.team" className="text-accent hover:underline">contact@caileme.team</a>
+            如有内容侵权、违规或需要反馈，请通过&nbsp;
+            <a
+              href="https://github.com/IanCao/caileme/issues/new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-accent hover:underline"
+            >
+              GitHub Issue
+            </a>
             &nbsp;联系处理。
           </p>
         </div>

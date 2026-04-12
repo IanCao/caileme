@@ -14,6 +14,9 @@ const ScrollingAvatars = dynamic(() => import("@/components/ScrollingAvatars"), 
   loading: () => <div className="h-20" />,
 });
 
+const GITHUB_REPO_URL = "https://github.com/IanCao/caileme";
+const GITHUB_NEW_ISSUE_URL = "https://github.com/IanCao/caileme/issues/new";
+
 const tools = [
   {
     title: "赔偿计算器",
@@ -137,6 +140,60 @@ export default function HomePage() {
             <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider">感谢每一位贡献者</h3>
           </div>
           <ScrollingAvatars />
+        </div>
+      </section>
+
+      <section className="py-16 md:py-20 bg-surface border-b border-gray-100">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
+          <FadeInSection className="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8 md:p-10">
+            <div className="grid gap-8 lg:grid-cols-[1.3fr_0.9fr] lg:items-center">
+              <div>
+                <div className="inline-flex items-center rounded-full bg-black/5 px-3 py-1 text-xs font-medium text-gray-500">
+                  Open Source · GitHub Driven
+                </div>
+                <h2 className="mt-4 text-2xl sm:text-3xl font-bold text-gray-900">
+                  这是一个公开协作的打工人项目
+                </h2>
+                <p className="mt-4 text-sm sm:text-base leading-relaxed text-gray-600">
+                  裁了么不仅是一个工具站，也是一个持续更新的开源公益项目。文章、裁员情报、红黑厂信息、
+                  数据勘误和功能建议，都会优先通过 GitHub Issue 或 Pull Request 协作处理。
+                </p>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <a
+                    href={GITHUB_REPO_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-full bg-black px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-gray-800"
+                  >
+                    查看 GitHub 仓库
+                  </a>
+                  <a
+                    href={GITHUB_NEW_ISSUE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center rounded-full border border-gray-300 px-6 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                  >
+                    投稿 / 反馈 / 勘误
+                  </a>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                <div className="rounded-2xl bg-gray-50 p-4">
+                  <div className="text-xs font-medium text-gray-400">内容协作</div>
+                  <div className="mt-1 text-sm font-semibold text-gray-900">投稿、纠错、补充案例</div>
+                </div>
+                <div className="rounded-2xl bg-gray-50 p-4">
+                  <div className="text-xs font-medium text-gray-400">代码协作</div>
+                  <div className="mt-1 text-sm font-semibold text-gray-900">Issue、PR、数据更新</div>
+                </div>
+                <div className="rounded-2xl bg-gray-50 p-4">
+                  <div className="text-xs font-medium text-gray-400">公开透明</div>
+                  <div className="mt-1 text-sm font-semibold text-gray-900">通过 GitHub 跟踪讨论与变更</div>
+                </div>
+              </div>
+            </div>
+          </FadeInSection>
         </div>
       </section>
 
@@ -314,7 +371,7 @@ export default function HomePage() {
                         去看保护站信息 →
                       </Link>
                       <a
-                        href="https://github.com/IanCao/caileme/issues/new"
+                        href={GITHUB_NEW_ISSUE_URL}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm font-medium text-accent hover:underline"

@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Logo](public/logo.png)
+<img src="app/public/logo.png" alt="Caileme Logo" width="160" />
 
 **A free tool platform helping workers cope with layoffs**
 
@@ -262,7 +262,7 @@ This project is open source under the [MIT License](LICENSE). You are free to us
 If you encounter problems or have improvement suggestions:
 
 - Submit [GitHub Issue](https://github.com/IanCao/caileme/issues)
-- Send email to contact@caileme.team
+- Send email to caoyixiong@apache.org
 
 ---
 

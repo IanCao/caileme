@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Logo](app/public/logo.png)
+<img src="app/public/logo.png" alt="Caileme Logo" width="160" />
 
 **帮助打工人应对裁员的免费工具平台**
 
@@ -262,7 +262,7 @@ caileme/                      # 项目根目录
 如果你在使用过程中遇到问题或有改进建议，欢迎：
 
 - 提交 [GitHub Issue](https://github.com/IanCao/caileme/issues)
-- 发送邮件至 contact@caileme.team
+- 发送邮件至 caoyixiong@apache.org
 
 ---
 
